@@ -25,9 +25,10 @@ The members of this team are below.
 ## Zihao Guo
 
 Zihao is a Junior in Data Science and Statistics. 
-## Dan Sussman
 
-Dan is a professor in the Math/Stat department and is the instructor for the course.
+## Sean Fung
+
+Sean is a senior in Math and Computer Science 
 
 <!-- Please leave in the information below -->
 
