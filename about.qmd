@@ -30,6 +30,11 @@ Zihao is a Junior in Data Science and Statistics.
 
 Sean is a senior in Math and Computer Science 
 
+## Oscar Mo
+
+Oscar is a senior in Computer Science
+
+
 <!-- Please leave in the information below -->
 
 ### About this Template.
