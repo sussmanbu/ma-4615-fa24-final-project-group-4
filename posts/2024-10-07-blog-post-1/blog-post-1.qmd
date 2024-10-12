@@ -1,8 +1,46 @@
 ---
 title: "Blog Post 1"
 author: ""
-date: "2024-10-07"
-date-modified: "2024-10-07"
-draft: FALSE
 ---
 
+##Dataset 1##
+https://www.kaggle.com/datasets/iamsouravbanerjee/airline-dataset 
+Airline dataset
+
+This dataset has about 15 columns with mainly incorporating fields such as Passenger ID, First Name, Last Name, Gender, Age, Nationality, Airport Name, Airport Country Code, Country Name, Airport Continent, Continents, Departure Date, Arrival Airport, Pilot Name, and Flight Status. As for the amount of rows, there are 98,619 unique ID names indicating at least 98,619 rows. The dataset was originally collected due to the information that the aviation industry can give. The dataset says that, “It provides valuable information about flight routes, schedules, passenger demographics, and preferences, which airlines can leverage to optimize their operations and enhance customer experiences.” It can also be important for governing bodies for security purposes in terms of the people entering the country. As for how they collected this data, they collected it probably through ticketing. 
+
+The dataset doesn't contain any missing values, but improvements can be made to the qualitative and categorical data by standardizing certain fields. For example, we can convert categorical variables like “Gender” and “Flight Status” into numerical values for easier analysis.  Potential research questions for this dataset could be: What is the trend/distribution of nationalities among passengers flying from specific airports, what factors are associated with flight delays compared to different variables, and whether pilot performance can be related to flight delay. One challenge we may face for this dataset is if multiple pilots are assigned to the same flight, it may be difficult to analyze how the pilot’s behavior affected flight performance.
+
+##Dataset 2##
+https://wonder.cdc.gov/controller/datarequest/D198;jsessionid=2282EA995E0480CCB5AF9F14471B 
+
+75,000 rows and 6 columns. 
+"Cancer Sites"	 "Region""State""Year""Race"	Count
+Data was collected by the CDC. Unknown how they were collected. 
+
+Collected because it is important to collect cancer information. 
+I can load it as a .txt but unknown if I can get it as a readable csv or something of that sort. May need to be cleaned. 
+
+
+Key questions for analysis could include: how cancer incidence rates vary between racial groups within the same state and year, changes in cancer cases over time, and regional comparisons. Some challenges in analyzing this data might include handling missing or incomplete data if it exists, accurately interpreting the racial and region codes, and ensuring that year-to-year comparisons account for other variables that might affect cancer rates.
+
+##Dataset 3##
+https://usa.ipums.org/usa-action/variables/group
+3373378 rows and 14 columns
+Columns: YEAR, HHINCOME, RACE, RACED, RACAMIND, RACASIAN, RACBLK, RACPACIS   RACWHT, RACOTHER, EDUC, EDUCD, SCHLTYPE, INCWAGE
+
+The data from IPUMS USA is primarily collected through U.S. census records and surveys. The data is consistently coded across census years, allowing for longitudinal studies on demographic, geographic, and economic trends.
+
+The sample we select is from American Community Survey 2022, here are the key characteristics of this sample:
+a) 1-in-100 national random sample of the population.
+b) The data include persons in group quarters.
+c) This is a weighted sample.
+d) The smallest identifiable geographic unit is the PUMA, containing at least 100,000 persons. PUMAs do not cross state boundaries.
+
+
+We are allowed to load and clean the data. 
+
+![A descriptive caption](/Users/kevinchen/Desktop/1.jpg)
+
+The main questions based on the variables we selected at this time can be: what’s the relationship between educational attainment and income wages across different racial groups, how does educational levels affect the income for a person across different racial groups, and how have trends in household income varied across different racial groups over time, considering differences in educational attainment, wage income, and school type.
+One challenge we may face is data cleaning. For example, the variable HHINCOME is a 7-digit numeric code that reports the total money income of all household members age 15+ during the previous year. However, the value 9999999 in the dataset represents missing values (N/A) for household income. There are numerous rows in the dataset with this value, and filtering out these rows could be time-consuming and would require careful attention to ensure the accuracy of the analysis.
