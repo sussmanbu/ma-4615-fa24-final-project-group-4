@@ -1,6 +1,6 @@
 ---
 title: "Blog Post 1"
-author: ""
+author: "Sean Fung, Zihao Guo, Siqi Chen"
 ---
 
 ##Dataset 1##
@@ -37,10 +37,7 @@ b) The data include persons in group quarters.
 c) This is a weighted sample.
 d) The smallest identifiable geographic unit is the PUMA, containing at least 100,000 persons. PUMAs do not cross state boundaries.
 
-
-We are allowed to load and clean the data. 
-
-![A descriptive caption](/Users/kevinchen/Desktop/1.jpg)
+We are allowed to load and clean the data, the dataset doesn't contain any missing values (is.na=0).
 
 The main questions based on the variables we selected at this time can be: what’s the relationship between educational attainment and income wages across different racial groups, how does educational levels affect the income for a person across different racial groups, and how have trends in household income varied across different racial groups over time, considering differences in educational attainment, wage income, and school type.
 One challenge we may face is data cleaning. For example, the variable HHINCOME is a 7-digit numeric code that reports the total money income of all household members age 15+ during the previous year. However, the value 9999999 in the dataset represents missing values (N/A) for household income. There are numerous rows in the dataset with this value, and filtering out these rows could be time-consuming and would require careful attention to ensure the accuracy of the analysis.
