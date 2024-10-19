@@ -40,4 +40,4 @@ After cleaning and sampling the data, I imported the **RDS file** into the final
     # Example of loading the RDS file
     sampled_data <- readRDS("filtered_data.rds")
 
-This approach ensures that our dataset is **manageable** and ready for further analysis, while also maintaining the **integrity of the original data**. It also makes collaboration smoother by allowing group members to work with the same cleaned dataset.
+This approach ensures that our dataset is **manageable** and ready for further analysis, while also maintaining the **integrity of the original data**. 
