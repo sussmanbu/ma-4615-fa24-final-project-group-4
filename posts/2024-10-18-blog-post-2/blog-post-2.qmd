@@ -5,6 +5,9 @@ date: "2024-10-18"
 date-modified: "2024-10-18"
 draft: FALSE
 ---
+#Background Information (Oscar)
+
+This dataset reflects incidents of crime in the City of Los Angeles dating back to 2020 which is collected and sourced by the Los Angeles Police Department. The LAPD collects this data as part of routine public safety operations in order to better track crime patterns, allocating resources, and for transparency purposes, ensuring that the public has access to crime data. While looking through the dataset, there are some issues with collecting the data. Since the LAPD records the crime data through reports, there can be several inconsistencies with how crime reports with different officers or stations taking in data as well as failing to account for unreported crime. This would lead to a dataset that doesn’t capture the full picture of crime in LA. With the dataset collecting crime reported from 2020 to the present, there are multiple reasons to think that the sample is biased pertaining to crime. Crime data can be biased due to socioeconomic and geographic factors as crime in lower-income neighborhoods are policed more often and more likely report certain kinds of crime which would skew the data in some ways. Additionally, less policed neighborhoods would have underreported crime data. This data can be used to shape policy in law enforcement to better allocate police resources to prevent crime and be used for research to study socioeconomic facts that play into crime in LA. There has been other research on the same data where they look into more niche subtopics of crime such as domestic violence or crime involving homeless people.
 
 
 # Data Cleaning (Sean)
