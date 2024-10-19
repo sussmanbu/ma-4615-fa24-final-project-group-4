@@ -6,26 +6,38 @@ date-modified: "2024-10-18"
 draft: FALSE
 ---
 
-Decided on the dataset of LAPD crime data. We decided that we would look at 2500 from each year (2020-2024) 
-[could be subject to change depending on initial analysis], for a total of 12,500 rows. I used a seperate R project to reduce the amount of rows in the csv file and then saved the file as rds file. Here is the following code:
 
-data$year <- format(as.Date(data$DATE.OCC, format = "%m/%d/%Y"), "%Y")
-data$year <- as.numeric(data$year)  # Convert year to numeric
+# Data Cleaning
 
-# Filter for the years 2020-2024
-filtered_years <- data %>%
-  filter(year %in% 2020:2024)
+For our project, we decided to use the LAPD crime dataset. The goal was to select **2,500 rows from each year (2020–2024)**, resulting in a **total of 12,500 rows**. However, this number could change based on initial analysis.
 
-# Split by year and sample up to 2500 rows for each year
-sampled_data <- filtered_years %>%
-  group_split(year) %>%
-  map_df(~ slice_sample(.x, n = min(2500, nrow(.x))))
+## Step 1: Data Reduction  
+Since the original dataset was too large, I used a **separate R project** to filter and reduce the number of rows in the CSV file. After processing, the data was saved as an **RDS file** to make it easier to work with. Below is the code I used:
 
-# View the sampled data
-head(sampled_data)
+    # Convert the date column to year format
+    data$year <- format(as.Date(data$DATE.OCC, format = "%m/%d/%Y"), "%Y")
+    data$year <- as.numeric(data$year)  # Convert year to numeric
 
-saveRDS(sampled_data, "filtered_data.rds")
+    # Filter for the years 2020–2024
+    filtered_years <- data %>%
+      filter(year %in% 2020:2024)
 
+    # Split by year and sample up to 2,500 rows per year
+    sampled_data <- filtered_years %>%
+      group_split(year) %>%
+      map_df(~ slice_sample(.x, n = min(2500, nrow(.x))))
 
+    # View the sampled data
+    head(sampled_data)
 
-I then imported this file to the data final project so that groupmates are able to access it. 
+    # Save the filtered data as an RDS file
+    saveRDS(sampled_data, "filtered_data.rds")
+
+## Step 2: Data Import for Group Collaboration
+
+After cleaning and sampling the data, I imported the **RDS file** into the final project so that all group members could access it easily.
+
+    # Example of loading the RDS file
+    sampled_data <- readRDS("filtered_data.rds")
+
+This approach ensures that our dataset is **manageable** and ready for further analysis, while also maintaining the **integrity of the original data**. It also makes collaboration smoother by allowing group members to work with the same cleaned dataset.
