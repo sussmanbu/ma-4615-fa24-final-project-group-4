@@ -193,7 +193,7 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(5)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(4)</span></div></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
 
@@ -236,32 +236,7 @@ Sean Fung, Zihao Guo, Siqi Chen
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1729224000000" data-listing-file-modified-sort="1729311109246" data-listing-date-modified-sort="1729224000000" data-listing-reading-time-sort="2" data-listing-word-count-sort="285">
-<div class="thumbnail">
-<p><a href="./posts/2024-10-18-blog-post-2/blog-post-2.html" class="no-external"></a></p><a href="./posts/2024-10-18-blog-post-2/blog-post-2.html" class="no-external">
-<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
-</a><p><a href="./posts/2024-10-18-blog-post-2/blog-post-2.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2024-10-18-blog-post-2/blog-post-2.html" class="no-external">Blog Post 2</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2024-10-18-blog-post-2/blog-post-2.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/2024-10-18-blog-post-2/blog-post-2.html" class="no-external">For our project, we decided to use the LAPD crime dataset. The goal was to select <strong>2,500 rows from each year (2020–2024)</strong>, resulting in a <strong>total of 12,500 rows</strong>. However, this…</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2024-10-18-blog-post-2/blog-post-2.html" class="no-external">
-<div class="listing-date">
-Oct 18, 2024
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="" data-listing-date-sort="1708923600000" data-listing-file-modified-sort="1728308216533" data-listing-date-modified-sort="1708923600000" data-listing-reading-time-sort="1" data-listing-word-count-sort="56">
+<div class="quarto-post image-right" data-index="1" data-categories="" data-listing-date-sort="1708923600000" data-listing-file-modified-sort="1728308216533" data-listing-date-modified-sort="1708923600000" data-listing-reading-time-sort="1" data-listing-word-count-sort="56">
 <div class="thumbnail">
 <p><a href="./posts/2023-12-20-examples/examples.html" class="no-external"></a></p><a href="./posts/2023-12-20-examples/examples.html" class="no-external">
 <p class="card-img-top"><img src="posts/2023-12-20-examples/examples_files/figure-html/unnamed-chunk-1-1.png"  class="thumbnail-image card-img"/></p>
@@ -292,7 +267,7 @@ Daniel Sussman
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-categories="" data-listing-date-sort="1708664400000" data-listing-file-modified-sort="1728308216533" data-listing-date-modified-sort="1708664400000" data-listing-reading-time-sort="3" data-listing-word-count-sort="402">
+<div class="quarto-post image-right" data-index="2" data-categories="" data-listing-date-sort="1708664400000" data-listing-file-modified-sort="1728308216533" data-listing-date-modified-sort="1708664400000" data-listing-reading-time-sort="3" data-listing-word-count-sort="402">
 <div class="thumbnail">
 <p><a href="./posts/2023-10-15-getting-started/getting-started.html" class="no-external"></a></p><a href="./posts/2023-10-15-getting-started/getting-started.html" class="no-external">
 <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
@@ -323,7 +298,7 @@ Daniel Sussman
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-categories="" data-listing-date-sort="1708491600000" data-listing-file-modified-sort="1728308216533" data-listing-date-modified-sort="1708491600000" data-listing-reading-time-sort="3" data-listing-word-count-sort="404">
+<div class="quarto-post image-right" data-index="3" data-categories="" data-listing-date-sort="1708491600000" data-listing-file-modified-sort="1728308216533" data-listing-date-modified-sort="1708491600000" data-listing-reading-time-sort="3" data-listing-word-count-sort="404">
 <div class="thumbnail">
 <p><a href="./posts/2023-10-13-first-team-meeting/first-team-meeting.html" class="no-external"></a></p><a href="./posts/2023-10-13-first-team-meeting/first-team-meeting.html" class="no-external">
 <p><img loading="lazy" src="./posts/2023-10-13-first-team-meeting/a-business-team-giving-fist-bump-in-agreement.jpg" class="thumbnail-image"></p>
@@ -451,7 +426,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp("https:\/\/sussmanbu\.github\.io\/ma-4615-fa24-final-project-group-4\/");
+      var filterRegex = new RegExp('/' + window.location.host + '/');
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
