@@ -6,3 +6,26 @@ date-modified: "2024-10-18"
 draft: FALSE
 ---
 
+Decided on the dataset of LAPD crime data. We decided that we would look at 2500 from each year (2020-2024) 
+[could be subject to change depending on initial analysis], for a total of 12,500 rows. I used a seperate R project to reduce the amount of rows in the csv file and then saved the file as rds file. Here is the following code:
+
+data$year <- format(as.Date(data$DATE.OCC, format = "%m/%d/%Y"), "%Y")
+data$year <- as.numeric(data$year)  # Convert year to numeric
+
+# Filter for the years 2020-2024
+filtered_years <- data %>%
+  filter(year %in% 2020:2024)
+
+# Split by year and sample up to 2500 rows for each year
+sampled_data <- filtered_years %>%
+  group_split(year) %>%
+  map_df(~ slice_sample(.x, n = min(2500, nrow(.x))))
+
+# View the sampled data
+head(sampled_data)
+
+saveRDS(sampled_data, "filtered_data.rds")
+
+
+
+I then imported this file to the data final project so that groupmates are able to access it. 
