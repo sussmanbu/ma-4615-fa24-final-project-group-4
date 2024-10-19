@@ -7,7 +7,7 @@ draft: FALSE
 ---
 
 
-# Data Cleaning
+# Data Cleaning (Sean)
 
 For our project, we decided to use the LAPD crime dataset. The goal was to select **2,500 rows from each year (2020–2024)**, resulting in a **total of 12,500 rows**. However, this number could change based on initial analysis.
 
