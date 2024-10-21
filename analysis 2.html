@@ -6,10 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="">
-<meta name="dcterms.date" content="2024-10-18">
+<meta name="description" content="Here we provide a detailed analysis using more sophisticated statistics techniques.">
 
-<title>Blog Post 2 – MA [46]15 Final Project</title>
+<title>Analysis – MA [46]15 Final Project</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,25 +21,59 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<script src="../../site_libs/quarto-html/quarto.js"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,17 +103,17 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+  <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
+    <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">MA [46]15 Final Project</span>
     </a>
   </div>
@@ -91,19 +124,19 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html"> 
+    <a class="nav-link" href="./about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../big_picture.html"> 
+    <a class="nav-link" href="./big_picture.html"> 
 <span class="menu-text">Big Picture</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../analysis.html"> 
+    <a class="nav-link active" href="./analysis.html" aria-current="page"> 
 <span class="menu-text">Analysis</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../data.html"> 
+    <a class="nav-link" href="./data.html"> 
 <span class="menu-text">Data</span></a>
   </li>  
 </ul>
@@ -114,120 +147,126 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title">Blog Post 2</h1>
-                      </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      
-      <div>
-      <div class="quarto-title-meta-heading">Published</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">October 18, 2024</p>
-      </div>
-    </div>
-    
-      <div>
-      <div class="quarto-title-meta-heading">Modified</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date-modified">October 18, 2024</p>
-      </div>
-    </div>
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#example-of-loading-data" id="toc-example-of-loading-data" class="nav-link active" data-scroll-target="#example-of-loading-data">Example of loading data</a></li>
+  <li><a href="#note-on-attribution" id="toc-note-on-attribution" class="nav-link" data-scroll-target="#note-on-attribution">Note on Attribution</a></li>
+  <li><a href="#rubric-on-this-page" id="toc-rubric-on-this-page" class="nav-link" data-scroll-target="#rubric-on-this-page">Rubric: On this page</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Analysis</h1>
+</div>
+
+<div>
+  <div class="description">
+    Here we provide a detailed analysis using more sophisticated statistics techniques.
+  </div>
+</div>
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
+</header>
 
-<section id="background-information-oscar" class="level2">
-<h2 class="anchored" data-anchor-id="background-information-oscar">Background Information (Oscar)</h2>
-<p>This dataset reflects incidents of crime in the City of Los Angeles dating back to 2020 which is collected and sourced by the Los Angeles Police Department. The LAPD collects this data as part of routine public safety operations in order to better track crime patterns, allocating resources, and for transparency purposes, ensuring that the public has access to crime data. While looking through the dataset, there are some issues with collecting the data. Since the LAPD records the crime data through reports, there can be several inconsistencies with how crime reports with different officers or stations taking in data as well as failing to account for unreported crime. This would lead to a dataset that doesn’t capture the full picture of crime in LA. With the dataset collecting crime reported from 2020 to the present, there are multiple reasons to think that the sample is biased pertaining to crime. Crime data can be biased due to socioeconomic and geographic factors as crime in lower-income neighborhoods are policed more often and more likely report certain kinds of crime which would skew the data in some ways. Additionally, less policed neighborhoods would have underreported crime data. This data can be used to shape policy in law enforcement to better allocate police resources to prevent crime and be used for research to study socioeconomic facts that play into crime in LA. There has been other research on the same data where they look into more niche subtopics of crime such as domestic violence or crime involving homeless people.</p>
+
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/7/77/Pebbleswithquarzite.jpg" class="img-fluid"></p>
+<p>This comes from the file <code>analysis.qmd</code>.</p>
+<p>We describe here our detailed data analysis. This page will provide an overview of what questions you addressed, illustrations of relevant aspects of the data with tables and figures, and a statistical model that attempts to answer part of the question. You’ll also reflect on next steps and further analysis.</p>
+<p>The audience for this page is someone like your class mates, so you can expect that they have some level of statistical and quantitative sophistication and understand ideas like linear and logistic regression, coefficients, confidence intervals, overfitting, etc.</p>
+<p>While the exact number of figures and tables will vary and depend on your analysis, you should target around 5 to 6. An overly long analysis could lead to losing points. If you want you can link back to your blog posts or create separate pages with more details.</p>
+<p>The style of this paper should aim to be that of an academic paper. I don’t expect this to be of publication quality but you should keep that aim in mind. Avoid using “we” too frequently, for example “We also found that …”. Describe your methodology and your findings but don’t describe your whole process.</p>
+<section id="example-of-loading-data" class="level3">
+<h3 class="anchored" data-anchor-id="example-of-loading-data">Example of loading data</h3>
+<p>The code below shows an example of loading the loan refusal data set (which you should delete at some point).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">getwd</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "/Users/seanfung/Documents/BU Fall 2024/MA 415/MA 415 G4 Final Project"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"dataset/loan_refusal_clean.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="data-cleaning-sean" class="level1">
-<h1>Data Cleaning (Sean)</h1>
-<p>For our project, we decided to use the LAPD crime dataset. The goal was to select <strong>2,500 rows from each year (2020–2024)</strong>, resulting in a <strong>total of 12,500 rows</strong>. However, this number could change based on initial analysis.</p>
-<section id="step-1-data-reduction" class="level2">
-<h2 class="anchored" data-anchor-id="step-1-data-reduction">Step 1: Data Reduction</h2>
-<p>Since the original dataset was too large, I used a <strong>separate R project</strong> to filter and reduce the number of rows in the CSV file. After processing, the data was saved as an <strong>RDS file</strong> to make it easier to work with. Below is the code I used:</p>
-<pre><code># Convert the date column to year format
-data$year &lt;- format(as.Date(data$DATE.OCC, format = "%m/%d/%Y"), "%Y")
-data$year &lt;- as.numeric(data$year)  # Convert year to numeric
-
-# Filter for the years 2020–2024
-filtered_years &lt;- data %&gt;%
-  filter(year %in% 2020:2024)
-
-# Split by year and sample up to 2,500 rows per year
-sampled_data &lt;- filtered_years %&gt;%
-  group_split(year) %&gt;%
-  map_df(~ slice_sample(.x, n = min(2500, nrow(.x))))
-
-# View the sampled data
-head(sampled_data)
-
-# Save the filtered data as an RDS file
-saveRDS(sampled_data, "filtered_data.rds")</code></pre>
-</section>
-<section id="step-2-data-import-for-group-collaboration" class="level2">
-<h2 class="anchored" data-anchor-id="step-2-data-import-for-group-collaboration">Step 2: Data Import for Group Collaboration</h2>
-<p>After cleaning and sampling the data, I imported the <strong>RDS file</strong> into the final project so that all group members could access it easily.</p>
-<pre><code># Example of loading the RDS file
-sampled_data &lt;- readRDS("filtered_data.rds")</code></pre>
-<p>This approach ensures that our dataset is <strong>manageable</strong> and ready for further analysis, while also maintaining the <strong>integrity of the original data</strong>.</p>
-</section>
-<section id="data-loading-and-exploration-zihao-and-siqi" class="level2">
-<h2 class="anchored" data-anchor-id="data-loading-and-exploration-zihao-and-siqi">Data Loading and exploration (Zihao and Siqi)</h2>
-<p>After loading RDS file, we found one interesting facts that we may need to clean out some meaningless value in dataset.</p>
-<pre><code>#ggplot(data,mapping = aes(x=Vict.Age))+geom_histogram(stat="count")</code></pre>
-<p>A lot of officers did not enter the victim’s age, so we can’t do some exploration of the age of victim would most likely to be the target.</p>
-<p>We also explore the area that would have the most crime.</p>
-<pre><code>#ggplot(data,mapping = aes(x=AREA))+geom_histogram(stat="count")</code></pre>
-<p>It shows that the top 3 areas are Area 1(Central), Area 12(77th Street), and Area 14(Pacific).</p>
-<p>Last, we also find the count of victims race in the data.</p>
-<pre><code>#ggplot(data,mapping = aes(x=Vict.Descent))+geom_histogram(stat="count")</code></pre>
-<p>It shows that H (Hispanic/Latin/Mexican)is the most targeted victims. The other few big victims group would be B(Black), O(Other), W(White), and X(Unknown).</p>
-<p>One thing to be notice is it has the same issue with age that officers did not record 2000 cases’ victims race.</p>
-</section>
-<section id="data-for-equity-yawen" class="level2">
-<h2 class="anchored" data-anchor-id="data-for-equity-yawen">Data for Equity (Yawen)</h2>
-<section id="transparency" class="level3">
-<h3 class="anchored" data-anchor-id="transparency">Transparency</h3>
-<p>Transparency involves being open about the context of the data and the decisions made during analysis. This includes being clear about how the crime data was collected, what factors are included, and any potential biases present.</p>
-<p>For example, one potential bias could be <strong>over-policing</strong> or <strong>under-policing</strong> in certain areas, which may lead to skewed analysis if not acknowledged.<br>
-- <strong>Over-policing</strong> in a neighborhood could result in a higher number of reported crimes, not necessarily because there is more crime, but due to increased law enforcement presence.<br>
-- <strong>Under-policing</strong> in other areas may result in under-reporting, giving a false sense of safety.</p>
-<p>Both situations can harm residents by reinforcing stereotypes and labeling certain neighborhoods as “high crime.” Transparency also involves: - Disclosing any <strong>missing data</strong>. - Clarifying that the dataset only reflects <strong>reported crimes</strong> and possibly under-reports certain types of crime.</p>
+<section id="note-on-attribution" class="level2">
+<h2 class="anchored" data-anchor-id="note-on-attribution">Note on Attribution</h2>
+<p>In general, you should try to provide links to relevant resources, especially those that helped you. You don’t have to link to every StackOverflow post you used but if there are explainers on aspects of the data or specific models that you found helpful, try to link to those. Also, try to link to other sources that might support (or refute) your analysis. These can just be regular hyperlinks. You don’t need a formal citation.</p>
+<p>If you are directly quoting from a source, please make that clear. You can show quotes using <code>&gt;</code> like this</p>
+<pre><code>&gt; To be or not to be.</code></pre>
+<blockquote class="blockquote">
+<p>To be or not to be.</p>
+</blockquote>
 <hr>
 </section>
-<section id="justice" class="level3">
-<h3 class="anchored" data-anchor-id="justice">Justice</h3>
-<p>Justice refers to the fair distribution of burdens and benefits among people. In our dataset, this means ensuring that data collection and analysis do not harm individuals or communities. Mishandling crime data could expose people to risks related to <strong>privacy</strong> and <strong>safety</strong>.</p>
-<p><strong>Recommendations:</strong> - Personally identifiable information, such as <strong>names</strong>, <strong>social security numbers</strong>, or <strong>dates of birth</strong>, should be excluded to protect privacy. - Including specific crime locations could unfairly label areas as “high crime,” leading to <strong>negative perceptions</strong>.</p>
-<p>To promote justice, the <strong>LAPD</strong> could engage with community residents through <strong>listening sessions</strong> to learn what data the community deems relevant to improving their lives.</p>
-<hr>
-</section>
-<section id="potential-limitations" class="level3">
-<h3 class="anchored" data-anchor-id="potential-limitations">Potential Limitations</h3>
-<p>One major limitation of crime data analysis is the risk of <strong>reinforcing stereotypes</strong>. Aggregated crime data might suggest that: - Certain neighborhoods are inherently more “criminal.” - Specific racial groups are prone to crime.</p>
-<p>These conclusions may ignore systemic factors such as <strong>poverty</strong> or <strong>inequality</strong>, which influence crime rates. Addressing these limitations requires careful framing and a commitment to equity throughout the analysis.</p>
+<section id="rubric-on-this-page" class="level2">
+<h2 class="anchored" data-anchor-id="rubric-on-this-page">Rubric: On this page</h2>
+<p>You will</p>
+<ul>
+<li>Introduce what motivates your Data Analysis (DA)
+<ul>
+<li>Which variables and relationships are you most interested in?</li>
+<li>What questions are you interested in answering?</li>
+<li>Provide context for the rest of the page. This will include figures/tables that illustrate aspects of the data of your question.</li>
+</ul></li>
+<li>Modeling and Inference
+<ul>
+<li>The page will include some kind of formal statistical model. This could be a linear regression, logistic regression, or another modeling framework.</li>
+<li>Explain the ideas and techniques you used to choose the predictors for your model. (Think about including interaction terms and other transformations of your variables.)</li>
+<li>Describe the results of your modelling and make sure to give a sense of the uncertainty in your estimates and conclusions.</li>
+</ul></li>
+<li>Explain the flaws and limitations of your analysis
+<ul>
+<li>Are there some assumptions that you needed to make that might not hold? Is there other data that would help to answer your questions?</li>
+</ul></li>
+<li>Clarity Figures
+<ul>
+<li>Are your figures/tables/results easy to read, informative, without problems like overplotting, hard-to-read labels, etc?</li>
+<li>Each figure should provide a key insight. Too many figures or other data summaries can detract from this. (While not a hard limit, around 5 total figures is probably a good target.)</li>
+<li>Default <code>lm</code> output and plots are typically not acceptable.</li>
+</ul></li>
+<li>Clarity of Explanations
+<ul>
+<li>How well do you explain each figure/result?</li>
+<li>Do you provide interpretations that suggest further analysis or explanations for observed phenomenon?</li>
+</ul></li>
+<li>Organization and cleanliness.
+<ul>
+<li>Make sure to remove excessive warnings, hide most or all code, organize with sections or multiple pages, use bullets, etc.</li>
+<li>This page should be self-contained, i.e.&nbsp;provide a description of the relevant data.</li>
+</ul></li>
+</ul>
 
 
-</section>
-</section>
 </section>
 
 </main> <!-- /main -->
