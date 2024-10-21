@@ -5,4 +5,68 @@ date: "2024-10-18"
 date-modified: "2024-10-18"
 draft: FALSE
 ---
+## Background Information (Oscar)
+
+This dataset reflects incidents of crime in the City of Los Angeles dating back to 2020 which is collected and sourced by the Los Angeles Police Department. The LAPD collects this data as part of routine public safety operations in order to better track crime patterns, allocating resources, and for transparency purposes, ensuring that the public has access to crime data. While looking through the dataset, there are some issues with collecting the data. Since the LAPD records the crime data through reports, there can be several inconsistencies with how crime reports with different officers or stations taking in data as well as failing to account for unreported crime. This would lead to a dataset that doesn’t capture the full picture of crime in LA. With the dataset collecting crime reported from 2020 to the present, there are multiple reasons to think that the sample is biased pertaining to crime. Crime data can be biased due to socioeconomic and geographic factors as crime in lower-income neighborhoods are policed more often and more likely report certain kinds of crime which would skew the data in some ways. Additionally, less policed neighborhoods would have underreported crime data. This data can be used to shape policy in law enforcement to better allocate police resources to prevent crime and be used for research to study socioeconomic facts that play into crime in LA. There has been other research on the same data where they look into more niche subtopics of crime such as domestic violence or crime involving homeless people.
+
+
+# Data Cleaning (Sean)
+
+For our project, we decided to use the LAPD crime dataset. The goal was to select **2,500 rows from each year (2020–2024)**, resulting in a **total of 12,500 rows**. However, this number could change based on initial analysis.
+
+## Step 1: Data Reduction  
+Since the original dataset was too large, I used a **separate R project** to filter and reduce the number of rows in the CSV file. After processing, the data was saved as an **RDS file** to make it easier to work with. Below is the code I used:
+
+    # Convert the date column to year format
+    data$year <- format(as.Date(data$DATE.OCC, format = "%m/%d/%Y"), "%Y")
+    data$year <- as.numeric(data$year)  # Convert year to numeric
+
+    # Filter for the years 2020–2024
+    filtered_years <- data %>%
+      filter(year %in% 2020:2024)
+
+    # Split by year and sample up to 2,500 rows per year
+    sampled_data <- filtered_years %>%
+      group_split(year) %>%
+      map_df(~ slice_sample(.x, n = min(2500, nrow(.x))))
+
+    # View the sampled data
+    head(sampled_data)
+
+    # Save the filtered data as an RDS file
+    saveRDS(sampled_data, "filtered_data.rds")
+
+## Step 2: Data Import for Group Collaboration
+
+After cleaning and sampling the data, I imported the **RDS file** into the final project so that all group members could access it easily.
+
+    # Example of loading the RDS file
+    sampled_data <- readRDS("filtered_data.rds")
+
+This approach ensures that our dataset is **manageable** and ready for further analysis, while also maintaining the **integrity of the original data**. 
+
+## Data Loading and exploration (Zihao and Siqi)
+After loading RDS file, we found one interesting facts that we may need to clean out some meaningless value in dataset.
+
+    #ggplot(data,mapping = aes(x=Vict.Age))+geom_histogram(stat="count")
+
+A lot of officers did not enter the victim's age, so we can't do some exploration of the age of victim would most likely to be the target.
+
+We also explore the area that would have the most crime. 
+
+    #ggplot(data,mapping = aes(x=AREA))+geom_histogram(stat="count")
+    
+It shows that the top 3 areas are Area 1(Central), Area 12(77th Street), and Area 14(Pacific).
+
+Last, we also find the count of victims race in the data. 
+
+    #ggplot(data,mapping = aes(x=Vict.Descent))+geom_histogram(stat="count")
+  
+It shows that H (Hispanic/Latin/Mexican)is the most targeted victims. The other few big victims group would be B(Black), O(Other), W(White), and X(Unknown).
+
+One thing to be notice is it has the same issue with age that officers did not record 2000 cases' victims race. 
+
+
+
+
 
