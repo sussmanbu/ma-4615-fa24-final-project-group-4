@@ -53,7 +53,7 @@
     "href": "index.html",
     "title": "MA [46]15 Final Project",
     "section": "",
-    "text": "Final Project due May 7, 2024 at 11:59pm.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBlog Post 1\n\n\n\n\n\n\n\n\n\n\n\nSean Fung, Zihao Guo, Siqi Chen\n\n\n\n\n\n\n\n\n\n\n\n\nBlog post 3\n\n\n\n\n\n\n\n\n\n\n\nOct 23, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nBlog Post 2\n\n\n\n\n\n\n\n\n\n\n\nOct 18, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nExamples\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFeb 26, 2024\n\n\nDaniel Sussman\n\n\n\n\n\n\n\n\n\n\n\n\nGetting started\n\n\n\n\n\n\n\n\nDirections to set up your website and create your first post. \n\n\n\n\n\nFeb 23, 2024\n\n\nDaniel Sussman\n\n\n\n\n\n\n\n\n\n\n\n\nFirst Team Meeting\n\n\n\n\n\n\n\n\nThis post details the steps you’ll take for your first team meeting. \n\n\n\n\n\nFeb 21, 2024\n\n\nDaniel Sussman\n\n\n\n\n\n\nNo matching items"
+    "text": "Final Project due May 7, 2024 at 11:59pm.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBlog Post 1\n\n\n\n\n\n\n\n\n\n\n\nSean Fung, Zihao Guo, Siqi Chen\n\n\n\n\n\n\n\n\n\n\n\n\nBlog post 3\n\n\n\n\n\n\n\n\n\n\n\nOct 23, 2024\n\n\nSean Fung\n\n\n\n\n\n\n\n\n\n\n\n\nBlog Post 2\n\n\n\n\n\n\n\n\n\n\n\nOct 18, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nExamples\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nFeb 26, 2024\n\n\nDaniel Sussman\n\n\n\n\n\n\n\n\n\n\n\n\nGetting started\n\n\n\n\n\n\n\n\nDirections to set up your website and create your first post. \n\n\n\n\n\nFeb 23, 2024\n\n\nDaniel Sussman\n\n\n\n\n\n\n\n\n\n\n\n\nFirst Team Meeting\n\n\n\n\n\n\n\n\nThis post details the steps you’ll take for your first team meeting. \n\n\n\n\n\nFeb 21, 2024\n\n\nDaniel Sussman\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/2023-12-20-examples/examples.html",
@@ -75,6 +75,83 @@
     "title": "Getting started",
     "section": "",
     "text": "Below, the items marked with [[OP]] should only be done by one person on the team.\n\nTo get started\n\n[[OP]] One person from the team should click the Github Classroom link on Teams.\n[[OP]] That person types in the group name for their group.\nThe rest of the team now clicks the Github Classroom link and selects their team from the dropdown list.\nFinally, each of you can clone the repository to your laptop like a normal assignment.\n\n\n\nSetting up the site\n\n[[OP]] Open the terminal and run quarto publish gh-pages.\n[[OP]] Select Yes to the prompt:  ? Publish site to https://sussmanbu.github.io/ma4615-fa23-final-project-TEAMNAME/ using gh-pages? (Y/n)\n[[OP]] Wait for the process to finish.\nOnce it is done, you can go to the URL it asked you about to see your site.\n\nNote: This is the process you will use every time you want to update your published site. Make sure to always follow the steps below for rendering, previewing, and committing your changes before doing these publish steps. Anyone can publish in the future.\n\n\nCustomize your site\n\n[[OP]] Open the _quarto.yml file and update the title to include your team name.\n[[OP]] Go to the about.qmd and remove the TF’s and professor’s names.\nadd your own along with a short introduction and a link to your Github user page.\n[[OP]] Render the site.\n[[OP]] Check and make sure you didn’t get any errors.\n[[OP]] Commit your changes and push.\n[[OP]] Repeat the steps under Setting up your site.\n\nOnce one person is done with this, each teammate in the group can, in turn, repeat steps 3-7. Before doing so, make sure to pull the changes from teammates before starting to make new changes. (We’ll talk soon about ways to organize your work and resolve conflicts.)\n\n\nStart your first post\n\nTo start your first post first, run remotes::install_github(\"sussmanbu/quartopost\") in your Console.\n[[OP]] Run quartopost::quartopost() (or click Addins-&gt;Create Quarto Post, or use C-Shift-P, type “Create Quarto” and press enter to run the command).\n\nNow you can start working on your post. You’ll want to render your post to see what it will look like on the site.\n\nEvery time you want to make a new post, you can repeat step 2 above.\nWhen you want to publish your progress, follow steps 4-7 from Customize your site.\n\nFinally, make sure to read through everything on this site which has the directions and rubric for the final project."
+  },
+  {
+    "objectID": "posts/2024-10-23-blog-post-3/blog-post-3.html",
+    "href": "posts/2024-10-23-blog-post-3/blog-post-3.html",
+    "title": "Blog post 3",
+    "section": "",
+    "text": "The following code blocks can be found in the scripts file under Sean test scripts for a complete R file for testing. This will be higher level descriptions."
+  },
+  {
+    "objectID": "posts/2024-10-23-blog-post-3/blog-post-3.html#background-information",
+    "href": "posts/2024-10-23-blog-post-3/blog-post-3.html#background-information",
+    "title": "Blog post 3",
+    "section": "",
+    "text": "The following code blocks can be found in the scripts file under Sean test scripts for a complete R file for testing. This will be higher level descriptions."
+  },
+  {
+    "objectID": "posts/2024-10-23-blog-post-3/blog-post-3.html#load-required-libraries",
+    "href": "posts/2024-10-23-blog-post-3/blog-post-3.html#load-required-libraries",
+    "title": "Blog post 3",
+    "section": "1. Load Required Libraries",
+    "text": "1. Load Required Libraries\n\n# Load required libraries\nlibrary(tibble)\nlibrary(dplyr)\n\n\nAttaching package: 'dplyr'\n\n\nThe following objects are masked from 'package:stats':\n\n    filter, lag\n\n\nThe following objects are masked from 'package:base':\n\n    intersect, setdiff, setequal, union\n\nlibrary(ggplot2)"
+  },
+  {
+    "objectID": "posts/2024-10-23-blog-post-3/blog-post-3.html#clean-dataset-for-readability-and-ease-of-use",
+    "href": "posts/2024-10-23-blog-post-3/blog-post-3.html#clean-dataset-for-readability-and-ease-of-use",
+    "title": "Blog post 3",
+    "section": "2. Clean Dataset for Readability and Ease of Use",
+    "text": "2. Clean Dataset for Readability and Ease of Use\n\ndata &lt;- readRDS(\"~/Documents/BU Fall 2024/MA 415/MA 415 G4 Final Project/filtered_data_copy.rds\")\n\n# Create a tibble with the mapping of descent codes\ndescent_codes &lt;- tribble(\n  ~Descent_Code, ~Descent_Description,\n  \"A\", \"Other Asian\",\n  \"B\", \"Black\",\n  \"C\", \"Chinese\",\n  \"D\", \"Cambodian\",\n  \"F\", \"Filipino\",\n  \"G\", \"Guamanian\",\n  \"H\", \"Hispanic/Latin/Mexican\",\n  \"I\", \"American Indian/Alaskan Native\",\n  \"J\", \"Japanese\",\n  \"K\", \"Korean\",\n  \"L\", \"Laotian\",\n  \"O\", \"Other\",\n  \"P\", \"Pacific Islander\",\n  \"S\", \"Samoan\",\n  \"U\", \"Hawaiian\",\n  \"V\", \"Vietnamese\",\n  \"W\", \"White\",\n  \"X\", \"Unknown\",\n  \"Z\", \"Asian Indian\"\n)\n\n# Join the tibble with the main dataset by Vict.Descent\ndata_clean &lt;- data %&gt;%\n  left_join(descent_codes, by = c(\"Vict.Descent\" = \"Descent_Code\"))\n\n# Replace unmatched or missing descriptions with \"Unknown\"\ndata_clean$Descent_Description[is.na(data_clean$Descent_Description)] &lt;- \"Unknown\"\n\n# Drop irrelevant columns with many NAs\ndata_clean &lt;- data_clean[, !(names(data_clean) %in% c(\"Crm.Cd.2\", \"Crm.Cd.3\", \"Crm.Cd.4\", \"Weapon.Used.Cd\", \"Weapon.Desc\", \"Cross.Street\"))]\ndata_clean$DATE.OCC &lt;- as.POSIXct(data_clean$DATE.OCC, format = \"%m/%d/%Y %I:%M:%S %p\")\n\n# Extract the 'month' column in \"YYYY-MM\" format\ndata_clean$month &lt;- format(data_clean$DATE.OCC, \"%Y-%m\")\n\n# Check the cleaned data\nnrow(data_clean)\n\n[1] 12500\n\nstr(data_clean)\n\ntibble [12,500 × 25] (S3: tbl_df/tbl/data.frame)\n $ DR_NO              : int [1:12500] 200604124 200218223 210105387 201314683 201610483 200907309 200905047 200111368 201508876 201111487 ...\n $ Date.Rptd          : chr [1:12500] \"01/03/2020 12:00:00 AM\" \"12/05/2020 12:00:00 AM\" \"02/02/2021 12:00:00 AM\" \"07/29/2020 12:00:00 AM\" ...\n $ DATE.OCC           : POSIXct[1:12500], format: \"2020-01-03\" \"2020-12-05\" ...\n $ TIME.OCC           : int [1:12500] 400 100 1550 1035 1455 1220 1230 2007 417 1235 ...\n $ AREA               : int [1:12500] 6 2 1 13 16 9 9 1 15 11 ...\n $ AREA.NAME          : chr [1:12500] \"Hollywood\" \"Rampart\" \"Central\" \"Newton\" ...\n $ Rpt.Dist.No        : int [1:12500] 648 235 152 1383 1695 994 915 159 1549 1115 ...\n $ Part.1.2           : int [1:12500] 1 1 2 2 2 1 2 2 1 2 ...\n $ Crm.Cd             : int [1:12500] 310 510 649 740 354 310 745 940 310 662 ...\n $ Crm.Cd.Desc        : chr [1:12500] \"BURGLARY\" \"VEHICLE - STOLEN\" \"DOCUMENT FORGERY / STOLEN FELONY\" \"VANDALISM - FELONY ($400 & OVER, ALL CHURCH VANDALISMS)\" ...\n $ Mocodes            : chr [1:12500] \"0325 0601 1601 1606\" \"\" \"1214 0923\" \"0329 1307\" ...\n $ Vict.Age           : int [1:12500] 0 0 0 0 26 48 57 37 0 60 ...\n $ Vict.Sex           : chr [1:12500] \"X\" \"\" \"X\" \"M\" ...\n $ Vict.Descent       : chr [1:12500] \"X\" \"\" \"X\" \"W\" ...\n $ Premis.Cd          : int [1:12500] 210 101 602 122 501 501 157 502 222 501 ...\n $ Premis.Desc        : chr [1:12500] \"RESTAURANT/FAST FOOD\" \"STREET\" \"BANK\" \"VEHICLE, PASSENGER/TRUCK\" ...\n $ Status             : chr [1:12500] \"IC\" \"IC\" \"IC\" \"IC\" ...\n $ Status.Desc        : chr [1:12500] \"Invest Cont\" \"Invest Cont\" \"Invest Cont\" \"Invest Cont\" ...\n $ Crm.Cd.1           : int [1:12500] 310 510 649 740 354 310 745 940 310 662 ...\n $ LOCATION           : chr [1:12500] \"5400 W  SUNSET                       BL\" \"2200 W  TEMPLE                       ST\" \"800    WILSHIRE                     BL\" \"6200 S  BROADWAY\" ...\n $ LAT                : num [1:12500] 34.1 34.1 34 34 34.2 ...\n $ LON                : num [1:12500] -118 -118 -118 -118 -118 ...\n $ year               : num [1:12500] 2020 2020 2020 2020 2020 2020 2020 2020 2020 2020 ...\n $ Descent_Description: chr [1:12500] \"Unknown\" \"Unknown\" \"Unknown\" \"White\" ...\n $ month              : chr [1:12500] \"2020-01\" \"2020-12\" \"2020-10\" \"2020-07\" ...\n\n\nThis was done in an effort to make the data more readable and cleaner. It gets rid of columns that had a lot of N/A’s in the column and changes the date column to remove the 12:00 AM that was previously there and replacing it with a “DATE OCC” column that was not initially there to make the data easier to change.\nIt also creates another column that takes the Vict.Descent column and uses the codes from a tibble to create another column called “Descent_Code” in order to get a more readable information. Then, I checked the data."
+  },
+  {
+    "objectID": "posts/2024-10-23-blog-post-3/blog-post-3.html#data-visualization",
+    "href": "posts/2024-10-23-blog-post-3/blog-post-3.html#data-visualization",
+    "title": "Blog post 3",
+    "section": "3. Data Visualization",
+    "text": "3. Data Visualization"
+  },
+  {
+    "objectID": "posts/2024-10-23-blog-post-3/blog-post-3.html#top-locations-with-crime",
+    "href": "posts/2024-10-23-blog-post-3/blog-post-3.html#top-locations-with-crime",
+    "title": "Blog post 3",
+    "section": "3.1 Top Locations with Crime",
+    "text": "3.1 Top Locations with Crime\n\nggplot(data_clean, aes(x = reorder(AREA.NAME, AREA.NAME, function(x) -length(x)))) +\n  geom_bar(fill = \"steelblue\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +\n  labs(title = \"Top Locations with Highest Crime\", x = \"Area\", y = \"Count\")\n\n\n\n\n\n\n\n\nThis depicts the locations for the places with the highest crime count. We previously did this last week but I wasn’t sure what the graph produced was so I recreated it. Same data as last week but a better visualization. Personally, nothing to note here, it seems like crime is distributd pretty evenly throughout the ditricts. Can be something to be mentioned in the final project."
+  },
+  {
+    "objectID": "posts/2024-10-23-blog-post-3/blog-post-3.html#crime-frequency-over-time",
+    "href": "posts/2024-10-23-blog-post-3/blog-post-3.html#crime-frequency-over-time",
+    "title": "Blog post 3",
+    "section": "3.2 Crime Frequency Over Time",
+    "text": "3.2 Crime Frequency Over Time\n\nggplot(data_clean, aes(x = month)) +\n  geom_bar(fill = \"darkred\") +\n  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +\n  labs(title = \"Crime Frequency Over Time\", x = \"Month\", y = \"Count\")\n\n\n\n\n\n\n\n\nThis is a bit hard to read but I did find it interesting that there was a spike in crime in 2024 January-February. May look into further for potential findings on why that was. Otherwise, crime seems decently evenly distributed by time."
+  },
+  {
+    "objectID": "posts/2024-10-23-blog-post-3/blog-post-3.html#crime-counts-by-descent-description",
+    "href": "posts/2024-10-23-blog-post-3/blog-post-3.html#crime-counts-by-descent-description",
+    "title": "Blog post 3",
+    "section": "3.3 Crime Counts by Descent Description",
+    "text": "3.3 Crime Counts by Descent Description\n\nggplot(data_clean, aes(x = reorder(Descent_Description, Descent_Description, function(x) -length(x)))) +\n  geom_bar(fill = \"purple\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +\n  labs(title = \"Crime Counts by Descent Description\", x = \"Descent Category\", y = \"Count\")\n\n\n\n\n\n\n\n\nInteresting that Hispanics represent the largest amount of crime counts by description. Even more interesting, is that Whites are second given different American stereotypes. May look into doing a correlation chart on this."
+  },
+  {
+    "objectID": "posts/2024-10-23-blog-post-3/blog-post-3.html#top-20-most-frequent-crime-types",
+    "href": "posts/2024-10-23-blog-post-3/blog-post-3.html#top-20-most-frequent-crime-types",
+    "title": "Blog post 3",
+    "section": "3.4 Top 20 Most Frequent Crime Types",
+    "text": "3.4 Top 20 Most Frequent Crime Types\n\n# Calculate the frequency of each crime type\ntop_crime_types &lt;- data_clean %&gt;%\n  count(Crm.Cd.Desc, sort = TRUE) %&gt;%\n  top_n(20, n)\n\nggplot(top_crime_types, aes(x = reorder(Crm.Cd.Desc, n), y = n)) +\n  geom_bar(stat = \"identity\", fill = \"orange\") +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +\n  labs(title = \"Top 20 Most Frequent Crime Types\", x = \"Crime Type\", y = \"Count\")\n\n\n\n\n\n\n\n\nInitially looked at all types of crime but this was too large a list so it was condensed down to the above chart with the top 20 most frequent. May look into condensing some of these categories such as burglary and robbery and look into the difference between those two crimes to see if they can be condensed. I really want to treat the $950 above and below as the same category. Still, it is interesting to see that a lot of people are still willing to commit felonies after the revision of the burglary codes. The difference between the $950 over and under is not too much."
+  },
+  {
+    "objectID": "posts/2024-10-23-blog-post-3/blog-post-3.html#monthly-crime-frequency-by-descent",
+    "href": "posts/2024-10-23-blog-post-3/blog-post-3.html#monthly-crime-frequency-by-descent",
+    "title": "Blog post 3",
+    "section": "3.5 Monthly Crime Frequency by Descent",
+    "text": "3.5 Monthly Crime Frequency by Descent\n\nggplot(data_clean, aes(x = month, fill = Descent_Description)) +\n  geom_bar(position = \"stack\") +\n  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +\n  labs(title = \"Monthly Crime Frequency by Descent\", x = \"Month\", y = \"Count\")\n\n\n\n\n\n\n\n\nThis is a confusing chart but an interesting visualization. Could be used if it considered most frequent to least frequent but we will see if we can incorporate this somehow."
+  },
+  {
+    "objectID": "posts/2024-10-23-blog-post-3/blog-post-3.html#next-steps",
+    "href": "posts/2024-10-23-blog-post-3/blog-post-3.html#next-steps",
+    "title": "Blog post 3",
+    "section": "4. Next Steps",
+    "text": "4. Next Steps\nMay look into saving the cleaned data as a seperate rds file depending on groupmate feedback. We will see. Honestly extremely annoyed at the moment but I will sleep on it.\nNeed to look at more charts like the places description to see if there are any indicators there. Also need to take a look at the time description to see which hours people are committing crime. I’m not doing anymore though at least not this week.\nLastly, look into formulating an idea for the direction of the project and any potential uses of the “lm()” function."
   },
   {
     "objectID": "posts/2024-10-18-blog-post-2/blog-post-2.html",
