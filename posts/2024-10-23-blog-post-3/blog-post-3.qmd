@@ -1,8 +1,136 @@
 ---
 title: "Blog post 3"
-author: ""
+author: "Sean Fung"
 date: "2024-10-23"
 date-modified: "2024-10-23"
 draft: FALSE
 ---
+## **Background Information**
+
+The following code blocks can be found in the scripts file under Sean test scripts for a complete R file for testing. This will be higher level descriptions. 
+
+
+## **1. Load Required Libraries**
+```{r}
+# Load required libraries
+library(tibble)
+library(dplyr)
+library(ggplot2)
+```
+
+## **2. Clean Dataset for Readability and Ease of Use**
+```{r}
+data <- readRDS("~/Documents/BU Fall 2024/MA 415/MA 415 G4 Final Project/filtered_data_copy.rds")
+
+# Create a tibble with the mapping of descent codes
+descent_codes <- tribble(
+  ~Descent_Code, ~Descent_Description,
+  "A", "Other Asian",
+  "B", "Black",
+  "C", "Chinese",
+  "D", "Cambodian",
+  "F", "Filipino",
+  "G", "Guamanian",
+  "H", "Hispanic/Latin/Mexican",
+  "I", "American Indian/Alaskan Native",
+  "J", "Japanese",
+  "K", "Korean",
+  "L", "Laotian",
+  "O", "Other",
+  "P", "Pacific Islander",
+  "S", "Samoan",
+  "U", "Hawaiian",
+  "V", "Vietnamese",
+  "W", "White",
+  "X", "Unknown",
+  "Z", "Asian Indian"
+)
+
+# Join the tibble with the main dataset by Vict.Descent
+data_clean <- data %>%
+  left_join(descent_codes, by = c("Vict.Descent" = "Descent_Code"))
+
+# Replace unmatched or missing descriptions with "Unknown"
+data_clean$Descent_Description[is.na(data_clean$Descent_Description)] <- "Unknown"
+
+# Drop irrelevant columns with many NAs
+data_clean <- data_clean[, !(names(data_clean) %in% c("Crm.Cd.2", "Crm.Cd.3", "Crm.Cd.4", "Weapon.Used.Cd", "Weapon.Desc", "Cross.Street"))]
+data_clean$DATE.OCC <- as.POSIXct(data_clean$DATE.OCC, format = "%m/%d/%Y %I:%M:%S %p")
+
+# Extract the 'month' column in "YYYY-MM" format
+data_clean$month <- format(data_clean$DATE.OCC, "%Y-%m")
+
+# Check the cleaned data
+nrow(data_clean)
+str(data_clean)
+
+```
+This was done in an effort to make the data more readable and cleaner. It gets rid of columns that had a lot of N/A's in the column and changes the date column to remove the 12:00 AM that was previously there and replacing it with a "DATE OCC" column that was not initially there to make the data easier to change.
+
+It also creates another column that takes the Vict.Descent column and uses the codes from a tibble to create another column called "Descent_Code" in order to get a more readable information. Then, I checked the data. 
+
+## **3. Data Visualization**
+
+## *3.1 Top Locations with Crime*
+```{r}
+ggplot(data_clean, aes(x = reorder(AREA.NAME, AREA.NAME, function(x) -length(x)))) +
+  geom_bar(fill = "steelblue") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Top Locations with Highest Crime", x = "Area", y = "Count")
+```
+This depicts the locations for the places with the highest crime count. We previously did this last week but I wasn't sure what the graph produced was so I recreated it. Same data as last week but a better visualization. 
+Personally, nothing to note here, it seems like crime is distributd pretty evenly throughout the ditricts. Can be something to be mentioned in the final project. 
+
+## *3.2 Crime Frequency Over Time*
+```{r}
+ggplot(data_clean, aes(x = month)) +
+  geom_bar(fill = "darkred") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title = "Crime Frequency Over Time", x = "Month", y = "Count")
+```
+This is a bit hard to read but I did find it interesting that there was a spike in crime in 2024 January-February. May look into further for potential findings on why that was. Otherwise, crime seems decently evenly distributed by time. 
+
+
+## *3.3 Crime Counts by Descent Description*
+```{r}
+ggplot(data_clean, aes(x = reorder(Descent_Description, Descent_Description, function(x) -length(x)))) +
+  geom_bar(fill = "purple") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Crime Counts by Descent Description", x = "Descent Category", y = "Count")
+```
+Interesting that Hispanics represent the largest amount of crime counts by description. Even more interesting, is that Whites are second given different American stereotypes. May look into doing a correlation chart on this. 
+
+## *3.4 Top 20 Most Frequent Crime Types*
+```{r}
+# Calculate the frequency of each crime type
+top_crime_types <- data_clean %>%
+  count(Crm.Cd.Desc, sort = TRUE) %>%
+  top_n(20, n)
+
+ggplot(top_crime_types, aes(x = reorder(Crm.Cd.Desc, n), y = n)) +
+  geom_bar(stat = "identity", fill = "orange") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Top 20 Most Frequent Crime Types", x = "Crime Type", y = "Count")
+```
+
+Initially looked at all types of crime but this was too large a list so it was condensed down to the above chart with the top 20 most frequent. May look into condensing some of these categories such as burglary and robbery and look into the difference between those two crimes to see if they can be condensed. I really want to treat the \$950 above and below as the same category. Still, it is interesting to see that a lot of people are still willing to commit felonies after the revision of the burglary codes. The difference between the \$950 over and under is not too much.
+
+## *3.5 Monthly Crime Frequency by Descent*
+```{r}
+ggplot(data_clean, aes(x = month, fill = Descent_Description)) +
+  geom_bar(position = "stack") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(title = "Monthly Crime Frequency by Descent", x = "Month", y = "Count")
+```
+This is a confusing chart but an interesting visualization. Could be used if it considered most frequent to least frequent but we will see if we can incorporate this somehow. 
+
+
+## **4. Next Steps**
+
+May look into saving the cleaned data as a seperate rds file depending on groupmate feedback. We will see. Honestly **extremely annoyed** at the moment but I will sleep on it. 
+
+Need to look at more charts like the places description to see if there are any indicators there. Also need to take a look at the time description to see which hours people are committing crime. I'm not doing anymore though at least not this week. 
+
+Lastly, look into formulating an idea for the direction of the project and any potential uses of the **"lm()"** function.
+
 
