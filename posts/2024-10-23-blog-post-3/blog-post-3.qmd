@@ -133,4 +133,42 @@ Need to look at more charts like the places description to see if there are any 
 
 Lastly, look into formulating an idea for the direction of the project and any potential uses of the **"lm()"** function.
 
+##**5. Charts about places and time that committing crime**
+```{r}
+library(tidyverse)
+df<- readRDS("~/Desktop/MA415/ma-4615-fa24-final-project-group-4/filtered_data_copy.rds")
+df <- df %>% select(-Mocodes) 
+```
+We take out Mocodes since it's a kind of code that use in police department. It's hard for us to analyze some useful Information.
+```{r}
+df <- df %>%
+  mutate(
+    TIME.OCC = sprintf("%04d", TIME.OCC),  
+    TIME.OCC = format(strptime(TIME.OCC, format = "%H%M"), "%H:%M")  
+  )
+```
+We transform the type of TIME.OCC to become HH:MM instead of numerical.
+It's easier for us to read because some of the time like 00:01 will be handle as 1 in the previous TIME.OCC column.
+We plus in the time in graph to see when would have the most case occurs.
+```{r}
+ggplot(df, aes(x = TIME.OCC)) +
+  geom_bar(stat = "count", fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Count of TIME.OCC", x = "Time of Occurrence", y = "Frequency") +
+  theme_minimal()
 
+```
+We can't see a lot of pattern because the graph is not sorted as hourly. We will take out HH from HH:MM and find the count of case to see in what hour in a day would have most case occurs.
+
+```{r}
+df <- df %>%
+  mutate(Hour = substr(TIME.OCC, 1, 2))
+head(df)
+hourly_counts <- df %>%
+  group_by(Hour) %>%
+  summarise(Count = n())
+ggplot(hourly_counts, aes(x = Hour, y = Count)) +
+  geom_bar(stat = "identity", fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Occurrences by Hour", x = "Hour of the Day", y = "Count") +
+  theme_minimal()
+```
+The answer is actually suprising because people thinks that mid night would be the time that will have most case. But it seems that noon time is would be the one that have the most case. It may be the reason that people may not realize and call the police after they wake up in the morning. 
