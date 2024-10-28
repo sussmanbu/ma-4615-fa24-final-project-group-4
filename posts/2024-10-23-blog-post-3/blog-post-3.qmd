@@ -172,3 +172,5 @@ ggplot(hourly_counts, aes(x = Hour, y = Count)) +
   theme_minimal()
 ```
 The answer is actually suprising because people thinks that mid night would be the time that will have most case. But it seems that noon time is would be the one that have the most case. It may be the reason that people may not realize and call the police after they wake up in the morning. 
+
+This is the most updated version. 
