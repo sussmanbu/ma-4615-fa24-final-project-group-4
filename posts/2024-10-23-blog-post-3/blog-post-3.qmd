@@ -127,7 +127,7 @@ This is a confusing chart but an interesting visualization. Could be used if it 
 
 ## **4. Next Steps**
 
-May look into saving the cleaned data as a seperate rds file depending on groupmate feedback. We will see. Honestly **extremely annoyed** at the moment but I will sleep on it. 
+May look into saving the cleaned data as a seperate rds file depending on groupmate feedback. We will see. I will sleep on it. 
 
 Need to look at more charts like the places description to see if there are any indicators there. Also need to take a look at the time description to see which hours people are committing crime. I'm not doing anymore though at least not this week. 
 
