@@ -20,7 +20,7 @@ library(ggplot2)
 
 ## **2. Clean Dataset for Readability and Ease of Use**
 ```{r}
-data <- readRDS("~/Documents/BU Fall 2024/MA 415/MA 415 G4 Final Project/filtered_data_copy.rds")
+data <- readRDS("~/Desktop/Fall24/MA415/ma-4615-fa24-final-project-group-4/filtered_data_copy.rds")
 
 # Create a tibble with the mapping of descent codes
 descent_codes <- tribble(
@@ -136,7 +136,7 @@ Lastly, look into formulating an idea for the direction of the project and any p
 ##**5. Charts about places and time that committing crime**
 ```{r}
 library(tidyverse)
-df<- readRDS("~/Documents/BU Fall 2024/MA 415/MA 415 G4 Final Project/filtered_data_copy.rds")
+df<- readRDS("~/Desktop/Fall24/MA415/ma-4615-fa24-final-project-group-4/filtered_data_copy.rds")
 df <- df %>% select(-Mocodes) 
 ```
 We take out Mocodes since it's a kind of code that use in police department. It's hard for us to analyze some useful Information.
@@ -174,3 +174,97 @@ ggplot(hourly_counts, aes(x = Hour, y = Count)) +
 The answer is actually suprising because people thinks that mid night would be the time that will have most case. But it seems that noon time is would be the one that have the most case. It may be the reason that people may not realize and call the police after they wake up in the morning. 
 
 This is the most updated version. 
+
+## **6. Analyze the relationship between top crimes and specific areas.**
+##6.1 analyze the highest crime in each of the top 10 areas. 
+```{r}
+# Calculate total crime count by area and select top 10 areas
+data <- readRDS("~/Desktop/Fall24/MA415/ma-4615-fa24-final-project-group-4/filtered_data_copy.rds")
+crime_area_summary <- data %>%
+  group_by(AREA.NAME, Crm.Cd.Desc) %>%
+  summarise(Crime_Count = n())
+
+top_10_areas <- crime_area_summary %>%
+  group_by(AREA.NAME) %>%
+  summarise(Total_Crimes = sum(Crime_Count)) %>%
+  arrange(desc(Total_Crimes)) %>%
+  top_n(10, Total_Crimes) %>%
+  pull(AREA.NAME)  
+
+```
+
+```{r}
+# Filter for top 10 areas
+top_10_area_crimes <- crime_area_summary %>%
+  filter(AREA.NAME %in% top_10_areas)
+
+# Find the most common crime type in each top area
+highest_crime_per_area <- top_10_area_crimes %>%
+  group_by(AREA.NAME) %>%
+  filter(Crime_Count == max(Crime_Count)) %>%
+  select(AREA.NAME, Crm.Cd.Desc, Crime_Count) %>%
+  arrange(desc(Crime_Count))
+
+```
+
+
+```{r}
+# plot showing the highest crime in each of the top 10 areas
+ggplot(highest_crime_per_area, aes(x = reorder(AREA.NAME, -Crime_Count), y = Crime_Count, fill = Crm.Cd.Desc)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Most Common Crime Type in Each of the Top 10 Areas",
+       x = "Area",
+       y = "Crime Count",
+       fill = "Crime Type") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+This helps identifying which crime types are dominant in high-crime areas, which could be usedful for 
+targeted policy-making. 
+it is worthy noticing that vehicle stolen us a widespread issue across several high crime areas.
+burglary is the top crime in wilshire, showing a unique pattern of property crimes in that area 
+compared to the others. 
+
+##6.2 analyze which area is the most prevalent for each of the top 10 crimes 
+```{r}
+# Identify the top 10 most frequent crime types
+top_10_crimes <- data_clean %>%
+  count(Crm.Cd.Desc, sort = TRUE) %>%
+  top_n(10, n) %>%
+  pull(Crm.Cd.Desc) 
+```
+
+```{r}
+# Filter for the top 10 crimes
+top_10_crime_areas <- crime_area_summary %>%
+  filter(Crm.Cd.Desc %in% top_10_crimes)
+
+# Find the most prevalent area for each top crime
+most_prevalent_area_per_crime <- top_10_crime_areas %>%
+  group_by(Crm.Cd.Desc) %>%
+  filter(Crime_Count == max(Crime_Count)) %>%
+  select(Crm.Cd.Desc, AREA.NAME, Crime_Count) %>%
+  arrange(desc(Crime_Count))
+
+```
+
+```{r}
+# plot showing the most prevalent area for each of the top 10 crimes
+ggplot(most_prevalent_area_per_crime, aes(x = reorder(Crm.Cd.Desc, -Crime_Count), y = Crime_Count, fill = AREA.NAME)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Most Prevalent Area for Each of the Top 10 Crimes",
+       x = "Crime Type",
+       y = "Crime Count",
+       fill = "Area") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+vehicle stolen and burglary from vehicle are particulary prevalent in 77th street and central. 
+assault with deadly weapon, aggravated assault and battery simple assault also occur very frequently 
+in 77th street. 
+theft of identity is most prevalent in N Hollywood, which shows a different crime pattern in this area
+
+combining with these two charts together, vehicle theft and burglary from vehicles dominate as the most 
+frequent crime types in multiple areas, especially in 77th street and central. 
+the central area has a high incidence of various crimes, which may indicating that the central area
+faces broader challenges. 
