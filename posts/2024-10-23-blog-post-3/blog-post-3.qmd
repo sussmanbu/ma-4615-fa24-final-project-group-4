@@ -20,7 +20,7 @@ library(ggplot2)
 
 ## **2. Clean Dataset for Readability and Ease of Use**
 ```{r}
-data <- readRDS("~/Desktop/Fall24/MA415/ma-4615-fa24-final-project-group-4/filtered_data_copy.rds")
+data <- readRDS("~/Documents/BU Fall 2024/MA 415/MA 415 G4 Final Project/filtered_data_copy.rds")
 
 # Create a tibble with the mapping of descent codes
 descent_codes <- tribble(
@@ -136,7 +136,7 @@ Lastly, look into formulating an idea for the direction of the project and any p
 ##**5. Charts about places and time that committing crime**
 ```{r}
 library(tidyverse)
-df<- readRDS("~/Desktop/Fall24/MA415/ma-4615-fa24-final-project-group-4/filtered_data_copy.rds")
+df<- readRDS("~/Documents/BU Fall 2024/MA 415/MA 415 G4 Final Project/filtered_data_copy.rds")
 df <- df %>% select(-Mocodes) 
 ```
 We take out Mocodes since it's a kind of code that use in police department. It's hard for us to analyze some useful Information.
@@ -179,7 +179,7 @@ This is the most updated version.
 ##6.1 analyze the highest crime in each of the top 10 areas. 
 ```{r}
 # Calculate total crime count by area and select top 10 areas
-data <- readRDS("~/Desktop/Fall24/MA415/ma-4615-fa24-final-project-group-4/filtered_data_copy.rds")
+data <- readRDS("~/Documents/BU Fall 2024/MA 415/MA 415 G4 Final Project/filtered_data_copy.rds")
 crime_area_summary <- data %>%
   group_by(AREA.NAME, Crm.Cd.Desc) %>%
   summarise(Crime_Count = n())
