@@ -16,12 +16,20 @@ The following code blocks can be found in the scripts file under Sean test scrip
 library(tibble)
 library(dplyr)
 library(ggplot2)
+<<<<<<< Updated upstream
 library(here)
+=======
+
+>>>>>>> Stashed changes
 ```
 
 ## **2. Clean Dataset for Readability and Ease of Use**
 ```{r}
+<<<<<<< Updated upstream
 data <- readRDS(here("filtered_data_copy.rds"))
+=======
+data <- readRDS("filtered_data_copy.rds")
+>>>>>>> Stashed changes
 
 # Create a tibble with the mapping of descent codes
 descent_codes <- tribble(
@@ -137,7 +145,11 @@ Lastly, look into formulating an idea for the direction of the project and any p
 ##**5. Charts about places and time that committing crime**
 ```{r}
 library(tidyverse)
+<<<<<<< Updated upstream
 df<- readRDS(here("filtered_data_copy.rds"))
+=======
+df<- readRDS("filtered_data_copy.rds")
+>>>>>>> Stashed changes
 df <- df %>% select(-Mocodes) 
 ```
 We take out Mocodes since it's a kind of code that use in police department. It's hard for us to analyze some useful Information.
@@ -180,7 +192,11 @@ This is the most updated version.
 ##6.1 analyze the highest crime in each of the top 10 areas. 
 ```{r}
 # Calculate total crime count by area and select top 10 areas
+<<<<<<< Updated upstream
 data <- readRDS(here("filtered_data_copy.rds"))
+=======
+data <- readRDS("filtered_data_copy.rds")
+>>>>>>> Stashed changes
 crime_area_summary <- data %>%
   group_by(AREA.NAME, Crm.Cd.Desc) %>%
   summarise(Crime_Count = n())
@@ -269,3 +285,34 @@ combining with these two charts together, vehicle theft and burglary from vehicl
 frequent crime types in multiple areas, especially in 77th street and central. 
 the central area has a high incidence of various crimes, which may indicating that the central area
 faces broader challenges. 
+
+```{r}
+# Convert the date column to Date format if not already in that format
+data$DATE.OCC <- as.POSIXct(data$DATE.OCC, format = "%m/%d/%Y %I:%M:%S %p")
+
+# Create an age group column
+data <- data %>%
+  mutate(Age_Group = case_when(
+    Vict.Age < 18 ~ "Under 18",
+    Vict.Age >= 18 & Vict.Age < 30 ~ "18-29",
+    Vict.Age >= 30 & Vict.Age < 45 ~ "30-44",
+    Vict.Age >= 45 & Vict.Age < 60 ~ "45-59",
+    Vict.Age >= 60 ~ "60+",
+    TRUE ~ "Unknown"
+  ))
+
+# Replace missing or "X" gender values with "Unknown"
+data <- data %>%
+  mutate(Vict.Sex = ifelse(is.na(Vict.Sex) | Vict.Sex == "X", "Unknown", Vict.Sex))
+
+# Plot the distribution of crimes by age group and gender, including unknown gender
+ggplot(data, aes(x = Age_Group, fill = Vict.Sex)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Distribution of Crimes by Victim's Age Group and Gender",
+       x = "Age Group",
+       y = "Number of Crimes",
+       fill = "Gender") +
+  scale_fill_manual(values = c("F" = "green", "M" = "purple", "H" = "cyan", "Unknown" = "orange")) +
+  theme_minimal()
+```
+The highest number of crimes appears to target females under 18, represented by the red bar in the "Under 18" category. This could indicate that crimes against younger females are a significant issue. Additionally The bar heights suggest that crimes involving male victims increase steadily from younger to older age groups, peaking around 30-44 and 45-59 age brackets. After 60, crime incidence significantly declines for all genders and Younger individuals (under 18 and 18-29) seem to experience a higher number of crimes overall compared to older individuals, indicating that crime incidents decrease with age. 
