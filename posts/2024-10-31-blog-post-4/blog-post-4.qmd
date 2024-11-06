@@ -60,8 +60,21 @@ I wanted to ask the question of whether every crime was correlated to descent. T
 - Everything else is mostly the same hovering around the expected with small fluctuations.
 
 
+```{r}
+library(dplyr)
+crime_hour_descent <- data %>%
+  group_by(Hour, Crm.Cd.Desc, Descent_Description) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+  filter(Count > 0)
 
+ggplot(crime_hour_descent, aes(x = Hour, y = Descent_Description, fill = Count)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "lightblue", high = "darkred", name = "Crime Count") + 
+  labs(title = "Heatmap of Crime Counts by Hour and Descent",
+       x = "Hour of Day",
+       y = "Descent Category")
+```
 
+I make this plot to visualize how crime frequency varies for each descent category by time of the day. I use heatmap since it provides a direct comparison across different times and descents. This plot clearly shows that certain racial categories, such as White, Hispanic/Latin/Mexican, and Black, experience higher crime rates compared to racial groups like Cambodian and Laotian, potentially due to smaller sample sizes or data collection biases.
 
-
-
+The general trend across most categories indicates a peak in crime rates from late evening to early morning (00:00 to 05:00), which is the same as what we expected. However, an additional peak occurs during daytime (10:00 to 15:00), which is unusual and needs further investigation.
