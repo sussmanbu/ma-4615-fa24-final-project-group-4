@@ -1,6 +1,6 @@
 ---
 title: "blog post 4"
-author: ""
+author: "Sean Fung"
 date: "2024-10-31"
 date-modified: "2024-10-31"
 draft: FALSE
