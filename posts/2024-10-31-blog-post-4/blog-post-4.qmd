@@ -78,3 +78,62 @@ ggplot(crime_hour_descent, aes(x = Hour, y = Descent_Description, fill = Count))
 I make this plot to visualize how crime frequency varies for each descent category by time of the day. I use heatmap since it provides a direct comparison across different times and descents. This plot clearly shows that certain racial categories, such as White, Hispanic/Latin/Mexican, and Black, experience higher crime rates compared to racial groups like Cambodian and Laotian, potentially due to smaller sample sizes or data collection biases.
 
 The general trend across most categories indicates a peak in crime rates from late evening to early morning (00:00 to 05:00), which is the same as what we expected. However, an additional peak occurs during daytime (10:00 to 15:00), which is unusual and needs further investigation.
+
+```{r}
+library(dplyr)
+crime_data <- readRDS("/Users/yz/Desktop/Fall24/MA415/ma-4615-fa24-final-project-group-4/filtered_data_2.rds") %>%
+  mutate(across(c(AREA.NAME, Crm.Cd.Desc, Descent_Description), ~ trimws(tolower(.))))
+crime_area_descent_summary <- crime_data %>%
+  count(AREA.NAME, Crm.Cd.Desc, Descent_Description, name = "Crime_Count")
+
+# Get top 10 areas and crimes
+top_10_areas <- crime_area_descent_summary %>%
+  count(AREA.NAME, wt = Crime_Count, sort = TRUE) %>%
+  slice_head(n = 10) %>%
+  pull(AREA.NAME)
+top_10_crimes <- crime_area_descent_summary %>%
+  count(Crm.Cd.Desc, wt = Crime_Count, sort = TRUE) %>%
+  slice_head(n = 10) %>%
+  pull(Crm.Cd.Desc)
+
+filtered_data <- crime_area_descent_summary %>%
+  filter(AREA.NAME %in% top_10_areas, Crm.Cd.Desc %in% top_10_crimes)
+
+# Chi-square test for Crime Type vs. Area
+crime_type_area<- xtabs(Crime_Count ~ Crm.Cd.Desc + AREA.NAME, data = filtered_data)
+chi_test_crime_area <- chisq.test(crime_type_area)
+print("Chi-Square Test Result: Crime Type vs. Area")
+print(chi_test_crime_area)
+
+# Chi-square test for Descent Group vs. Area
+descent_area <- xtabs(Crime_Count ~ Descent_Description + AREA.NAME, data = filtered_data)
+chi_test_descent_area <- chisq.test(descent_area)
+print("Chi-Square Test Result: Descent Group vs. Area")
+print(chi_test_descent_area)
+
+```
+both of the chi-square tests have low p-value, indicating that the variables are statistically associated. With the chi-sqaure test on crime type - descent group, I wanted to understand the distribution across these three variables at once.  
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# Plot
+ggplot(filtered_data, aes(x = reorder(Crm.Cd.Desc, -Crime_Count), y = Crime_Count, fill = AREA.NAME)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ Descent_Description, ncol = 3) +
+  labs(
+    title = "Most Prevalent Area for Top Crimes by Descent Group (Top 10 Areas and Crimes)",
+    x = "Crime Type",
+    y = "Crime Count",
+    fill = "Area"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 6),
+    strip.text = element_text(size = 10),
+    legend.position = "bottom"
+  )
+```
+This graph shows the distributions across crime types, geographic areas, and descent groups within the top 10 most frequent crime types and top 10 areas(it's actually 11 areas in the graph: 'hollywood' and ' n hollywood' are counted as separate entries) with the highest crime counts. Here are some key patterns from the graph: noted that some descent groups, like Black, Hispanic/Latin/Mexican, and White, experienced a wider range of crime types across multiple areas, whereas others had more limited exposure. Certain areas, such as 77th Street, Central, and Southwest, consistently showed high counts across multiple crime types, showing that they are hopspts for various types of crime. Last but not least, vehicle theft, simple assault, and petty theft were widespread acroos areas and descent groups. 
+
