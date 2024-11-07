@@ -5,13 +5,7 @@ date: "2024-10-31"
 date-modified: "2024-10-31"
 draft: FALSE
 ---
-```{r}
-data <- readRDS("filtered_data_2.rds")
 
-# Save it as a CSV file
-write.csv(data, "your_file.csv", row.names = FALSE)
-```
-Used this to view data in excel file for easier visibility and filtering. 
 
 ```{r}
 library(ggplot2)
@@ -81,7 +75,8 @@ The general trend across most categories indicates a peak in crime rates from la
 
 ```{r}
 library(dplyr)
-crime_data <- readRDS("/Users/yz/Desktop/Fall24/MA415/ma-4615-fa24-final-project-group-4/filtered_data_2.rds") %>%
+library(here)
+crime_data <- readRDS(here("filtered_data_2.rds")) %>%
   mutate(across(c(AREA.NAME, Crm.Cd.Desc, Descent_Description), ~ trimws(tolower(.))))
 crime_area_descent_summary <- crime_data %>%
   count(AREA.NAME, Crm.Cd.Desc, Descent_Description, name = "Crime_Count")
