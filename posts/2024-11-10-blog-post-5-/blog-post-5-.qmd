@@ -1,6 +1,6 @@
 ---
 title: "blog post 5 "
-author: "Sean Fung, Zihao Guo"
+author: "Sean Fung, Zihao Guo, Yawen Zhang"
 date: "2024-11-10"
 date-modified: "2024-11-10"
 draft: FALSE
@@ -106,8 +106,63 @@ ggplot() +
 
 
 ```
+# crime rates by income levels
+Based on the detailed spatial dataset, we're allowed to do some explorations of the relationship between income levels and crime incidents across Los Angeles neighborhoods. 
+I'm interested in crime rates by income levels. The chunk below is to determine if crime rates are higher in low-income areas. We categorize neighborhoods into income brackets(low, middle, high income) and calculate crime rates for each bracket. 
+```{r}
+library(dplyr)
+
+crime_income_map <- crime_summary %>%
+  mutate(
+    income_bracket = case_when(
+      avg_income <= quantile(avg_income, 0.33, na.rm = TRUE) ~ "Low",
+      avg_income > quantile(avg_income, 0.33, na.rm = TRUE) & avg_income <= quantile(avg_income, 0.66, na.rm = TRUE) ~ "Middle",
+      avg_income > quantile(avg_income, 0.66, na.rm = TRUE) ~ "High"
+    )
+  )
+
+crime_rate_by_income <- crime_income_map %>%
+  group_by(income_bracket) %>%
+  summarize(
+    avg_crime_rate = mean(total_crimes, na.rm = TRUE)
+  )
+
+ggplot(crime_rate_by_income, aes(x = income_bracket, y = avg_crime_rate, fill = income_bracket)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = "Average Crime Rate by Income Level",
+    x = "Income Bracket",
+    y = "Average Crime Rate"
+  ) +
+  theme_minimal()
 
 
+```
+Observing the graph we get above, it seems that neighborhoods with low-income levels have a higher avergae crime rate compared to middle and high-income areas. I think this trend aligns with common sociological patterns. Now we visualize the distribution of crime rates and income levels in Los Angeles. 
+# map of crime rates across income levels
+```{r}
+library(ggplot2)
+library(dplyr)
+library(sf)
+crime_income_expanded <- crime_income_map %>%
+  rowwise() %>%
+  mutate(points = list(rep(geometry, total_crimes))) %>%
+  unnest(points) %>%
+  st_as_sf()
+
+ggplot() +
+  geom_sf(data = crime_income_expanded, aes(geometry = points, color = income_bracket), size = 0.1, alpha = 0.6) +
+  scale_color_manual(values = c("blue", "purple", "red"), name = "Income Bracket") +
+  labs(
+    title = "Dot-Density Map of Crime Rates Across Income Levels",
+    subtitle = "Each dot represents a crime incident within an income bracket"
+  ) +
+  theme_minimal() +
+  coord_sf(xlim = c(-118.8, -118.1), ylim = c(33.5, 34.5))
+
+```
+There's a dense cluster of red/ purple/ blue dots in certain areas, showing that neighborhoods classified under high/ middle/ low income have noticeable crime incidents concentrated within specific locations. 
+the visual representation shows that crime rates are not uniformly distributed across all income levels. 
 # Input LA Temp CSV and change it to RDS file
 ```{r}
 csvfile <- read.csv("latemp.csv")
