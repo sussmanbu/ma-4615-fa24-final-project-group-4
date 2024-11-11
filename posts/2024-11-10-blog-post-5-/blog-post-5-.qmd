@@ -1,6 +1,6 @@
 ---
 title: "blog post 5 "
-author: "Sean Fung"
+author: "Sean Fung, Zihao Guo"
 date: "2024-11-10"
 date-modified: "2024-11-10"
 draft: FALSE
@@ -108,4 +108,38 @@ ggplot() +
 ```
 
 
+# Input LA Temp CSV and change it to RDS file
+```{r}
+csvfile <- read.csv("latemp.csv")
+saveRDS(csvfile, "latemp.rds")
+```
+## We had combine the temp data and data that we are using by using left join
+```{r}
+latemp <- readRDS(here("latemp.rds"))
+latemp <- latemp %>%
+  mutate(DATE = as.Date(DATE)) %>%
+  rename(DATE.OCC = DATE)
+latemp_unique <- latemp %>%
+  distinct(DATE.OCC, .keep_all = TRUE)
+data_with_temp <- data %>%
+  left_join(latemp_unique, by = "DATE.OCC")
+```
+## Find the top 20 temperture that mostly to occur crime
+```{r}
+top_20_temps <- data_with_temp %>%
+  count(TAVG, sort = TRUE) %>%
+  top_n(20, n)
 
+top_20_temps
+```
+
+## ggplot for temp vs crime occurs
+```{r}
+ggplot(data_with_temp, aes(x = TAVG)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black") +
+  labs(title = "Crime Count by Temperature",
+       x = "Average Temperature (TAVG)",
+       y = "Crime Count") +
+  theme_minimal()
+```
+The histogram shows that crime counts are higher in the temperature range of approximately 55°F to 75°F. Within this range, the frequency of crimes appears to be fairly consistent, with a peak around 60°F to 70°F. As temperatures exceed 75°F, there is a noticeable decline in crime counts. This suggests that extremely warm days may be associated with lower crime activity. Similarly, at lower temperatures (below 50°F), there are also fewer crime incidents. This could be due to people staying indoors more on colder days, leading to less social interaction and possibly fewer opportunities for crime.
