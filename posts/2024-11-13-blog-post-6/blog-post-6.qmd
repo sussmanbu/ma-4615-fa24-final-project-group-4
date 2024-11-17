@@ -1,6 +1,6 @@
 ---
 title: "blog post 6"
-author: "Sean Fung"
+author: "Sean Fung, Zihao Guo"
 date: "2024-11-13"
 date-modified: "2024-11-13"
 draft: FALSE
@@ -124,3 +124,44 @@ summary(model)
 
 ```
 Based on the above models, we need to be looking at the certain areas with crime data as the LAPD seems to be concentrated in the multiple districts in the Southwest. Try to adjust for bias. 
+
+## Crime in each neighborhood
+```{r}
+# Define broader crime categories based on `Crm.Cd.Desc`
+crime_with_neighborhoods <- crime_with_neighborhoods %>%
+  mutate(Crime_Category = case_when(
+    str_detect(Crm.Cd.Desc, "BURGLARY|THEFT|VANDALISM|EMBEZZLEMENT|FORGERY|SHOPLIFTING") ~ "Property Crime",
+    str_detect(Crm.Cd.Desc, "ASSAULT|ROBBERY|HOMICIDE|KIDNAPPING|SEXUAL ASSAULT") ~ "Violent Crime",
+    str_detect(Crm.Cd.Desc, "DRUG") ~ "Drug Offense",
+    str_detect(Crm.Cd.Desc, "TRAFFIC|DRIVING|DUI|FAILURE TO YIELD") ~ "Traffic Violation",
+    TRUE ~ "Other"
+  ))
+crime_summary <- crime_with_neighborhoods %>%
+  group_by(AREA.NAME, Crime_Category) %>%
+  summarize(total_crimes = n(), .groups = "drop")
+ggplot(crime_summary, aes(x = reorder(AREA.NAME, total_crimes), y = total_crimes, fill = Crime_Category)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "Crime Categories by Neighborhood",
+    x = "Neighborhood",
+    y = "Total Crimes",
+    fill = "Crime Category"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+```{r}
+ggplot(crime_summary, aes(x = reorder(AREA.NAME, total_crimes), y = total_crimes, fill = Crime_Category)) +
+  geom_bar(stat = "identity", position = "fill") +
+  labs(
+    title = "Proportion of Crime Categories by Neighborhood",
+    x = "Neighborhood",
+    y = "Proportion",
+    fill = "Crime Category"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+These graphs tell a compelling story about crime patterns in neighborhoods. Property crimes are a widespread issue, while violent crimes are relatively localized. Hollywood and similar areas show distinctive crime patterns, suggesting localized factors influencing crime dynamics.The 77th Street neighborhood stands out in both graphs due to the almost equal distribution of Property Crime and Other Crime categories. This is unusual compared to most neighborhoods where Property Crime significantly dominates.
