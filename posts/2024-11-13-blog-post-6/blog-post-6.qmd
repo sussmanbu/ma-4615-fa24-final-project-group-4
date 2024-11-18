@@ -1,6 +1,6 @@
 ---
 title: "blog post 6"
-author: "Sean Fung, Zihao Guo"
+author: "Sean Fung, Zihao Guo, Yawen Zhang"
 date: "2024-11-13"
 date-modified: "2024-11-13"
 draft: FALSE
@@ -25,6 +25,7 @@ neighborhoods <- st_read(here("LA_Times_Neighborhood_Boundaries-shp/8494cd42-db4
 
 # Join crime incidents with neighborhoods
 crime_with_neighborhoods <- st_join(crime_sf, neighborhoods, join = st_within)
+census_api_key("c2aebe6041f0c99e41a3458ed8d0b95ee3650fa4")
 
 # Load and transform median income data
 economic_data <- get_acs(
@@ -165,3 +166,53 @@ ggplot(crime_summary, aes(x = reorder(AREA.NAME, total_crimes), y = total_crimes
 
 ```
 These graphs tell a compelling story about crime patterns in neighborhoods. Property crimes are a widespread issue, while violent crimes are relatively localized. Hollywood and similar areas show distinctive crime patterns, suggesting localized factors influencing crime dynamics.The 77th Street neighborhood stands out in both graphs due to the almost equal distribution of Property Crime and Other Crime categories. This is unusual compared to most neighborhoods where Property Crime significantly dominates.
+```{r}
+library(dplyr)
+library(ggplot2)
+set.seed(123) 
+
+kmeans_data <- crime_with_income %>%
+  group_by(AREA.NAME) %>%
+  summarize(
+    avg_income = mean(estimate, na.rm = TRUE),  
+    total_crimes = n()  
+  ) %>%
+  na.omit() 
+kmeans_data_numeric <- kmeans_data %>%
+  st_drop_geometry() %>%  
+  select(avg_income, total_crimes)  
+kmeans_result <- kmeans(kmeans_data_numeric, centers = 3)
+kmeans_data <- kmeans_data %>%
+  mutate(cluster = factor(kmeans_result$cluster))
+
+
+ggplot(kmeans_data, aes(x = avg_income, y = total_crimes, color = cluster)) +
+  geom_point(size = 3, alpha = 0.7) +
+  labs(
+    title = "clustering neighborhoods by income and crime",
+    x = "Median Income",
+    y = "Total Crimes",
+    color = "Cluster"
+  ) +
+  theme_minimal()
+
+
+```
+cluster 1: moderate crime counts and moderate income levels
+cluster 2: higher income levels and lower crime counts
+cluster 3: high crime counts and lower income levels 
+```{r}
+cluster_centers <- as.data.frame(kmeans_result$centers)
+
+ggplot(kmeans_data, aes(x = avg_income, y = total_crimes, color = cluster)) +
+  geom_point(size = 3, alpha = 0.7) +
+  geom_point(data = cluster_centers, aes(x = avg_income, y = total_crimes), size = 5, shape = 17, color = "black") + 
+  labs(
+    title = "clustering neighborhoods by income and crime with centroids",
+    x = "Median Income",
+    y = "Total Crimes",
+    color = "Cluster"
+  ) +
+  theme_minimal()
+```
+the black triangles represent the average values of income and crime for each cluster. this shows that crime counts decrease as median income increases. 
