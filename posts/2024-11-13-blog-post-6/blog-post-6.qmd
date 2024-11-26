@@ -43,7 +43,7 @@ crime_with_income <- st_join(crime_with_neighborhoods, economic_data, join = st_
 
 # Summarize crime data by neighborhood
 crime_summary <- crime_with_income %>%
-  group_by(AREA.NAME) %>%
+  group_by(GEOID) %>%
   summarize(
     total_crimes = n(),
     avg_income = mean(estimate, na.rm = TRUE),

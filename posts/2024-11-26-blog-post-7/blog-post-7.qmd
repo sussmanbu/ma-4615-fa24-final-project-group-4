@@ -1,0 +1,8 @@
+---
+title: "blog post 7"
+author: "Sean Fung"
+date: "2024-11-26"
+date-modified: "2024-11-26"
+draft: FALSE
+---
+
