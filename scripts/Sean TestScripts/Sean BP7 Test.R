@@ -44,4 +44,142 @@ crime_summary <- crime_with_income %>%
 
 
 
-laCityBounday <- st_read(here("CityBoundaryofLosAngeles/geo_export_416eaeda-447a-4473-b003-37e2cad181ac.shp"))
+lapd_boundary <- st_read(here("CityBoundaryofLosAngeles/geo_export_416eaeda-447a-4473-b003-37e2cad181ac.shp")) %>%
+  st_transform(st_crs(crime_sf))  # Align CRS
+plot(st_geometry(lapd_boundary))  # Visualize the boundary
+
+
+crime_within_lapd <- crime_sf %>%
+  filter(rowSums(st_within(geometry, st_geometry(lapd_boundary), sparse = FALSE)) > 0)
+
+crime_with_income_lapd <- st_join(crime_within_lapd, economic_data, join = st_within)
+
+economic_data_lapd <- st_intersection(economic_data, lapd_boundary)
+
+
+# Update the crime summary
+crime_summary_lapd <- crime_with_income_lapd %>%
+  group_by(GEOID) %>%
+  summarize(
+    total_crimes = n(),
+    avg_income = mean(estimate, na.rm = TRUE),
+    geometry = st_union(geometry)
+  ) %>%
+  filter(!is.na(avg_income)) %>%  # Exclude rows with missing income
+  st_as_sf()
+
+# Update visualizations
+ggplot(crime_summary_lapd, aes(x = avg_income, y = total_crimes)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Crime vs Median Income (LAPD Jurisdiction)", x = "Median Income", y = "Total Crimes")
+
+ggplot() +
+  geom_sf(data = economic_data_lapd, aes(fill = estimate), color = NA) +  # Median income layer
+  scale_fill_viridis_c(option = "magma", na.value = "grey50") +
+  scale_color_viridis_c(option = "inferno", na.value = "grey50") +
+  labs(
+    title = "Median Income within LAPD Jurisdiction",
+    fill = "Median Income",
+    color = "Average Income"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 18, hjust = 0.5),
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 12),
+    axis.title = element_text(size = 12),
+    axis.text = element_text(size = 10)
+  ) +
+  coord_sf(
+    xlim = c(-119, -117),  # Focus on the Los Angeles area
+    ylim = c(33, 35)       # Focus on the Los Angeles area
+  )
+
+
+crime_within_lapd <- st_transform(crime_within_lapd, st_crs(economic_data_lapd))
+
+ggplot() +
+  # Median income heatmap
+  geom_sf(data = economic_data_lapd, aes(fill = estimate), color = NA) +  
+  scale_fill_viridis_c(option = "magma", na.value = "grey50") +
+  scale_color_viridis_c(option = "inferno", na.value = "grey50") +
+  # Overlay crime points
+  geom_sf(data = crime_within_lapd, aes(), color = "black", shape = 4, size = 0.5, alpha = 0.7) +
+  labs(
+    title = "Median Income and Crime Data within LAPD Jurisdiction",
+    fill = "Median Income",
+    color = "Average Income"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 18, hjust = 0.5),
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 12),
+    axis.title = element_text(size = 12),
+    axis.text = element_text(size = 10)
+  ) +
+  coord_sf(
+    xlim = c(-119, -117),  # Focus on the Los Angeles area
+    ylim = c(33, 35)       # Focus on the Los Angeles area
+  )
+#Good place to use shinylive here. Can filter by year. 
+
+# crime_filtered <- crime_within_lapd %>%
+#   filter(year == 2021)
+# ggplot() +
+#   geom_sf(data = economic_data_lapd, aes(fill = estimate), color = NA) +  
+#   scale_fill_viridis_c(option = "magma", na.value = "grey50") +
+#   geom_sf(data = crime_filtered, aes(), color = "black", shape = 4, size = 0.5, alpha = 0.7) +
+#   labs(
+#     title = "Median Income and 2020 Crime Data within LAPD Jurisdiction",
+#     fill = "Median Income"
+#   ) +
+#   theme_minimal() +
+#   coord_sf(xlim = c(-119, -117), ylim = c(33, 35))
+
+#Look at data utilizing a poisson distribution model. 
+# Fit a Poisson regression model
+poisson_model <- glm(total_crimes ~ avg_income, 
+                     family = poisson(link = "log"), 
+                     data = crime_summary_lapd)
+
+# Summary of the model
+summary(poisson_model)
+exp(coef(poisson_model))
+
+residual_deviance <- poisson_model$deviance
+degrees_of_freedom <- poisson_model$df.residual
+dispersion <- residual_deviance / degrees_of_freedom
+dispersion
+
+quasi_poisson_model <- glm(total_crimes ~ avg_income, 
+                           family = quasipoisson(link = "log"), 
+                           data = crime_summary_lapd)
+summary(quasi_poisson_model)
+
+library(MASS)
+nb_model <- glm.nb(total_crimes ~ avg_income, data = crime_summary_lapd)
+summary(nb_model)
+
+crime_summary_lapd <- crime_summary_lapd %>%
+  mutate(fitted_crimes = predict(poisson_model, type = "response"))
+
+# Plot observed vs. predicted
+ggplot(crime_summary_lapd, aes(x = avg_income, y = total_crimes)) +
+  geom_point() +
+  geom_line(aes(y = fitted_crimes), color = "red") +
+  labs(
+    title = "Poisson Regression: Crime vs. Median Income",
+    x = "Median Income",
+    y = "Total Crimes"
+  )
+
+crime_summary_lapd <- crime_summary_lapd %>%
+  mutate(fitted_crimes_nb = predict(nb_model, type = "response"))
+
+
+
+
+
+
