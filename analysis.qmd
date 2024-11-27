@@ -23,12 +23,79 @@ Avoid using "we" too frequently, for example "We also found that ...". Describe 
 ### Example of loading data
 
 The code below shows an example of loading the loan refusal data set (which you should delete at some point).
-
-```{r}
+```{r load libraries}
+#| results: "hide"
+#| echo: false
 library(tidyverse)
-print(getwd())
-data <- read_rds(here::here("dataset/loan_refusal_clean.rds"))
+library(sf)
+library(tidycensus)
+library(here)
+library(viridis)
+
+# Load crime data and convert to spatial format
+data <- readRDS(here("filtered_data_2.rds"))
+crime_sf <- st_as_sf(data, coords = c("LON", "LAT"), crs = 4326)
+
+# Load neighborhood boundaries
+neighborhoods <- st_read(here("LA_Times_Neighborhood_Boundaries-shp/8494cd42-db48-4af1-a215-a2c8f61e96a22020328-1-621do0.x5yiu.shp")) %>%
+  st_transform(st_crs(crime_sf))
+
+# Join crime incidents with neighborhoods
+crime_with_neighborhoods <- st_join(crime_sf, neighborhoods, join = st_within)
+census_api_key("c2aebe6041f0c99e41a3458ed8d0b95ee3650fa4")
+
+# Load and transform median income data
+economic_data <- get_acs(
+  geography = "block group",
+  variables = c(median_income = "B19013_001"),
+  state = "CA",
+  county = "Los Angeles",
+  year = 2020,
+  geometry = TRUE
+) %>% 
+  st_transform(st_crs(crime_with_neighborhoods))
+
+# Join income with neighborhood-level crime data
+crime_with_income <- st_join(crime_with_neighborhoods, economic_data, join = st_within)
+
+# Summarize crime data by neighborhood
+crime_summary <- crime_with_income %>%
+  group_by(GEOID) %>%
+  summarize(
+    total_crimes = n(),
+    avg_income = mean(estimate, na.rm = TRUE),
+    geometry = st_union(geometry)
+  ) %>%
+  filter(!is.na(avg_income)) %>%  # Remove rows with missing income
+  st_as_sf()
+
+
+
+lapd_boundary <- st_read(here("CityBoundaryofLosAngeles/geo_export_416eaeda-447a-4473-b003-37e2cad181ac.shp")) %>%
+  st_transform(st_crs(crime_sf))  # Align CRS
+
+
+
+crime_within_lapd <- crime_sf %>%
+  filter(rowSums(st_within(geometry, st_geometry(lapd_boundary), sparse = FALSE)) > 0)
+
+crime_with_income_lapd <- st_join(crime_within_lapd, economic_data, join = st_within)
+
+economic_data_lapd <- st_intersection(economic_data, lapd_boundary)
+
+
+# Update the crime summary
+crime_summary_lapd <- crime_with_income_lapd %>%
+  group_by(GEOID) %>%
+  summarize(
+    total_crimes = n(),
+    avg_income = mean(estimate, na.rm = TRUE),
+    geometry = st_union(geometry)
+  ) %>%
+  filter(!is.na(avg_income)) %>%  # Exclude rows with missing income
+  st_as_sf()
 ```
+
 
 ## Note on Attribution
 
@@ -68,3 +135,130 @@ You will
 -   Organization and cleanliness.
     -   Make sure to remove excessive warnings, hide most or all code, organize with sections or multiple pages, use bullets, etc.
     -   This page should be self-contained, i.e. provide a description of the relevant data.
+    
+    
+    
+# What Motivated Our Data Analysis:
+Crime is a pervasive issue that affects communities differently based on various socioeconomic, demographic, and geographic factors. Understanding what drives crime frequency is crucial for developing effective policies and interventions to promote equity and public safety.
+
+Our data analysis was motivated by the desire to uncover relationships between crime and the following key factors:
+
+**Economic Status** (e.g., median income) \
+**Demographics** (e.g., racial composition) \
+**Location** (e.g., neighborhood characteristics) \
+\
+
+
+
+# Variables of Interest
+
+The primary variables we analyzed included:
+
+**Crime Frequency:** The total number of reported crimes in a neighborhood. \
+**Economic Data:** Median household income from the American Community Survey (ACS). \
+**Neighborhood Boundaries:** Spatial boundaries defined by the LA Times. \
+**Location Data:** Geospatial coordinates (latitude and longitude) for reported crime incidents. \
+#Add to here as necessary \
+To explore these variables, we integrated datasets from LAPD crime reports, U.S. Census economic data, and geospatial shapefiles for Los Angeles neighborhoods. This allowed us to analyze both spatial and statistical relationships. \
+#Add links here
+
+# Key Questions
+**Economic Status and Crime:** Does a neighborhood's median income influence the number of crimes reported?
+**Geographic Crime Hotspots:** Are there specific areas with persistently high crime rates?
+**Disparities in Crime Impact:** How do demographic or socioeconomic disparities correlate with crime?
+#Add here as necessary \
+
+# Modeling 
+For a specific statistic model when looking at the economic data inb relation to crime, we used a negative binomial relaationship. Initially, we were recommended to utilize a poisson distribution but because there was a statistically significant difference between mean and variance. So, we felt as if a negative binomial was fitting for this problem. 
+
+```{r Negative Binomial}
+library(MASS)
+nb_model <- glm.nb(total_crimes ~ avg_income, data = crime_summary_lapd)
+summary(nb_model)
+```
+
+
+
+## 1. Coefficients
+
+### Intercept:
+- **Estimate**: 1.924 \
+- **Exponentiated**: ~ 6.85 \
+  - This means that when the median income is zero (a hypothetical reference), the expected number of crimes is about 6.85 crimes per area.
+
+### Avg_Income Coefficient:
+- **Estimate**: -4.169 \times 10^{-6}
+- **Exponentiated**: ~0.9999958 \
+  - For every $1 increase in median income, the expected crime count decreases by approximately \(0.00042\%\).  
+  - For a more interpretable unit, for every $10,000 increase in median income, the expected crime count decreases by approximately 4.2\%.
+
+### Significance:
+- **z-value**: -9.977
+- **p-value**: p < 2 \times 10^{-16} 
+  - The negative relationship between income and crime is highly statistically significant.
+
+---
+
+## 2. Model Fit
+
+### Null Deviance:
+- **Value**: 2336.5
+  - This represents the deviance of a null model with no predictors.
+
+### Residual Deviance:
+- **Value**: 2233.8
+  - The reduction from the null deviance indicates an improvement in model fit.
+
+### AIC:
+- **Value**: 11983 
+  - Lower AIC values indicate a better fit. This model's AIC is significantly lower than that of the Poisson model (\(15413\)), suggesting that the negative binomial model is a much better fit for the data.
+
+---
+
+## 3. Dispersion Parameter :
+- **Value** = 2.2887, with a standard error of 0.0926.
+  - A higher value indicates better accommodation of variance in the data. (This was tested using Poisson distributed prior and this was a lower theta-value)
+
+
+```{r Neg Bin Chart}
+crime_summary_lapd <- crime_summary_lapd %>%
+  mutate(fitted_crimes_nb = predict(nb_model, type = "response"))
+
+ggplot(crime_summary_lapd, aes(x = avg_income, y = total_crimes)) +
+  geom_point(alpha = 0.7) +
+  geom_line(aes(y = fitted_crimes_nb), color = "blue") +
+  labs(
+    title = "Negative Binomial Regression: Crime vs. Median Income",
+    x = "Median Income",
+    y = "Total Crimes"
+  ) +
+  theme_minimal()
+```
+The chart shown supports the summary above where we said that as median income increases, crime numbers seem to decrease. Even though it isn't by much, it does trend slightly downward. 
+
+
+## 4. Coefficient Estimates and Their Standard Errors
+Each coefficient in your model is an estimate derived from your data, but it's subject to sampling variability.
+
+**Standard Error (SE):** Measures the variability of each coefficient estimate. Smaller SE indicates more precise estimates. For example:
+
+The SE for the intercept is *0.03495*.
+The SE for the median income coefficient is 4.179 \times 10^{-7}.
+
+## 5. Confidence Intervals
+Calculated as:
+
+
+Estimate: 1.96 * Standard Error \
+
+
+- For the **avg_income coefficient**:
+  \[
+  -4.169 * 10^{-6},  1.96 * 4.179 * 10^{-7}
+  \]
+  - Confidence Interval: [-4.42 * 10^{-6}, -3.91 * 10^{-6}]
+
+- **Interpretation**: The true effect of median income on crime likely lies within this range. It reinforces the negative relationship but highlights uncertainty in its exact magnitude.
+
+
+
