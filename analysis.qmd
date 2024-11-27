@@ -163,12 +163,12 @@ To explore these variables, we integrated datasets from LAPD crime reports, U.S.
 #Add links here
 
 # Key Questions
-**Economic Status and Crime:** Does a neighborhood's median income influence the number of crimes reported?
-**Geographic Crime Hotspots:** Are there specific areas with persistently high crime rates?
+**Economic Status and Crime:** Does a neighborhood's median income influence the number of crimes reported? \
+**Geographic Crime Hotspots:** Are there specific areas with persistently high crime rates? \
 **Disparities in Crime Impact:** How do demographic or socioeconomic disparities correlate with crime?
 #Add here as necessary \
 
-# Modeling 
+# Modeling Economic Data
 For a specific statistic model when looking at the economic data inb relation to crime, we used a negative binomial relaationship. Initially, we were recommended to utilize a poisson distribution but because there was a statistically significant difference between mean and variance. So, we felt as if a negative binomial was fitting for this problem. 
 
 ```{r Negative Binomial}
