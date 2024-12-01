@@ -95,8 +95,92 @@ crime_summary_lapd <- crime_with_income_lapd %>%
   filter(!is.na(avg_income)) %>%  # Exclude rows with missing income
   st_as_sf()
 ```
+```{r}
+crime_with_neighborhoods <- crime_with_neighborhoods %>%
+  mutate(Crime_Category = case_when(
+    str_detect(Crm.Cd.Desc, "BURGLARY|THEFT|VANDALISM|EMBEZZLEMENT|FORGERY|SHOPLIFTING|STOLEN") ~ "Property Crime",
+    str_detect(Crm.Cd.Desc, "ASSAULT|ROBBERY|HOMICIDE|KIDNAPPING|SEXUAL ASSAULT") ~ "Violent Crime",
+    str_detect(Crm.Cd.Desc, "TRAFFIC|DRIVING|DUI|FAILURE TO YIELD") ~ "Traffic Violation",
+    TRUE ~ "Other"
+  ))
+crime_summary <- crime_with_neighborhoods %>%
+  group_by(AREA.NAME, Crime_Category) %>%
+  summarize(total_crimes = n(), .groups = "drop")
+ggplot(crime_summary, aes(x = reorder(AREA.NAME, total_crimes), y = total_crimes, fill = Crime_Category)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "Crime Categories by Neighborhood",
+    x = "Neighborhood",
+    y = "Total Crimes",
+    fill = "Crime Category"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
 
 
+```{r}
+ggplot(crime_summary, aes(x = reorder(AREA.NAME, total_crimes), y = total_crimes, fill = Crime_Category)) +
+  geom_bar(stat = "identity", position = "fill") +
+  labs(
+    title = "Proportion of Crime Categories by Neighborhood",
+    x = "Neighborhood",
+    y = "Proportion",
+    fill = "Crime Category"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+
+```{r}
+most_frequent_property_crime <- crime_with_neighborhoods %>%
+  filter(Crime_Category == "Property Crime") %>%
+  group_by(AREA.NAME, Crm.Cd.Desc) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  arrange(AREA.NAME, desc(count)) %>%
+  group_by(AREA.NAME) %>%
+  slice_head(n = 1) %>%
+  ungroup()
+print(most_frequent_property_crime)
+```
+
+```{r}
+most_frequent_other<- crime_with_neighborhoods %>%
+  filter(Crime_Category == "Other") %>%
+  group_by(AREA.NAME, Crm.Cd.Desc) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  arrange(AREA.NAME, desc(count)) %>%
+  group_by(AREA.NAME) %>%
+  slice_head(n = 1) %>%
+  ungroup()
+
+print(most_frequent_other)
+```
+```{r}
+most_frequent_Traffic_Violation <- crime_with_neighborhoods %>%
+  filter(Crime_Category == "Traffic Violation") %>%
+  group_by(AREA.NAME, Crm.Cd.Desc) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  arrange(AREA.NAME, desc(count)) %>%
+  group_by(AREA.NAME) %>%
+  slice_head(n = 1) %>%
+  ungroup()
+
+print(most_frequent_Traffic_Violation)
+```
+```{r}
+most_frequent_Violent_Crime<- crime_with_neighborhoods %>%
+  filter(Crime_Category == "Violent Crime") %>%
+  group_by(AREA.NAME, Crm.Cd.Desc) %>%
+  summarize(count = n(), .groups = "drop") %>%
+  arrange(AREA.NAME, desc(count)) %>%
+  group_by(AREA.NAME) %>%
+  slice_head(n = 1) %>%
+  ungroup()
+
+print(most_frequent_Violent_Crime)
+```
 ## Note on Attribution
 
 In general, you should try to provide links to relevant resources, especially those that helped you. You don't have to link to every StackOverflow post you used but if there are explainers on aspects of the data or specific models that you found helpful, try to link to those. Also, try to link to other sources that might support (or refute) your analysis. These can just be regular hyperlinks. You don't need a formal citation.
