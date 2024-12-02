@@ -253,9 +253,10 @@ To explore these variables, we integrated datasets from LAPD crime reports, U.S.
 #Add here as necessary \
 
 # Modeling Economic Data
-For a specific statistic model when looking at the economic data inb relation to crime, we used a negative binomial relaationship. Initially, we were recommended to utilize a poisson distribution but because there was a statistically significant difference between mean and variance. So, we felt as if a negative binomial was fitting for this problem. 
+For a specific statistic model when looking at the economic data in relation to crime, we used a negative binomial relaationship. Initially, we were recommended to utilize a poisson distribution but because there was a statistically significant difference between mean and variance. So, we felt as if a negative binomial was fitting for this problem. 
 
 ```{r Negative Binomial}
+#| echo: false
 library(MASS)
 nb_model <- glm.nb(total_crimes ~ avg_income, data = crime_summary_lapd)
 summary(nb_model)
@@ -293,18 +294,15 @@ summary(nb_model)
 - **Value**: 2233.8
   - The reduction from the null deviance indicates an improvement in model fit.
 
-### AIC:
-- **Value**: 11983 
-  - Lower AIC values indicate a better fit. This model's AIC is significantly lower than that of the Poisson model (\(15413\)), suggesting that the negative binomial model is a much better fit for the data.
-
 ---
 
 ## 3. Dispersion Parameter :
 - **Value** = 2.2887, with a standard error of 0.0926.
-  - A higher value indicates better accommodation of variance in the data. (This was tested using Poisson distributed prior and this was a lower theta-value)
+  - A higher value indicates better accommodation of variance in the data. (This was previously tested using Poisson distributed prior and this was a lower theta-value)
 
 
 ```{r Neg Bin Chart}
+#| echo: false
 crime_summary_lapd <- crime_summary_lapd %>%
   mutate(fitted_crimes_nb = predict(nb_model, type = "response"))
 
@@ -322,8 +320,6 @@ The chart shown supports the summary above where we said that as median income i
 
 
 ## 4. Coefficient Estimates and Their Standard Errors
-Each coefficient in your model is an estimate derived from your data, but it's subject to sampling variability.
-
 **Standard Error (SE):** Measures the variability of each coefficient estimate. Smaller SE indicates more precise estimates. For example:
 
 The SE for the intercept is *0.03495*.
@@ -343,6 +339,9 @@ Estimate: 1.96 * Standard Error \
   - Confidence Interval: [-4.42 * 10^{-6}, -3.91 * 10^{-6}]
 
 - **Interpretation**: The true effect of median income on crime likely lies within this range. It reinforces the negative relationship but highlights uncertainty in its exact magnitude.
+
+## 6. Conclusions about Economic Data
+
 
 
 
