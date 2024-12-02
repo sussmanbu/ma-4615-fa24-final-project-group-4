@@ -96,91 +96,55 @@ crime_summary_lapd <- crime_with_income_lapd %>%
   st_as_sf()
 ```
 ```{r}
-crime_with_neighborhoods <- crime_with_neighborhoods %>%
-  mutate(Crime_Category = case_when(
-    str_detect(Crm.Cd.Desc, "BURGLARY|THEFT|VANDALISM|EMBEZZLEMENT|FORGERY|SHOPLIFTING|STOLEN") ~ "Property Crime",
-    str_detect(Crm.Cd.Desc, "ASSAULT|ROBBERY|HOMICIDE|KIDNAPPING|SEXUAL ASSAULT") ~ "Violent Crime",
-    str_detect(Crm.Cd.Desc, "TRAFFIC|DRIVING|DUI|FAILURE TO YIELD") ~ "Traffic Violation",
-    TRUE ~ "Other"
-  ))
-crime_summary <- crime_with_neighborhoods %>%
-  group_by(AREA.NAME, Crime_Category) %>%
+total_crimes_by_neighborhood <- crime_with_neighborhoods %>%
+  group_by(AREA.NAME) %>%
   summarize(total_crimes = n(), .groups = "drop")
-ggplot(crime_summary, aes(x = reorder(AREA.NAME, total_crimes), y = total_crimes, fill = Crime_Category)) +
-  geom_bar(stat = "identity", position = "dodge") +
+
+# Create the bar plot
+library(ggplot2)
+
+ggplot(total_crimes_by_neighborhood, aes(x = reorder(AREA.NAME, -total_crimes), y = total_crimes, fill = AREA.NAME)) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
   labs(
-    title = "Crime Categories by Neighborhood",
+    title = "Total Crimes by Neighborhood",
     x = "Neighborhood",
-    y = "Total Crimes",
-    fill = "Crime Category"
+    y = "Total Crimes"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+
+
+```{r}
+crime_with_income <- st_join(crime_with_neighborhoods, economic_data, join = st_within)
+
+# Summarize median income by neighborhood
+median_income_by_neighborhood <- crime_with_income %>%
+  group_by(AREA.NAME) %>%
+  summarize(
+    median_income = median(estimate, na.rm = TRUE),
+    total_crimes = n(),  # Optional: Include total crimes
+    geometry = st_union(geometry)
+  ) %>%
+  filter(!is.na(median_income)) %>% 
+  st_as_sf()
+
+# View the result
+print(median_income_by_neighborhood)
+ggplot(median_income_by_neighborhood, aes(x = reorder(AREA.NAME, -median_income), y = median_income, fill = median_income)) +
+  geom_bar(stat = "identity") +
+  scale_fill_viridis_c(option = "plasma", name = "Median Income") +
+  labs(
+    title = "Median Income by Neighborhood",
+    x = "Neighborhood",
+    y = "Median Income"
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 
 
-```{r}
-ggplot(crime_summary, aes(x = reorder(AREA.NAME, total_crimes), y = total_crimes, fill = Crime_Category)) +
-  geom_bar(stat = "identity", position = "fill") +
-  labs(
-    title = "Proportion of Crime Categories by Neighborhood",
-    x = "Neighborhood",
-    y = "Proportion",
-    fill = "Crime Category"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-```
-
-
-```{r}
-most_frequent_property_crime <- crime_with_neighborhoods %>%
-  filter(Crime_Category == "Property Crime") %>%
-  group_by(AREA.NAME, Crm.Cd.Desc) %>%
-  summarize(count = n(), .groups = "drop") %>%
-  arrange(AREA.NAME, desc(count)) %>%
-  group_by(AREA.NAME) %>%
-  slice_head(n = 1) %>%
-  ungroup()
-print(most_frequent_property_crime)
-```
-
-```{r}
-most_frequent_other<- crime_with_neighborhoods %>%
-  filter(Crime_Category == "Other") %>%
-  group_by(AREA.NAME, Crm.Cd.Desc) %>%
-  summarize(count = n(), .groups = "drop") %>%
-  arrange(AREA.NAME, desc(count)) %>%
-  group_by(AREA.NAME) %>%
-  slice_head(n = 1) %>%
-  ungroup()
-
-print(most_frequent_other)
-```
-```{r}
-most_frequent_Traffic_Violation <- crime_with_neighborhoods %>%
-  filter(Crime_Category == "Traffic Violation") %>%
-  group_by(AREA.NAME, Crm.Cd.Desc) %>%
-  summarize(count = n(), .groups = "drop") %>%
-  arrange(AREA.NAME, desc(count)) %>%
-  group_by(AREA.NAME) %>%
-  slice_head(n = 1) %>%
-  ungroup()
-
-print(most_frequent_Traffic_Violation)
-```
-```{r}
-most_frequent_Violent_Crime<- crime_with_neighborhoods %>%
-  filter(Crime_Category == "Violent Crime") %>%
-  group_by(AREA.NAME, Crm.Cd.Desc) %>%
-  summarize(count = n(), .groups = "drop") %>%
-  arrange(AREA.NAME, desc(count)) %>%
-  group_by(AREA.NAME) %>%
-  slice_head(n = 1) %>%
-  ungroup()
-
-print(most_frequent_Violent_Crime)
-```
 ## Note on Attribution
 
 In general, you should try to provide links to relevant resources, especially those that helped you. You don't have to link to every StackOverflow post you used but if there are explainers on aspects of the data or specific models that you found helpful, try to link to those. Also, try to link to other sources that might support (or refute) your analysis. These can just be regular hyperlinks. You don't need a formal citation.
@@ -253,9 +217,10 @@ To explore these variables, we integrated datasets from LAPD crime reports, U.S.
 #Add here as necessary \
 
 # Modeling Economic Data
-For a specific statistic model when looking at the economic data inb relation to crime, we used a negative binomial relaationship. Initially, we were recommended to utilize a poisson distribution but because there was a statistically significant difference between mean and variance. So, we felt as if a negative binomial was fitting for this problem. 
+For a specific statistic model when looking at the economic data in relation to crime, we used a negative binomial relaationship. Initially, we were recommended to utilize a poisson distribution but because there was a statistically significant difference between mean and variance. So, we felt as if a negative binomial was fitting for this problem. 
 
 ```{r Negative Binomial}
+#| echo: false
 library(MASS)
 nb_model <- glm.nb(total_crimes ~ avg_income, data = crime_summary_lapd)
 summary(nb_model)
@@ -293,18 +258,15 @@ summary(nb_model)
 - **Value**: 2233.8
   - The reduction from the null deviance indicates an improvement in model fit.
 
-### AIC:
-- **Value**: 11983 
-  - Lower AIC values indicate a better fit. This model's AIC is significantly lower than that of the Poisson model (\(15413\)), suggesting that the negative binomial model is a much better fit for the data.
-
 ---
 
 ## 3. Dispersion Parameter :
 - **Value** = 2.2887, with a standard error of 0.0926.
-  - A higher value indicates better accommodation of variance in the data. (This was tested using Poisson distributed prior and this was a lower theta-value)
+  - A higher value indicates better accommodation of variance in the data. (This was previously tested using Poisson distributed prior and this was a lower theta-value)
 
 
 ```{r Neg Bin Chart}
+#| echo: false
 crime_summary_lapd <- crime_summary_lapd %>%
   mutate(fitted_crimes_nb = predict(nb_model, type = "response"))
 
@@ -322,8 +284,6 @@ The chart shown supports the summary above where we said that as median income i
 
 
 ## 4. Coefficient Estimates and Their Standard Errors
-Each coefficient in your model is an estimate derived from your data, but it's subject to sampling variability.
-
 **Standard Error (SE):** Measures the variability of each coefficient estimate. Smaller SE indicates more precise estimates. For example:
 
 The SE for the intercept is *0.03495*.
@@ -343,6 +303,9 @@ Estimate: 1.96 * Standard Error \
   - Confidence Interval: [-4.42 * 10^{-6}, -3.91 * 10^{-6}]
 
 - **Interpretation**: The true effect of median income on crime likely lies within this range. It reinforces the negative relationship but highlights uncertainty in its exact magnitude.
+
+## 6. Conclusions about Economic Data
+
 
 
 
