@@ -142,6 +142,22 @@ ggplot(median_income_by_neighborhood, aes(x = reorder(AREA.NAME, -median_income)
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
+# Scatter plot connecting income and number of cases
+ggplot(median_income_by_neighborhood, aes(x = median_income, y = total_crimes)) +
+  geom_point(aes(color = median_income, size = total_crimes), alpha = 0.7) +
+  scale_color_viridis_c(option = "plasma", name = "Median Income") +
+  labs(
+    title = "Relationship Between Median Income and Total Crimes",
+    x = "Median Income (USD)",
+    y = "Total Crimes",
+    caption = "Source: ACS 2020 and Crime Data"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "right",
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
 ```
 
 
