@@ -48,6 +48,7 @@ ggplot(crime_summary, aes(x = avg_income, y = total_crimes)) +
 
 ggplot() +
   geom_sf(data = economic_data, aes(fill = estimate), color = NA) +  # Median income layer
+  scale_fill_viridis_c(option = "magma", na.value = "grey50") +
   scale_color_viridis_c(option = "inferno", na.value = "grey50") +
   labs(
     title = "Median Income and Crime Data by Neighborhood in Los Angeles",

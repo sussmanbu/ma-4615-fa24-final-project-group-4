@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="description" content="Here we provide a detailed analysis using more sophisticated statistics techniques.">
 
-<title>MA [46]15 Final Project - Analysis</title>
+<title>Analysis – MA [46]15 Final Project</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -34,7 +34,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -118,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -141,7 +141,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -158,6 +158,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#example-of-loading-data" id="toc-example-of-loading-data" class="nav-link active" data-scroll-target="#example-of-loading-data">Example of loading data</a></li>
   <li><a href="#note-on-attribution" id="toc-note-on-attribution" class="nav-link" data-scroll-target="#note-on-attribution">Note on Attribution</a></li>
   <li><a href="#rubric-on-this-page" id="toc-rubric-on-this-page" class="nav-link" data-scroll-target="#rubric-on-this-page">Rubric: On this page</a></li>
+  <li><a href="#what-motivated-our-data-analysis" id="toc-what-motivated-our-data-analysis" class="nav-link" data-scroll-target="#what-motivated-our-data-analysis">What Motivated Our Data Analysis:</a></li>
+  <li><a href="#variables-of-interest" id="toc-variables-of-interest" class="nav-link" data-scroll-target="#variables-of-interest">Variables of Interest</a></li>
+  <li><a href="#key-questions" id="toc-key-questions" class="nav-link" data-scroll-target="#key-questions">Key Questions</a></li>
+  <li><a href="#modeling-economic-data" id="toc-modeling-economic-data" class="nav-link" data-scroll-target="#modeling-economic-data">Modeling Economic Data</a>
+  <ul class="collapse">
+  <li><a href="#coefficients" id="toc-coefficients" class="nav-link" data-scroll-target="#coefficients">1. Coefficients</a>
+  <ul class="collapse">
+  <li><a href="#intercept" id="toc-intercept" class="nav-link" data-scroll-target="#intercept">Intercept:</a></li>
+  <li><a href="#avg_income-coefficient" id="toc-avg_income-coefficient" class="nav-link" data-scroll-target="#avg_income-coefficient">Avg_Income Coefficient:</a></li>
+  <li><a href="#significance" id="toc-significance" class="nav-link" data-scroll-target="#significance">Significance:</a></li>
+  </ul></li>
+  <li><a href="#model-fit" id="toc-model-fit" class="nav-link" data-scroll-target="#model-fit">2. Model Fit</a>
+  <ul class="collapse">
+  <li><a href="#null-deviance" id="toc-null-deviance" class="nav-link" data-scroll-target="#null-deviance">Null Deviance:</a></li>
+  <li><a href="#residual-deviance" id="toc-residual-deviance" class="nav-link" data-scroll-target="#residual-deviance">Residual Deviance:</a></li>
+  </ul></li>
+  <li><a href="#dispersion-parameter" id="toc-dispersion-parameter" class="nav-link" data-scroll-target="#dispersion-parameter">3. Dispersion Parameter :</a></li>
+  <li><a href="#coefficient-estimates-and-their-standard-errors" id="toc-coefficient-estimates-and-their-standard-errors" class="nav-link" data-scroll-target="#coefficient-estimates-and-their-standard-errors">4. Coefficient Estimates and Their Standard Errors</a></li>
+  <li><a href="#confidence-intervals" id="toc-confidence-intervals" class="nav-link" data-scroll-target="#confidence-intervals">5. Confidence Intervals</a></li>
+  <li><a href="#conclusions-about-economic-data" id="toc-conclusions-about-economic-data" class="nav-link" data-scroll-target="#conclusions-about-economic-data">6. Conclusions about Economic Data</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -198,7 +219,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="example-of-loading-data">Example of loading data</h3>
 <p>The code below shows an example of loading the loan refusal data set (which you should delete at some point).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
@@ -209,13 +229,206 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors
+Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE
+
+here() starts at /Users/seanfung/Documents/BU Fall 2024/MA 415/MA 415 G4 Final Project
+
+Loading required package: viridisLite
+
+To install your API key for use in future sessions, run this function with `install = TRUE`.
+
+Getting data from the 2016-2020 5-year ACS
+
+Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">getwd</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: attribute variables are assumed to be spatially constant throughout
+all geometries</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>crime_with_neighborhoods <span class="ot">&lt;-</span> crime_with_neighborhoods <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Crime_Category =</span> <span class="fu">case_when</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(Crm.Cd.Desc, <span class="st">"BURGLARY|THEFT|VANDALISM|EMBEZZLEMENT|FORGERY|SHOPLIFTING|STOLEN"</span>) <span class="sc">~</span> <span class="st">"Property Crime"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(Crm.Cd.Desc, <span class="st">"ASSAULT|ROBBERY|HOMICIDE|KIDNAPPING|SEXUAL ASSAULT"</span>) <span class="sc">~</span> <span class="st">"Violent Crime"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(Crm.Cd.Desc, <span class="st">"TRAFFIC|DRIVING|DUI|FAILURE TO YIELD"</span>) <span class="sc">~</span> <span class="st">"Traffic Violation"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Other"</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>crime_summary <span class="ot">&lt;-</span> crime_with_neighborhoods <span class="sc">%&gt;%</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AREA.NAME, Crime_Category) <span class="sc">%&gt;%</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">total_crimes =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(crime_summary, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(AREA.NAME, total_crimes), <span class="at">y =</span> total_crimes, <span class="at">fill =</span> Crime_Category)) <span class="sc">+</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Crime Categories by Neighborhood"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Neighborhood"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Total Crimes"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Crime Category"</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="analysis_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(crime_summary, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(AREA.NAME, total_crimes), <span class="at">y =</span> total_crimes, <span class="at">fill =</span> Crime_Category)) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Proportion of Crime Categories by Neighborhood"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Neighborhood"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Proportion"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Crime Category"</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="analysis_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>most_frequent_property_crime <span class="ot">&lt;-</span> crime_with_neighborhoods <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Crime_Category <span class="sc">==</span> <span class="st">"Property Crime"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AREA.NAME, Crm.Cd.Desc) <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(AREA.NAME, <span class="fu">desc</span>(count)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AREA.NAME) <span class="sc">%&gt;%</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(most_frequent_property_crime)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "/Users/yz/Desktop/Fall24/MA415/ma-4615-fa24-final-project-group-4"</code></pre>
+<pre><code>Simple feature collection with 21 features and 3 fields
+Geometry type: MULTIPOINT
+Dimension:     XY
+Bounding box:  xmin: -118.6484 ymin: 0 xmax: 0 ymax: 34.3227
+Geodetic CRS:  WGS 84
+# A tibble: 21 × 4
+   AREA.NAME   Crm.Cd.Desc           count                              geometry
+   &lt;chr&gt;       &lt;chr&gt;                 &lt;int&gt;                      &lt;MULTIPOINT [°]&gt;
+ 1 77th Street VEHICLE - STOLEN        140 ((-118.3123 33.9418), (-118.3113 33.…
+ 2 Central     BURGLARY FROM VEHICLE   133 ((-118.2327 34.0383), (-118.2356 34.…
+ 3 Devonshire  VEHICLE - STOLEN         64 ((-118.5907 34.2681), (-118.4997 34.…
+ 4 Foothill    VEHICLE - STOLEN         63 ((-118.4361 34.2625), (-118.4306 34.…
+ 5 Harbor      VEHICLE - STOLEN         97 ((-118.3035 33.8573), (-118.2907 33.…
+ 6 Hollenbeck  VEHICLE - STOLEN         81 ((-118.1987 34.0915), (-118.2032 34.…
+ 7 Hollywood   VEHICLE - STOLEN         65 ((-118.304 34.0835), (-118.3051 34.0…
+ 8 Mission     VEHICLE - STOLEN         96 ((-118.4926 34.3197), (-118.4958 34.…
+ 9 N Hollywood VEHICLE - STOLEN         70 ((-118.3911 34.1959), (-118.379 34.2…
+10 Newton      VEHICLE - STOLEN        114 ((-118.2362 34.0348), (-118.2388 34.…
+# ℹ 11 more rows</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"dataset/loan_refusal_clean.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>most_frequent_other<span class="ot">&lt;-</span> crime_with_neighborhoods <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Crime_Category <span class="sc">==</span> <span class="st">"Other"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AREA.NAME, Crm.Cd.Desc) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(AREA.NAME, <span class="fu">desc</span>(count)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AREA.NAME) <span class="sc">%&gt;%</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(most_frequent_other)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 21 features and 3 fields
+Geometry type: MULTIPOINT
+Dimension:     XY
+Bounding box:  xmin: -118.6234 ymin: 0 xmax: 0 ymax: 34.3265
+Geodetic CRS:  WGS 84
+# A tibble: 21 × 4
+   AREA.NAME   Crm.Cd.Desc                       count                  geometry
+   &lt;chr&gt;       &lt;chr&gt;                             &lt;int&gt;          &lt;MULTIPOINT [°]&gt;
+ 1 77th Street CRIMINAL THREATS - NO WEAPON DIS…    25 ((-118.3294 33.9781), (-…
+ 2 Central     TRESPASSING                          69 ((0 0), (-118.2469 34.04…
+ 3 Devonshire  CRIMINAL THREATS - NO WEAPON DIS…    10 ((-118.5158 34.2611), (-…
+ 4 Foothill    VIOLATION OF COURT ORDER              9 ((0 0), (-118.4343 34.25…
+ 5 Harbor      VIOLATION OF RESTRAINING ORDER       23 ((-118.2419 33.7823), (-…
+ 6 Hollenbeck  VIOLATION OF RESTRAINING ORDER        8 ((0 0), (-118.1761 34.06…
+ 7 Hollywood   TRESPASSING                          21 ((0 0), (-118.3114 34.08…
+ 8 Mission     BRANDISH WEAPON                       9 ((-118.4357 34.3265), (-…
+ 9 N Hollywood TRESPASSING                          26 ((-118.3745 34.2027), (-…
+10 Newton      CRIMINAL THREATS - NO WEAPON DIS…    11 ((-118.272 34.0269), (-1…
+# ℹ 11 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>most_frequent_Traffic_Violation <span class="ot">&lt;-</span> crime_with_neighborhoods <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Crime_Category <span class="sc">==</span> <span class="st">"Traffic Violation"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AREA.NAME, Crm.Cd.Desc) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(AREA.NAME, <span class="fu">desc</span>(count)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AREA.NAME) <span class="sc">%&gt;%</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(most_frequent_Traffic_Violation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 15 features and 3 fields
+Geometry type: GEOMETRY
+Dimension:     XY
+Bounding box:  xmin: -118.5622 ymin: 33.7279 xmax: -118.1982 ymax: 34.2841
+Geodetic CRS:  WGS 84
+# A tibble: 15 × 4
+   AREA.NAME   Crm.Cd.Desc                       count                  geometry
+   &lt;chr&gt;       &lt;chr&gt;                             &lt;int&gt;            &lt;GEOMETRY [°]&gt;
+ 1 77th Street FAILURE TO YIELD                      4 MULTIPOINT ((-118.309 33…
+ 2 Central     FAILURE TO YIELD                      2 MULTIPOINT ((-118.2459 3…
+ 3 Foothill    RECKLESS DRIVING                      1 POINT (-118.4227 34.2841)
+ 4 Harbor      FAILURE TO YIELD                      2 MULTIPOINT ((-118.245 33…
+ 5 Hollenbeck  RECKLESS DRIVING                      1 POINT (-118.1982 34.0266)
+ 6 Hollywood   FAILURE TO YIELD                      4 MULTIPOINT ((-118.3386 3…
+ 7 N Hollywood HUMAN TRAFFICKING - COMMERCIAL S…     1  POINT (-118.342 34.1362)
+ 8 Newton      FAILURE TO YIELD                      1 POINT (-118.2805 34.0038)
+ 9 Northeast   DRIVING WITHOUT OWNER CONSENT (D…     1 POINT (-118.2345 34.0904)
+10 Rampart     FAILURE TO YIELD                      3 MULTIPOINT ((-118.2917 3…
+11 Southeast   FAILURE TO YIELD                      2 MULTIPOINT ((-118.2814 3…
+12 Southwest   FAILURE TO YIELD                      3 MULTIPOINT ((-118.3351 3…
+13 Topanga     FAILURE TO YIELD                      1 POINT (-118.5622 34.1938)
+14 Van Nuys    FAILURE TO YIELD                      4 MULTIPOINT ((-118.4487 3…
+15 West Valley RECKLESS DRIVING                      3 MULTIPOINT ((-118.4837 3…</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>most_frequent_Violent_Crime<span class="ot">&lt;-</span> crime_with_neighborhoods <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Crime_Category <span class="sc">==</span> <span class="st">"Violent Crime"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AREA.NAME, Crm.Cd.Desc) <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(AREA.NAME, <span class="fu">desc</span>(count)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AREA.NAME) <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(most_frequent_Violent_Crime)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 21 features and 3 fields
+Geometry type: MULTIPOINT
+Dimension:     XY
+Bounding box:  xmin: -118.6505 ymin: 33.7189 xmax: -118.1585 ymax: 34.3248
+Geodetic CRS:  WGS 84
+# A tibble: 21 × 4
+   AREA.NAME   Crm.Cd.Desc                       count                  geometry
+   &lt;chr&gt;       &lt;chr&gt;                             &lt;int&gt;          &lt;MULTIPOINT [°]&gt;
+ 1 77th Street ASSAULT WITH DEADLY WEAPON, AGGR…    79 ((-118.309 33.9563), (-1…
+ 2 Central     BATTERY - SIMPLE ASSAULT             78 ((-118.2504 34.0404), (-…
+ 3 Devonshire  BATTERY - SIMPLE ASSAULT             35 ((-118.5754 34.2866), (-…
+ 4 Foothill    BATTERY - SIMPLE ASSAULT             33 ((-118.4238 34.2648), (-…
+ 5 Harbor      BATTERY - SIMPLE ASSAULT             38 ((-118.3041 33.8481), (-…
+ 6 Hollenbeck  BATTERY - SIMPLE ASSAULT             35 ((-118.197 34.0819), (-1…
+ 7 Hollywood   BATTERY - SIMPLE ASSAULT             49 ((-118.3019 34.0863), (-…
+ 8 Mission     INTIMATE PARTNER - SIMPLE ASSAULT    39 ((-118.4251 34.3183), (-…
+ 9 N Hollywood BATTERY - SIMPLE ASSAULT             39 ((-118.3911 34.1962), (-…
+10 Newton      BATTERY - SIMPLE ASSAULT             54 ((-118.2436 34.0349), (-…
+# ℹ 11 more rows</code></pre>
+</div>
 </div>
 </section>
 <section id="note-on-attribution" class="level2">
@@ -265,8 +478,178 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>This page should be self-contained, i.e.&nbsp;provide a description of the relevant data.</li>
 </ul></li>
 </ul>
+</section>
+<section id="what-motivated-our-data-analysis" class="level1">
+<h1>What Motivated Our Data Analysis:</h1>
+<p>Crime is a pervasive issue that affects communities differently based on various socioeconomic, demographic, and geographic factors. Understanding what drives crime frequency is crucial for developing effective policies and interventions to promote equity and public safety.</p>
+<p>Our data analysis was motivated by the desire to uncover relationships between crime and the following key factors:</p>
+<p><strong>Economic Status</strong> (e.g., median income)<br>
+<strong>Demographics</strong> (e.g., racial composition)<br>
+<strong>Location</strong> (e.g., neighborhood characteristics)<br>
+<br>
+</p>
+</section>
+<section id="variables-of-interest" class="level1">
+<h1>Variables of Interest</h1>
+<p>The primary variables we analyzed included:</p>
+<p><strong>Crime Frequency:</strong> The total number of reported crimes in a neighborhood.<br>
+<strong>Economic Data:</strong> Median household income from the American Community Survey (ACS).<br>
+<strong>Neighborhood Boundaries:</strong> Spatial boundaries defined by the LA Times.<br>
+<strong>Location Data:</strong> Geospatial coordinates (latitude and longitude) for reported crime incidents.<br>
+#Add to here as necessary<br>
+To explore these variables, we integrated datasets from LAPD crime reports, U.S. Census economic data, and geospatial shapefiles for Los Angeles neighborhoods. This allowed us to analyze both spatial and statistical relationships.<br>
+#Add links here</p>
+</section>
+<section id="key-questions" class="level1">
+<h1>Key Questions</h1>
+<p><strong>Economic Status and Crime:</strong> Does a neighborhood’s median income influence the number of crimes reported?<br>
+<strong>Geographic Crime Hotspots:</strong> Are there specific areas with persistently high crime rates?<br>
+<strong>Disparities in Crime Impact:</strong> How do demographic or socioeconomic disparities correlate with crime? #Add here as necessary<br>
+</p>
+</section>
+<section id="modeling-economic-data" class="level1">
+<h1>Modeling Economic Data</h1>
+<p>For a specific statistic model when looking at the economic data in relation to crime, we used a negative binomial relaationship. Initially, we were recommended to utilize a poisson distribution but because there was a statistically significant difference between mean and variance. So, we felt as if a negative binomial was fitting for this problem.</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'MASS'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    select</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm.nb(formula = total_crimes ~ avg_income, data = crime_summary_lapd, 
+    init.theta = 2.288655763, link = log)
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  1.924e+00  3.495e-02  55.062   &lt;2e-16 ***
+avg_income  -4.169e-06  4.179e-07  -9.977   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for Negative Binomial(2.2887) family taken to be 1)
+
+    Null deviance: 2336.5  on 2296  degrees of freedom
+Residual deviance: 2233.8  on 2295  degrees of freedom
+AIC: 11983
+
+Number of Fisher Scoring iterations: 1
+
+              Theta:  2.2887 
+          Std. Err.:  0.0926 
+
+ 2 x log-likelihood:  -11977.1990 </code></pre>
+</div>
+</div>
+<section id="coefficients" class="level2">
+<h2 class="anchored" data-anchor-id="coefficients">1. Coefficients</h2>
+<section id="intercept" class="level3">
+<h3 class="anchored" data-anchor-id="intercept">Intercept:</h3>
+<ul>
+<li><strong>Estimate</strong>: 1.924<br>
+</li>
+<li><strong>Exponentiated</strong>: ~ 6.85<br>
+
+<ul>
+<li>This means that when the median income is zero (a hypothetical reference), the expected number of crimes is about 6.85 crimes per area.</li>
+</ul></li>
+</ul>
+</section>
+<section id="avg_income-coefficient" class="level3">
+<h3 class="anchored" data-anchor-id="avg_income-coefficient">Avg_Income Coefficient:</h3>
+<ul>
+<li><strong>Estimate</strong>: -4.169 ^{-6}</li>
+<li><strong>Exponentiated</strong>: ~0.9999958<br>
+
+<ul>
+<li>For every $1 increase in median income, the expected crime count decreases by approximately (0.00042%).<br>
+</li>
+<li>For a more interpretable unit, for every $10,000 increase in median income, the expected crime count decreases by approximately 4.2%.</li>
+</ul></li>
+</ul>
+</section>
+<section id="significance" class="level3">
+<h3 class="anchored" data-anchor-id="significance">Significance:</h3>
+<ul>
+<li><strong>z-value</strong>: -9.977</li>
+<li><strong>p-value</strong>: p &lt; 2 ^{-16}
+<ul>
+<li>The negative relationship between income and crime is highly statistically significant.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="model-fit" class="level2">
+<h2 class="anchored" data-anchor-id="model-fit">2. Model Fit</h2>
+<section id="null-deviance" class="level3">
+<h3 class="anchored" data-anchor-id="null-deviance">Null Deviance:</h3>
+<ul>
+<li><strong>Value</strong>: 2336.5
+<ul>
+<li>This represents the deviance of a null model with no predictors.</li>
+</ul></li>
+</ul>
+</section>
+<section id="residual-deviance" class="level3">
+<h3 class="anchored" data-anchor-id="residual-deviance">Residual Deviance:</h3>
+<ul>
+<li><strong>Value</strong>: 2233.8
+<ul>
+<li>The reduction from the null deviance indicates an improvement in model fit.</li>
+</ul></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="dispersion-parameter" class="level2">
+<h2 class="anchored" data-anchor-id="dispersion-parameter">3. Dispersion Parameter :</h2>
+<ul>
+<li><strong>Value</strong> = 2.2887, with a standard error of 0.0926.
+<ul>
+<li>A higher value indicates better accommodation of variance in the data. (This was previously tested using Poisson distributed prior and this was a lower theta-value)</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="analysis_files/figure-html/Neg Bin Chart-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The chart shown supports the summary above where we said that as median income increases, crime numbers seem to decrease. Even though it isn’t by much, it does trend slightly downward.</p>
+</section>
+<section id="coefficient-estimates-and-their-standard-errors" class="level2">
+<h2 class="anchored" data-anchor-id="coefficient-estimates-and-their-standard-errors">4. Coefficient Estimates and Their Standard Errors</h2>
+<p><strong>Standard Error (SE):</strong> Measures the variability of each coefficient estimate. Smaller SE indicates more precise estimates. For example:</p>
+<p>The SE for the intercept is <em>0.03495</em>. The SE for the median income coefficient is 4.179 ^{-7}.</p>
+</section>
+<section id="confidence-intervals" class="level2">
+<h2 class="anchored" data-anchor-id="confidence-intervals">5. Confidence Intervals</h2>
+<p>Calculated as:</p>
+<p>Estimate: 1.96 * Standard Error<br>
+</p>
+<ul>
+<li>For the <strong>avg_income coefficient</strong>: [ -4.169 * 10^{-6}, 1.96 * 4.179 * 10^{-7} ]
+<ul>
+<li>Confidence Interval: [-4.42 * 10^{-6}, -3.91 * 10^{-6}]</li>
+</ul></li>
+<li><strong>Interpretation</strong>: The true effect of median income on crime likely lies within this range. It reinforces the negative relationship but highlights uncertainty in its exact magnitude.</li>
+</ul>
+</section>
+<section id="conclusions-about-economic-data" class="level2">
+<h2 class="anchored" data-anchor-id="conclusions-about-economic-data">6. Conclusions about Economic Data</h2>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -305,18 +688,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -348,7 +720,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp("https:\/\/sussmanbu\.github\.io\/ma-4615-fa24-final-project-group-4\/");
@@ -356,7 +750,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
