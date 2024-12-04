@@ -5,6 +5,7 @@ date: "2024-11-26"
 date-modified: "2024-11-26"
 draft: FALSE
 ---
+
 ```{r load libraries}
 #| results: "hide"
 #| echo: false
@@ -161,10 +162,6 @@ ggplot() +
 
 ```
 
-
-
-
-
 ```{r}
 
 crime_summary_race <- crime_with_income %>%
@@ -206,6 +203,7 @@ bivar_nb_model <- glm.nb(total_crimes ~ avg_median_income + Hispanic.Latin.Mexic
     Asian.Indian + American.Indian.Alaskan.Native + Cambodian + Vietnamese + Laotian, data = crime_summary_race)
 summary(bivar_nb_model)
 ```
+
 ```{r}
 crime_summary_race_model <- crime_summary_race %>%
   filter(complete.cases(
@@ -265,7 +263,6 @@ crime_race_long <- crime_race_long %>%
 
 ```
 
-
 ```{r Refinement of model}
 colnames(crime_race_long)
 
@@ -301,5 +298,4 @@ ggplot(grid, aes(x = avg_median_income, y = predicted_crimes, color = race)) +
     legend.position = "none"              # Hide legend if redundant
   )
 ```
-
 

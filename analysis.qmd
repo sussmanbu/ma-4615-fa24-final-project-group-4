@@ -22,7 +22,6 @@ Avoid using "we" too frequently, for example "We also found that ...". Describe 
 
 ### Example of loading data
 
-The code below shows an example of loading the loan refusal data set (which you should delete at some point).
 ```{r load libraries}
 #| results: "hide"
 #| echo: false
@@ -31,6 +30,9 @@ library(sf)
 library(tidycensus)
 library(here)
 library(viridis)
+library(dplyr)
+library(MASS)
+library(tidyr)
 
 # Load crime data and convert to spatial format
 data <- readRDS(here("filtered_data_2.rds"))
@@ -94,6 +96,89 @@ crime_summary_lapd <- crime_with_income_lapd %>%
   ) %>%
   filter(!is.na(avg_income)) %>%  # Exclude rows with missing income
   st_as_sf()
+
+crime_summary_race <- crime_with_income %>%
+  group_by(GEOID, Descent_Description) %>%
+  summarize(
+    total_crimes = n(),  # Count crimes for each GEOID and Descent_Description group
+    avg_median_income = mean(estimate, na.rm = TRUE)
+  ) %>%
+  pivot_wider(
+    names_from = Descent_Description,
+    values_from = total_crimes,
+    values_fill = 0  # Fill missing values with 0 for crimes
+  ) %>%
+  rowwise() %>%
+  mutate(
+    total_crimes = sum(c_across(-c(GEOID, avg_median_income, geometry)), na.rm = TRUE)  # Sum only the crime columns
+  ) %>%
+  ungroup()
+
+crime_summary_race <- crime_summary_race %>%
+  rename_with(~ make.names(.), everything())
+
+crime_summary_race_model <- crime_summary_race %>%
+  filter(complete.cases(
+    avg_median_income, Hispanic.Latin.Mexican, White, Black, Other, Other.Asian,
+    Unknown, Japanese, Korean, Filipino, Chinese, Hawaiian, Asian.Indian,
+    American.Indian.Alaskan.Native, Cambodian, Vietnamese, Laotian
+  ))
+
+
+bivar_nb_model <- glm.nb(total_crimes ~ avg_median_income + Hispanic.Latin.Mexican + White + Black + Other + 
+    Other.Asian + Unknown + Japanese + Korean + Filipino + Chinese + Hawaiian + 
+    Asian.Indian + American.Indian.Alaskan.Native + Cambodian + Vietnamese + Laotian, data = crime_summary_race)
+
+# Add predicted values to the filtered data
+crime_summary_race_model <- crime_summary_race_model %>%
+  mutate(predicted_crimes = predict(bivar_nb_model, type = "response"))
+
+crime_race_long <- crime_summary_race_model %>%
+  pivot_longer(
+    cols = c(Hispanic.Latin.Mexican, White, Black, Other, Other.Asian, Unknown, 
+             Japanese, Korean, Filipino, Chinese, Hawaiian, Asian.Indian, 
+             American.Indian.Alaskan.Native, Cambodian, Vietnamese, Laotian),
+    names_to = "race",
+    values_to = "crime_count"
+  )
+
+
+crime_race_long <- crime_summary_race %>%
+  pivot_longer(
+    cols = c(Hispanic.Latin.Mexican, White, Black, Other, Other.Asian, Unknown, 
+             Japanese, Korean, Filipino, Chinese, Hawaiian, Asian.Indian, 
+             American.Indian.Alaskan.Native, Cambodian, Vietnamese, Laotian),
+    names_to = "race",
+    values_to = "crime_count"
+  ) %>%
+  filter(!is.na(crime_count) & crime_count > 0) %>%
+  mutate(avg_median_income = avg_median_income / 1000)
+
+
+
+# Fit Poisson regression with pivoted data
+poisson_model <- glm(
+  crime_count ~ avg_median_income + race,
+  family = poisson(link = "log"),
+  data = crime_race_long
+)
+summary(poisson_model)
+
+# Fit Negative Binomial regression with pivoted data
+crime_race_long <- crime_race_long %>%
+  filter(complete.cases(avg_median_income, race, crime_count))
+
+nb_model <- glm.nb(
+  crime_count ~ avg_median_income * race,
+  data = crime_race_long
+)
+
+crime_race_long <- crime_race_long %>%
+  mutate(predicted_crimes = predict(nb_model, newdata = crime_race_long, type = "response"))
+
+
+
+
 ```
 
 
@@ -199,95 +284,142 @@ To explore these variables, we integrated datasets from LAPD crime reports, U.S.
 **Disparities in Crime Impact:** How do demographic or socioeconomic disparities correlate with crime?
 #Add here as necessary \
 
-# Modeling Economic Data
-For a specific statistic model when looking at the economic data in relation to crime, we used a negative binomial relaationship. Initially, we were recommended to utilize a poisson distribution but because there was a statistically significant difference between mean and variance. So, we felt as if a negative binomial was fitting for this problem. 
+# Modeling and Inference
+## Motivation for the Model
+We aim to understand the relationship between median income and crime, considering racial demographics as a moderating factor. This requires modeling total crimes as a function of average median income and racial groupings. To account for overdispersion in crime count data, we employ both Poisson regression and Negative Binomial regression frameworks.
 
-```{r Negative Binomial}
-#| echo: false
-library(MASS)
-nb_model <- glm.nb(total_crimes ~ avg_income, data = crime_summary_lapd)
+## Model Selection
+**Why Poisson and Negative Binomial Models?**
+
+Crime counts are discrete and non-negative, making Poisson regression an intuitive starting point. \
+Overdispersion (variance exceeding the mean) was evident, prompting the use of a Negative Binomial regression model.
+Predictors Considered
+
+**Median income**: Hypothesized to influence crime rates inversely. \
+**Race**: Used as categorical predictors to examine demographic disparities in crime incidence. \
+**Interaction terms**: Incorporated to explore how income effects vary across racial groups. \
+
+## Modeling Steps
+
+### Poisson regression model:
+```{r Poisson}
+#| echo: False 
+#| results: "hide"
+poisson_model <- glm(crime_count ~ avg_median_income + race, family = poisson(link = "log"), data = crime_race_long)
+summary(poisson_model)
+```
+#### Coefficients:
+- **avg_median_income**: -0.0019821 (p < 0.001, significant)
+- **raceBlack**: 0.6206 (p = 0.007, significant)
+- **raceHispanic.Latin.Mexican**: 0.8102 (p < 0.001, significant)
+- **raceUnknown**: 0.7717 (p < 0.001, significant)
+- **raceWhite**: 0.6654 (p = 0.004, significant)
+
+#### Model Metrics:
+- Null deviance: 6300.2 on 5907 degrees of freedom
+- Residual deviance: 5790.0 on 5891 degrees of freedom
+- AIC: 20106
+
+**Key Insights:**
+
+avg_median_income is negatively associated with crime counts and is statistically significant. \
+Certain racial categories (raceHispanic.Latin.Mexican, raceUnknown, raceWhite, and raceBlack) are positively associated with higher crime counts and are statistically significant. \
+
+### Negative Binomial regression model:
+```{r Neg. Binomial}
+#| echo: False 
+#| results: "hide"
+nb_model <- glm.nb(crime_count ~ avg_median_income * race, data = crime_race_long)
 summary(nb_model)
 ```
+#### Coefficients:
+- **raceHispanic.Latin.Mexican**: 1.0450 (p = 0.013, significant)
+- **raceUnknown**: 0.7903 (p = 0.061, marginally significant)
+- **raceBlack**: 0.7862 (p = 0.064, marginally significant)
+
+#### Model Metrics:
+- Null deviance: 4800.1 on 5907 degrees of freedom
+- Residual deviance: 4305.8 on 5877 degrees of freedom
+- AIC: 19758
+- Dispersion parameter: Theta = 9.252 (SE = 0.706)
+
+**Key Insights:**
+
+raceHispanic.Latin.Mexican remains statistically significant and positively associated with crime counts. \
+The inclusion of overdispersion (via the Negative Binomial model) leads to better model fit metrics (lower AIC and deviance) compared to the Poisson regression. \
+We evaluate model fit using AIC and residual diagnostics, concluding the Negative Binomial model better accounts for data characteristics. \
+
+### Why Negative Binomial Was Better
+**Dispersion Issue:** The Poisson model assumes that the mean and variance of the dependent variable (crime counts) are equal. However, the data exhibits overdispersion (variance > mean), as indicated by the high residual deviance in the Poisson model. \
+**Model Fit:** The Negative Binomial regression explicitly accounts for overdispersion with a dispersion parameter (Theta = 9.252), leading to improved model fit (lower AIC: 19758 vs. 20106 and reduced deviance). \
+**Interpretation:** While both models identify significant predictors (e.g., raceHispanic.Latin.Mexican), the Negative Binomial model provides more reliable estimates due to its ability to handle overdispersed data.
 
 
+## Predicted Trends
+Using the model, we predict crime counts across income ranges for each racial group:
+```{r Predicted Trends}
+#| echo: False
 
-## 1. Coefficients
-
-### Intercept:
-- **Estimate**: 1.924 \
-- **Exponentiated**: ~ 6.85 \
-  - This means that when the median income is zero (a hypothetical reference), the expected number of crimes is about 6.85 crimes per area.
-
-### Avg_Income Coefficient:
-- **Estimate**: -4.169 \times 10^{-6}
-- **Exponentiated**: ~0.9999958 \
-  - For every $1 increase in median income, the expected crime count decreases by approximately \(0.00042\%\).  
-  - For a more interpretable unit, for every $10,000 increase in median income, the expected crime count decreases by approximately 4.2\%.
-
-### Significance:
-- **z-value**: -9.977
-- **p-value**: p < 2 \times 10^{-16} 
-  - The negative relationship between income and crime is highly statistically significant.
-
----
-
-## 2. Model Fit
-
-### Null Deviance:
-- **Value**: 2336.5
-  - This represents the deviance of a null model with no predictors.
-
-### Residual Deviance:
-- **Value**: 2233.8
-  - The reduction from the null deviance indicates an improvement in model fit.
-
----
-
-## 3. Dispersion Parameter :
-- **Value** = 2.2887, with a standard error of 0.0926.
-  - A higher value indicates better accommodation of variance in the data. (This was previously tested using Poisson distributed prior and this was a lower theta-value)
-
-
-```{r Neg Bin Chart}
-#| echo: false
-crime_summary_lapd <- crime_summary_lapd %>%
-  mutate(fitted_crimes_nb = predict(nb_model, type = "response"))
-
-ggplot(crime_summary_lapd, aes(x = avg_income, y = total_crimes)) +
-  geom_point(alpha = 0.7) +
-  geom_line(aes(y = fitted_crimes_nb), color = "blue") +
-  labs(
-    title = "Negative Binomial Regression: Crime vs. Median Income",
-    x = "Median Income",
-    y = "Total Crimes"
-  ) +
-  theme_minimal()
+grid <- expand.grid(
+  avg_median_income = seq(min(crime_race_long$avg_median_income), max(crime_race_long$avg_median_income), length.out = 100),
+  race = unique(crime_race_long$race)
+)
+grid$predicted_crimes <- predict(nb_model, newdata = grid, type = "response")
 ```
-The chart shown supports the summary above where we said that as median income increases, crime numbers seem to decrease. Even though it isn't by much, it does trend slightly downward. 
+### Visualization
+```{r}
+#| echo: False
+significant_races <- summary(nb_model)$coefficients %>%
+  as.data.frame() %>%
+  rownames_to_column("race") %>%
+  filter(grepl("race", race)) %>%  # Keep only race-related coefficients
+  mutate(race = gsub("race", "", race)) %>%  # Clean up race names
+  filter(`Pr(>|z|)` <= 0.8) %>%  # Keep only races with p-values <= 0.7
+  filter(!race %in% c("Unknown", "Other")) %>%  # Exclude "Unknown" and "Other"
+  pull(race)
 
+# Filter the data to include only significant races
+filtered_crime_race_long <- crime_race_long %>%
+  filter(race %in% significant_races)
 
-## 4. Coefficient Estimates and Their Standard Errors
-**Standard Error (SE):** Measures the variability of each coefficient estimate. Smaller SE indicates more precise estimates. For example:
+# Plot the ggplot
+ggplot(filtered_crime_race_long, aes(x = avg_median_income, y = predicted_crimes, color = race)) +
+  geom_line() +
+  facet_wrap(~race, scales = "free_y") +  # Facet by race, allowing y-axis to vary by panel
+  labs(
+    title = "Predicted Crime Counts vs Median Income by Race (Facet by Race)",
+    x = "Average Median Income (in $1,000s)",
+    y = "Predicted Crime Counts"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(size = 10),  # Adjust facet labels
+    legend.position = "none"              # Hide legend if redundant
+  )
+```
+This figure illustrates how income impacts predicted crime counts, highlighting disparities among racial groups.\
+This also removed any race with a P-Value over 0.8 and any races like "unknown" and "other" because that doesn't give much information.
 
-The SE for the intercept is *0.03495*.
-The SE for the median income coefficient is 4.179 \times 10^{-7}.
+### Uncertainty and Limitations
+**1. Uncertainty in Estimates:**
 
-## 5. Confidence Intervals
-Calculated as:
+- Wide confidence intervals for certain racial group coefficients suggest variability in observed patterns.\
+- Limited data for smaller racial groups (e.g., Laotian, Cambodian) may result in unreliable estimates.\
 
+**2.Model Assumptions:**
 
-Estimate: 1.96 * Standard Error \
+- Both Poisson and Negative Binomial models assume log-linear relationships, which may oversimplify real-world dynamics.\
+- Spatial dependencies (e.g., crime clustering in neighborhoods) are not accounted for, potentially biasing results.\
 
+**3. Data Limitations:**
 
-- For the **avg_income coefficient**:
-  \[
-  -4.169 * 10^{-6},  1.96 * 4.179 * 10^{-7}
-  \]
-  - Confidence Interval: [-4.42 * 10^{-6}, -3.91 * 10^{-6}]
+- The dataset has missing values for some predictors, leading to excluded observations.\
+- Aggregation by neighborhood may obscure within-neighborhood variability in income and crime rates.\
 
-- **Interpretation**: The true effect of median income on crime likely lies within this range. It reinforces the negative relationship but highlights uncertainty in its exact magnitude.
+### Future Directions
 
-## 6. Conclusions about Economic Data
+- Integrate additional predictors like unemployment rates, educational attainment, or policing density to refine insights.\
+- Perform robustness checks by using alternative categorizations for racial groups or income brackets.\
 
 
 
