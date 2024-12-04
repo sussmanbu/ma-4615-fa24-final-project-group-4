@@ -95,31 +95,12 @@ crime_summary_lapd <- crime_with_income_lapd %>%
   filter(!is.na(avg_income)) %>%  # Exclude rows with missing income
   st_as_sf()
 ```
-```{r}
-total_crimes_by_neighborhood <- crime_with_neighborhoods %>%
-  group_by(AREA.NAME) %>%
-  summarize(total_crimes = n(), .groups = "drop")
 
-# Create the bar plot
-library(ggplot2)
-
-ggplot(total_crimes_by_neighborhood, aes(x = reorder(AREA.NAME, -total_crimes), y = total_crimes, fill = AREA.NAME)) +
-  geom_bar(stat = "identity", show.legend = FALSE) +
-  labs(
-    title = "Total Crimes by Neighborhood",
-    x = "Neighborhood",
-    y = "Total Crimes"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-
-```
 
 
 ```{r}
+#| echo: false
 crime_with_income <- st_join(crime_with_neighborhoods, economic_data, join = st_within)
-
-# Summarize median income by neighborhood
 median_income_by_neighborhood <- crime_with_income %>%
   group_by(AREA.NAME) %>%
   summarize(
@@ -129,20 +110,6 @@ median_income_by_neighborhood <- crime_with_income %>%
   ) %>%
   filter(!is.na(median_income)) %>% 
   st_as_sf()
-
-# View the result
-print(median_income_by_neighborhood)
-ggplot(median_income_by_neighborhood, aes(x = reorder(AREA.NAME, -median_income), y = median_income, fill = median_income)) +
-  geom_bar(stat = "identity") +
-  scale_fill_viridis_c(option = "plasma", name = "Median Income") +
-  labs(
-    title = "Median Income by Neighborhood",
-    x = "Neighborhood",
-    y = "Median Income"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-# Scatter plot connecting income and number of cases
 ggplot(median_income_by_neighborhood, aes(x = median_income, y = total_crimes)) +
   geom_point(aes(color = median_income, size = total_crimes), alpha = 0.7) +
   scale_color_viridis_c(option = "plasma", name = "Median Income") +
