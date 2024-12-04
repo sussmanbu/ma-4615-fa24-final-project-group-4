@@ -44,7 +44,7 @@ crime_summary <- crime_with_income %>%
   group_by(GEOID) %>%
   summarize(
     total_crimes = n(),
-    avg_income = mean(estimate, na.rm = TRUE),
+    avg_income = median(estimate, na.rm = TRUE),
     geometry = st_union(geometry)
   ) %>%
   filter(!is.na(avg_income)) %>%  # Remove rows with missing income
