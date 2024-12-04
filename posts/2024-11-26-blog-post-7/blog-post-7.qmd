@@ -12,6 +12,9 @@ library(sf)
 library(tidycensus)
 library(here)
 library(viridis)
+library(dplyr)
+library(MASS)
+library(tidyr)
 
 # Load crime data and convert to spatial format
 data <- readRDS(here("filtered_data_2.rds"))
@@ -214,6 +217,103 @@ ggplot(crime_summary_lapd, aes(x = avg_income, y = total_crimes)) +
   theme_minimal()
 ```
 
+
+```{r}
+
+crime_summary_race <- crime_with_income %>%
+  group_by(GEOID, Descent_Description) %>%
+  summarize(
+    total_crimes = n(),  # Count crimes for each GEOID and Descent_Description group
+    avg_median_income = mean(estimate, na.rm = TRUE)
+  ) %>%
+  pivot_wider(
+    names_from = Descent_Description,
+    values_from = total_crimes,
+    values_fill = 0  # Fill missing values with 0 for crimes
+  ) %>%
+  rowwise() %>%
+  mutate(
+    total_crimes = sum(c_across(-c(GEOID, avg_median_income, geometry)), na.rm = TRUE)  # Sum only the crime columns
+  ) %>%
+  ungroup()
+
+
+
 ```
+
+```{r}
+crime_summary_race <- crime_summary_race %>%
+  rename_with(~ make.names(.), everything())
+
+bivar_poisson_model <- glm(
+  total_crimes ~ avg_median_income + Hispanic.Latin.Mexican + White + Black + Other + 
+    Other.Asian + Unknown + Japanese + Korean + Filipino + Chinese + Hawaiian + 
+    Asian.Indian + American.Indian.Alaskan.Native + Cambodian + Vietnamese + Laotian,
+  family = poisson(link = "log"),
+  data = crime_summary_race
+)
+summary(bivar_poisson_model)
+
+bivar_nb_model <- glm.nb(total_crimes ~ avg_median_income + Hispanic.Latin.Mexican + White + Black + Other + 
+    Other.Asian + Unknown + Japanese + Korean + Filipino + Chinese + Hawaiian + 
+    Asian.Indian + American.Indian.Alaskan.Native + Cambodian + Vietnamese + Laotian, data = crime_summary_race)
+summary(bivar_nb_model)
+```
+```{r}
+crime_summary_race_model <- crime_summary_race %>%
+  filter(complete.cases(
+    avg_median_income, Hispanic.Latin.Mexican, White, Black, Other, Other.Asian,
+    Unknown, Japanese, Korean, Filipino, Chinese, Hawaiian, Asian.Indian,
+    American.Indian.Alaskan.Native, Cambodian, Vietnamese, Laotian
+  ))
+
+# Add predicted values to the filtered data
+crime_summary_race_model <- crime_summary_race_model %>%
+  mutate(predicted_crimes = predict(bivar_nb_model, type = "response"))
+
+crime_race_long <- crime_summary_race_model %>%
+  pivot_longer(
+    cols = c(Hispanic.Latin.Mexican, White, Black, Other, Other.Asian, Unknown, 
+             Japanese, Korean, Filipino, Chinese, Hawaiian, Asian.Indian, 
+             American.Indian.Alaskan.Native, Cambodian, Vietnamese, Laotian),
+    names_to = "race",
+    values_to = "crime_count"
+  )
+
+crime_race_long_filtered <- crime_race_long %>%
+  filter(crime_count > 0)  # Keep only rows with meaningful crime data
+crime_race_long_filtered <- crime_race_long_filtered %>%
+  mutate(avg_median_income = avg_median_income / 1000)  # Convert income to thousands
+
+# Plot actual vs predicted by race
+ggplot(crime_race_long_filtered, aes(x = total_crimes, y = predicted_crimes)) +
+  geom_point(alpha = 0.6, color = "blue") +
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed", color = "red") +
+  facet_wrap(~race, scales = "free") +
+  labs(
+    title = "Actual vs Predicted Crimes by Race (Non-Zero Only)",
+    x = "Actual Total Crimes",
+    y = "Predicted Total Crimes"
+  ) +
+  theme_minimal() +
+  theme(strip.text = element_text(size = 10))
+
+
+
+ggplot(crime_race_long_filtered, aes(x = avg_median_income, y = predicted_crimes)) +
+  geom_point(alpha = 0.6, color = "blue") +
+  geom_smooth(method = "loess", se = FALSE, color = "red") +
+  facet_wrap(~race, scales = "free_y") +
+  labs(
+    title = "Predicted Crimes vs Median Income by Race (Non-Zero Only)",
+    x = "Average Median Income ($1,000s)",
+    y = "Predicted Total Crimes"
+  ) +
+  theme_minimal() +
+  theme(strip.text = element_text(size = 10))
+
+
+```
+
 
 
