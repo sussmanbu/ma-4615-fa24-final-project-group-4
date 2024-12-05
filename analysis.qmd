@@ -25,6 +25,8 @@ Avoid using "we" too frequently, for example "We also found that ...". Describe 
 ```{r load libraries}
 #| results: "hide"
 #| echo: false
+#| message: false
+#| warning: false
 library(tidyverse)
 library(sf)
 library(tidycensus)
@@ -400,7 +402,7 @@ ggplot(filtered_crime_race_long, aes(x = avg_median_income, y = predicted_crimes
   )
 ```
 This figure illustrates how income impacts predicted crime counts, highlighting disparities among racial groups.\
-This also removed any race with a P-Value over 0.8 and any races like "unknown" and "other" because that doesn't give much information.
+This also removed any race with a P-Value over 0.8 and any races like "unknown" and "other" because that doesn't give much information. We can see that for the most part, as median income increases, the likelihood of a crime decreases. This is not the case for 
 
 ### Uncertainty and Limitations
 **1. Uncertainty in Estimates:**
