@@ -207,7 +207,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors
 Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE
 
-here() starts at /Users/seanfung/Documents/BU Fall 2024/MA 415/MA415 G4 Final Project
+here() starts at /Users/seanfung/Documents/BU Fall 2024/MA 415/MA 415 G4 Final Project
 
 Loading required package: viridisLite
 
@@ -331,39 +331,178 @@ all geometries</code></pre>
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a Poisson regression model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>crime_summary_race <span class="ot">&lt;-</span> crime_with_income <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(GEOID, Descent_Description) <span class="sc">%&gt;%</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_crimes =</span> <span class="fu">n</span>(),  <span class="co"># Count crimes for each GEOID and Descent_Description group</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_median_income =</span> <span class="fu">mean</span>(estimate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> Descent_Description,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> total_crimes,</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span>  <span class="co"># Fill missing values with 0 for crimes</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_crimes =</span> <span class="fu">sum</span>(<span class="fu">c_across</span>(<span class="sc">-</span><span class="fu">c</span>(GEOID, avg_median_income, geometry)), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)  <span class="co"># Sum only the crime columns</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>poisson_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(total_crimes <span class="sc">~</span> avg_income, </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>), </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> crime_summary_lapd)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary of the model</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(poisson_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = total_crimes ~ avg_income, family = poisson(link = "log"), 
+    data = crime_summary_lapd)
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  1.940e+00  1.979e-02   98.01   &lt;2e-16 ***
+avg_income  -4.382e-06  2.528e-07  -17.33   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 8430.6  on 2296  degrees of freedom
+Residual deviance: 8102.3  on 2295  degrees of freedom
+AIC: 15413
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(poisson_model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)  avg_income 
+  6.9570080   0.9999956 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>residual_deviance <span class="ot">&lt;-</span> poisson_model<span class="sc">$</span>deviance</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>degrees_of_freedom <span class="ot">&lt;-</span> poisson_model<span class="sc">$</span>df.residual</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>dispersion <span class="ot">&lt;-</span> residual_deviance <span class="sc">/</span> degrees_of_freedom</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>dispersion</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.530416</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>quasi_poisson_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(total_crimes <span class="sc">~</span> avg_income, </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">family =</span> <span class="fu">quasipoisson</span>(<span class="at">link =</span> <span class="st">"log"</span>), </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">data =</span> crime_summary_lapd)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(quasi_poisson_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = total_crimes ~ avg_income, family = quasipoisson(link = "log"), 
+    data = crime_summary_lapd)
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  1.940e+00  5.037e-02   38.51  &lt; 2e-16 ***
+avg_income  -4.382e-06  6.434e-07   -6.81 1.24e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for quasipoisson family taken to be 6.476489)
+
+    Null deviance: 8430.6  on 2296  degrees of freedom
+Residual deviance: 8102.3  on 2295  degrees of freedom
+AIC: NA
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>nb_model <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(total_crimes <span class="sc">~</span> avg_income, <span class="at">data =</span> crime_summary_lapd)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(nb_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm.nb(formula = total_crimes ~ avg_income, data = crime_summary_lapd, 
+    init.theta = 2.288655763, link = log)
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  1.924e+00  3.495e-02  55.062   &lt;2e-16 ***
+avg_income  -4.169e-06  4.179e-07  -9.977   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for Negative Binomial(2.2887) family taken to be 1)
+
+    Null deviance: 2336.5  on 2296  degrees of freedom
+Residual deviance: 2233.8  on 2295  degrees of freedom
+AIC: 11983
+
+Number of Fisher Scoring iterations: 1
+
+              Theta:  2.2887 
+          Std. Err.:  0.0926 
+
+ 2 x log-likelihood:  -11977.1990 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>crime_summary_lapd <span class="ot">&lt;-</span> crime_summary_lapd <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fitted_crimes =</span> <span class="fu">predict</span>(poisson_model, <span class="at">type =</span> <span class="st">"response"</span>))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot observed vs. predicted</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(crime_summary_lapd, <span class="fu">aes</span>(<span class="at">x =</span> avg_income, <span class="at">y =</span> total_crimes)) <span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> fitted_crimes), <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Poisson Regression: Crime vs. Median Income"</span>,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Median Income"</span>,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Total Crimes"</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="blog-post-7_files/figure-html/Poisson-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>crime_summary_lapd <span class="ot">&lt;-</span> crime_summary_lapd <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fitted_crimes_nb =</span> <span class="fu">predict</span>(nb_model, <span class="at">type =</span> <span class="st">"response"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>crime_summary_lapd <span class="ot">&lt;-</span> crime_summary_lapd <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fitted_crimes_nb =</span> <span class="fu">predict</span>(nb_model, <span class="at">type =</span> <span class="st">"response"</span>))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(crime_summary_lapd, <span class="fu">aes</span>(<span class="at">x =</span> avg_income, <span class="at">y =</span> total_crimes)) <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> fitted_crimes_nb), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Negative Binomial Regression: Crime vs. Median Income"</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Median Income"</span>,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Total Crimes"</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="blog-post-7_files/figure-html/Neg Bin-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>crime_summary_race <span class="ot">&lt;-</span> crime_with_income <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(GEOID, Descent_Description) <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_crimes =</span> <span class="fu">n</span>(),  <span class="co"># Count crimes for each GEOID and Descent_Description group</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_median_income =</span> <span class="fu">mean</span>(estimate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> Descent_Description,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> total_crimes,</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_fill =</span> <span class="dv">0</span>  <span class="co"># Fill missing values with 0 for crimes</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_crimes =</span> <span class="fu">sum</span>(<span class="fu">c_across</span>(<span class="sc">-</span><span class="fu">c</span>(GEOID, avg_median_income, geometry)), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)  <span class="co"># Sum only the crime columns</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`summarise()` has grouped output by 'GEOID'. You can override using the
 `.groups` argument.</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>crime_summary_race <span class="ot">&lt;-</span> crime_summary_race <span class="sc">%&gt;%</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span> <span class="fu">make.names</span>(.), <span class="fu">everything</span>())</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>bivar_poisson_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  total_crimes <span class="sc">~</span> avg_median_income <span class="sc">+</span> Hispanic.Latin.Mexican <span class="sc">+</span> White <span class="sc">+</span> Black <span class="sc">+</span> Other <span class="sc">+</span> </span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    Other.Asian <span class="sc">+</span> Unknown <span class="sc">+</span> Japanese <span class="sc">+</span> Korean <span class="sc">+</span> Filipino <span class="sc">+</span> Chinese <span class="sc">+</span> Hawaiian <span class="sc">+</span> </span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    Asian.Indian <span class="sc">+</span> American.Indian.Alaskan.Native <span class="sc">+</span> Cambodian <span class="sc">+</span> Vietnamese <span class="sc">+</span> Laotian,</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>),</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> crime_summary_race</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bivar_poisson_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>crime_summary_race <span class="ot">&lt;-</span> crime_summary_race <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span> <span class="fu">make.names</span>(.), <span class="fu">everything</span>())</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>bivar_poisson_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  total_crimes <span class="sc">~</span> avg_median_income <span class="sc">+</span> Hispanic.Latin.Mexican <span class="sc">+</span> White <span class="sc">+</span> Black <span class="sc">+</span> Other <span class="sc">+</span> </span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    Other.Asian <span class="sc">+</span> Unknown <span class="sc">+</span> Japanese <span class="sc">+</span> Korean <span class="sc">+</span> Filipino <span class="sc">+</span> Chinese <span class="sc">+</span> Hawaiian <span class="sc">+</span> </span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    Asian.Indian <span class="sc">+</span> American.Indian.Alaskan.Native <span class="sc">+</span> Cambodian <span class="sc">+</span> Vietnamese <span class="sc">+</span> Laotian,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>),</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> crime_summary_race</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bivar_poisson_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -405,14 +544,14 @@ AIC: 15858
 
 Number of Fisher Scoring iterations: 6</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>bivar_nb_model <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(total_crimes <span class="sc">~</span> avg_median_income <span class="sc">+</span> Hispanic.Latin.Mexican <span class="sc">+</span> White <span class="sc">+</span> Black <span class="sc">+</span> Other <span class="sc">+</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    Other.Asian <span class="sc">+</span> Unknown <span class="sc">+</span> Japanese <span class="sc">+</span> Korean <span class="sc">+</span> Filipino <span class="sc">+</span> Chinese <span class="sc">+</span> Hawaiian <span class="sc">+</span> </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    Asian.Indian <span class="sc">+</span> American.Indian.Alaskan.Native <span class="sc">+</span> Cambodian <span class="sc">+</span> Vietnamese <span class="sc">+</span> Laotian, <span class="at">data =</span> crime_summary_race)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>bivar_nb_model <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(total_crimes <span class="sc">~</span> avg_median_income <span class="sc">+</span> Hispanic.Latin.Mexican <span class="sc">+</span> White <span class="sc">+</span> Black <span class="sc">+</span> Other <span class="sc">+</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    Other.Asian <span class="sc">+</span> Unknown <span class="sc">+</span> Japanese <span class="sc">+</span> Korean <span class="sc">+</span> Filipino <span class="sc">+</span> Chinese <span class="sc">+</span> Hawaiian <span class="sc">+</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    Asian.Indian <span class="sc">+</span> American.Indian.Alaskan.Native <span class="sc">+</span> Cambodian <span class="sc">+</span> Vietnamese <span class="sc">+</span> Laotian, <span class="at">data =</span> crime_summary_race)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in glm.nb(total_crimes ~ avg_median_income + Hispanic.Latin.Mexican + :
 alternation limit reached</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bivar_nb_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bivar_nb_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -462,47 +601,47 @@ Warning while fitting theta: alternation limit reached
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>crime_summary_race_model <span class="ot">&lt;-</span> crime_summary_race <span class="sc">%&gt;%</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">complete.cases</span>(</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    avg_median_income, Hispanic.Latin.Mexican, White, Black, Other, Other.Asian,</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    Unknown, Japanese, Korean, Filipino, Chinese, Hawaiian, Asian.Indian,</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    American.Indian.Alaskan.Native, Cambodian, Vietnamese, Laotian</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add predicted values to the filtered data</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>crime_summary_race_model <span class="ot">&lt;-</span> crime_summary_race_model <span class="sc">%&gt;%</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">predicted_crimes =</span> <span class="fu">predict</span>(bivar_nb_model, <span class="at">type =</span> <span class="st">"response"</span>))</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>crime_race_long <span class="ot">&lt;-</span> crime_summary_race_model <span class="sc">%&gt;%</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(Hispanic.Latin.Mexican, White, Black, Other, Other.Asian, Unknown, </span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>             Japanese, Korean, Filipino, Chinese, Hawaiian, Asian.Indian, </span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>             American.Indian.Alaskan.Native, Cambodian, Vietnamese, Laotian),</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"race"</span>,</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"crime_count"</span></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>crime_race_long <span class="ot">&lt;-</span> crime_summary_race <span class="sc">%&gt;%</span></span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(Hispanic.Latin.Mexican, White, Black, Other, Other.Asian, Unknown, </span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>             Japanese, Korean, Filipino, Chinese, Hawaiian, Asian.Indian, </span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>             American.Indian.Alaskan.Native, Cambodian, Vietnamese, Laotian),</span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"race"</span>,</span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"crime_count"</span></span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(crime_count) <span class="sc">&amp;</span> crime_count <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">avg_median_income =</span> avg_median_income <span class="sc">/</span> <span class="dv">1000</span>)</span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit Poisson regression with pivoted data</span></span>
-<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>poisson_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>  crime_count <span class="sc">~</span> avg_median_income <span class="sc">+</span> race,</span>
-<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>),</span>
-<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> crime_race_long</span>
-<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(poisson_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>crime_summary_race_model <span class="ot">&lt;-</span> crime_summary_race <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">complete.cases</span>(</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    avg_median_income, Hispanic.Latin.Mexican, White, Black, Other, Other.Asian,</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    Unknown, Japanese, Korean, Filipino, Chinese, Hawaiian, Asian.Indian,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    American.Indian.Alaskan.Native, Cambodian, Vietnamese, Laotian</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add predicted values to the filtered data</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>crime_summary_race_model <span class="ot">&lt;-</span> crime_summary_race_model <span class="sc">%&gt;%</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">predicted_crimes =</span> <span class="fu">predict</span>(bivar_nb_model, <span class="at">type =</span> <span class="st">"response"</span>))</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>crime_race_long <span class="ot">&lt;-</span> crime_summary_race_model <span class="sc">%&gt;%</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(Hispanic.Latin.Mexican, White, Black, Other, Other.Asian, Unknown, </span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>             Japanese, Korean, Filipino, Chinese, Hawaiian, Asian.Indian, </span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>             American.Indian.Alaskan.Native, Cambodian, Vietnamese, Laotian),</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"race"</span>,</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"crime_count"</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>crime_race_long <span class="ot">&lt;-</span> crime_summary_race <span class="sc">%&gt;%</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">c</span>(Hispanic.Latin.Mexican, White, Black, Other, Other.Asian, Unknown, </span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>             Japanese, Korean, Filipino, Chinese, Hawaiian, Asian.Indian, </span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>             American.Indian.Alaskan.Native, Cambodian, Vietnamese, Laotian),</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"race"</span>,</span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"crime_count"</span></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(crime_count) <span class="sc">&amp;</span> crime_count <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">avg_median_income =</span> avg_median_income <span class="sc">/</span> <span class="dv">1000</span>)</span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit Poisson regression with pivoted data</span></span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a>poisson_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a>  crime_count <span class="sc">~</span> avg_median_income <span class="sc">+</span> race,</span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>),</span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> crime_race_long</span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(poisson_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -540,132 +679,43 @@ AIC: 20106
 
 Number of Fisher Scoring iterations: 5</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit Negative Binomial regression with pivoted data</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>crime_race_long <span class="ot">&lt;-</span> crime_race_long <span class="sc">%&gt;%</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">complete.cases</span>(avg_median_income, race, crime_count))</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>nb_model <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  crime_count <span class="sc">~</span> avg_median_income <span class="sc">*</span> race,</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> crime_race_long</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(nb_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-glm.nb(formula = crime_count ~ avg_median_income * race, data = crime_race_long, 
-    init.theta = 9.252493725, link = log)
-
-Coefficients: (1 not defined because of singularities)
-                                               Estimate Std. Error z value
-(Intercept)                                   0.1455120  0.4202718   0.346
-avg_median_income                            -0.0016531  0.0063198  -0.262
-raceAsian.Indian                             -0.1455120  1.0570790  -0.138
-raceBlack                                     0.7861658  0.4246697   1.851
-raceCambodian                                 0.4754042  1.0460402   0.454
-raceChinese                                  -0.1475022  0.5367116  -0.275
-raceFilipino                                 -0.1663137  0.5407560  -0.308
-raceHawaiian                                 -0.1455120  1.0060103  -0.145
-raceHispanic.Latin.Mexican                    1.0450224  0.4226039   2.473
-raceJapanese                                  0.1871495  0.6428169   0.291
-raceKorean                                    0.1289437  0.4757716   0.271
-raceLaotian                                  -0.0274248  1.0855404  -0.025
-raceOther                                     0.2422653  0.4272637   0.567
-raceOther.Asian                               0.0666385  0.4443021   0.150
-raceUnknown                                   0.7903132  0.4223953   1.871
-raceVietnamese                               -0.1455120  0.6123748  -0.238
-raceWhite                                     0.4589181  0.4231629   1.084
-avg_median_income:raceAsian.Indian            0.0016531  0.0115164   0.144
-avg_median_income:raceBlack                  -0.0027989  0.0063851  -0.438
-avg_median_income:raceCambodian              -0.0043472  0.0145757  -0.298
-avg_median_income:raceChinese                 0.0030248  0.0071816   0.421
-avg_median_income:raceFilipino                0.0021817  0.0077737   0.281
-avg_median_income:raceHawaiian                0.0016531  0.0130268   0.127
-avg_median_income:raceHispanic.Latin.Mexican -0.0038425  0.0063534  -0.605
-avg_median_income:raceJapanese               -0.0019210  0.0091102  -0.211
-avg_median_income:raceKorean                 -0.0001553  0.0069246  -0.022
-avg_median_income:raceLaotian                        NA         NA      NA
-avg_median_income:raceOther                   0.0011020  0.0063781   0.173
-avg_median_income:raceOther.Asian             0.0008324  0.0065657   0.127
-avg_median_income:raceUnknown                -0.0003425  0.0063433  -0.054
-avg_median_income:raceVietnamese              0.0016531  0.0079050   0.209
-avg_median_income:raceWhite                   0.0023250  0.0063396   0.367
-                                             Pr(&gt;|z|)  
-(Intercept)                                    0.7292  
-avg_median_income                              0.7937  
-raceAsian.Indian                               0.8905  
-raceBlack                                      0.0641 .
-raceCambodian                                  0.6495  
-raceChinese                                    0.7835  
-raceFilipino                                   0.7584  
-raceHawaiian                                   0.8850  
-raceHispanic.Latin.Mexican                     0.0134 *
-raceJapanese                                   0.7709  
-raceKorean                                     0.7864  
-raceLaotian                                    0.9798  
-raceOther                                      0.5707  
-raceOther.Asian                                0.8808  
-raceUnknown                                    0.0613 .
-raceVietnamese                                 0.8122  
-raceWhite                                      0.2781  
-avg_median_income:raceAsian.Indian             0.8859  
-avg_median_income:raceBlack                    0.6611  
-avg_median_income:raceCambodian                0.7655  
-avg_median_income:raceChinese                  0.6736  
-avg_median_income:raceFilipino                 0.7790  
-avg_median_income:raceHawaiian                 0.8990  
-avg_median_income:raceHispanic.Latin.Mexican   0.5453  
-avg_median_income:raceJapanese                 0.8330  
-avg_median_income:raceKorean                   0.9821  
-avg_median_income:raceLaotian                      NA  
-avg_median_income:raceOther                    0.8628  
-avg_median_income:raceOther.Asian              0.8991  
-avg_median_income:raceUnknown                  0.9569  
-avg_median_income:raceVietnamese               0.8344  
-avg_median_income:raceWhite                    0.7138  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-(Dispersion parameter for Negative Binomial(9.2525) family taken to be 1)
-
-    Null deviance: 4800.1  on 5907  degrees of freedom
-Residual deviance: 4305.8  on 5877  degrees of freedom
-AIC: 19758
-
-Number of Fisher Scoring iterations: 1
-
-              Theta:  9.252 
-          Std. Err.:  0.706 
-
- 2 x log-likelihood:  -19694.184 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>crime_race_long <span class="ot">&lt;-</span> crime_race_long <span class="sc">%&gt;%</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">predicted_crimes =</span> <span class="fu">predict</span>(nb_model, <span class="at">newdata =</span> crime_race_long, <span class="at">type =</span> <span class="st">"response"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit Negative Binomial regression with pivoted data</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>crime_race_long <span class="ot">&lt;-</span> crime_race_long <span class="sc">%&gt;%</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">complete.cases</span>(avg_median_income, race, crime_count))</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>nb_model <span class="ot">&lt;-</span> <span class="fu">glm.nb</span>(</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  crime_count <span class="sc">~</span> avg_median_income <span class="sc">*</span> race,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> crime_race_long</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>crime_race_long <span class="ot">&lt;-</span> crime_race_long <span class="sc">%&gt;%</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">predicted_crimes =</span> <span class="fu">predict</span>(nb_model, <span class="at">newdata =</span> crime_race_long, <span class="at">type =</span> <span class="st">"response"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(crime_race_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(crime_race_long)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "GEOID"             "avg_median_income" "geometry"         
 [4] "total_crimes"      "race"              "crime_count"      
 [7] "predicted_crimes" </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">avg_median_income =</span> <span class="fu">seq</span>(<span class="fu">min</span>(crime_race_long<span class="sc">$</span>avg_median_income), <span class="fu">max</span>(crime_race_long<span class="sc">$</span>avg_median_income), <span class="at">length.out =</span> <span class="dv">100</span>),</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">race =</span> <span class="fu">unique</span>(crime_race_long<span class="sc">$</span>race)</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>predicted_crimes <span class="ot">&lt;-</span> <span class="fu">predict</span>(nb_model, <span class="at">newdata =</span> grid, <span class="at">type =</span> <span class="st">"response"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">avg_median_income =</span> <span class="fu">seq</span>(<span class="fu">min</span>(crime_race_long<span class="sc">$</span>avg_median_income), <span class="fu">max</span>(crime_race_long<span class="sc">$</span>avg_median_income), <span class="at">length.out =</span> <span class="dv">100</span>),</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">race =</span> <span class="fu">unique</span>(crime_race_long<span class="sc">$</span>race)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>grid<span class="sc">$</span>predicted_crimes <span class="ot">&lt;-</span> <span class="fu">predict</span>(nb_model, <span class="at">newdata =</span> grid, <span class="at">type =</span> <span class="st">"response"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in predict.lm(object, newdata, se.fit, scale = 1, type = if (type == :
 prediction from rank-deficient fit; attr(*, "non-estim") has doubtful cases</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(grid, <span class="fu">aes</span>(<span class="at">x =</span> avg_median_income, <span class="at">y =</span> predicted_crimes, <span class="at">color =</span> race)) <span class="sc">+</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Predicted Crime Counts vs Median Income by Race"</span>,</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Average Median Income (in $1,000s)"</span>,</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted Crime Counts"</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(grid, <span class="fu">aes</span>(<span class="at">x =</span> avg_median_income, <span class="at">y =</span> predicted_crimes, <span class="at">color =</span> race)) <span class="sc">+</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Predicted Crime Counts vs Median Income by Race"</span>,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Average Median Income (in $1,000s)"</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted Crime Counts"</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -673,19 +723,19 @@ prediction from rank-deficient fit; attr(*, "non-estim") has doubtful cases</cod
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(grid, <span class="fu">aes</span>(<span class="at">x =</span> avg_median_income, <span class="at">y =</span> predicted_crimes, <span class="at">color =</span> race)) <span class="sc">+</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>race, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span>  <span class="co"># Facet by race, allowing y-axis to vary by panel</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Predicted Crime Counts vs Median Income by Race (Facet by Race)"</span>,</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Average Median Income (in $1,000s)"</span>,</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted Crime Counts"</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),  <span class="co"># Adjust facet labels</span></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>              <span class="co"># Hide legend if redundant</span></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(grid, <span class="fu">aes</span>(<span class="at">x =</span> avg_median_income, <span class="at">y =</span> predicted_crimes, <span class="at">color =</span> race)) <span class="sc">+</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>race, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span>  <span class="co"># Facet by race, allowing y-axis to vary by panel</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Predicted Crime Counts vs Median Income by Race (Facet by Race)"</span>,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Average Median Income (in $1,000s)"</span>,</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted Crime Counts"</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),  <span class="co"># Adjust facet labels</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span>              <span class="co"># Hide legend if redundant</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
