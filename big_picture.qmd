@@ -11,7 +11,7 @@ filters:
   - shinylive
 ---
 
-```{r}
+```{shinylive-r}
 #| results: "hide"
 #| echo: false
 library(tidyverse)
@@ -73,10 +73,7 @@ crime_within_lapd <- crime_sf %>%
 crime_with_income_lapd <- st_join(crime_within_lapd, economic_data, join = st_within)
 
 economic_data_lapd <- st_intersection(economic_data, lapd_boundary)
-```
 
-```{r}
-#| echo: false
 ui <- fluidPage(
   titlePanel("Crime and Economic Data in LAPD Jurisdiction"),
   sidebarLayout(
