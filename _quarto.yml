@@ -1,7 +1,10 @@
 project:
   type: website
   execute-dir: project
-  resources: scripts
+  resources: [
+    shiny_dataset,
+    scripts
+  ]
 
 website:
   title: "MA [46]15 Final Project"
