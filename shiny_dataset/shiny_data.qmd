@@ -1,0 +1,42 @@
+```{r}
+library(tidyverse)
+library(sf)
+library(tidycensus)
+library(here)
+
+# Load raw crime data
+data <- readRDS(here("filtered_data_2.rds"))
+crime_sf <- st_as_sf(data, coords = c("LON", "LAT"), crs = 4326)
+
+# Load LAPD boundary shapefile
+lapd_boundary <- st_read(here("CityBoundaryofLosAngeles/geo_export_416eaeda-447a-4473-b003-37e2cad181ac.shp")) %>%
+  st_transform(st_crs(crime_sf))
+
+# Filter crime data within LAPD jurisdiction
+crime_within_lapd <- crime_sf %>%
+  filter(st_within(geometry, lapd_boundary, sparse = FALSE))
+
+# Set up Census API key
+census_api_key("c2aebe6041f0c99e41a3458ed8d0b95ee3650fa4")
+
+# Load and transform economic data
+economic_data <- get_acs(
+  geography = "block group",
+  variables = c(median_income = "B19013_001"),
+  state = "CA",
+  county = "Los Angeles",
+  year = 2020,
+  geometry = TRUE
+) %>%
+  st_transform(st_crs(crime_within_lapd))
+
+# Filter economic data within LAPD boundary
+economic_data_lapd <- st_intersection(economic_data, lapd_boundary)
+
+# Perform spatial join to combine crime and economic data
+crime_with_income_lapd <- st_join(crime_within_lapd, economic_data_lapd, join = st_within)
+
+# Save the processed dataset
+saveRDS(crime_with_income_lapd, file = here("crime_with_income_lapd.rds"))
+cat("crime_with_income_lapd dataset has been successfully saved!")
+```
