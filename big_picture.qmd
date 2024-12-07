@@ -14,6 +14,7 @@ filters:
 ```{shinylive-r}
 #| results: "hide"
 #| echo: false
+#| standalone: true
 library(tidyverse)
 library(sf)
 library(tidycensus)
