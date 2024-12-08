@@ -147,6 +147,7 @@ The dataset was loaded as a CSV file for easier manipulation. Here’s the R cod
 
 ```{r}
 #| results: hide
+#| warning: false
 library(here)
 library(readr)
 data <- read_csv(here("your_file.csv"))
