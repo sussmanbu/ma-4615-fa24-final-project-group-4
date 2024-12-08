@@ -5,6 +5,7 @@ toc: true
 draft: false
 ---
 
+
 ![](https://upload.wikimedia.org/wikipedia/commons/7/77/Pebbleswithquarzite.jpg)
 
 This comes from the file `analysis.qmd`.
@@ -21,6 +22,7 @@ I don't expect this to be of publication quality but you should keep that aim in
 Avoid using "we" too frequently, for example "We also found that ...". Describe your methodology and your findings but don't describe your whole process.
 
 ### Example of loading data
+
 
 ```{r load libraries}
 #| results: "hide"
@@ -185,8 +187,6 @@ crime_race_long <- crime_race_long %>%
 
 ```
 
-
-
 ```{r}
 #| echo: false
 crime_with_income <- st_join(crime_with_neighborhoods, economic_data, join = st_within)
@@ -215,6 +215,7 @@ ggplot(median_income_by_neighborhood, aes(x = median_income, y = total_crimes)) 
   )
 
 ```
+
 ```{r}
 crime_summary$income_quartile <- cut(
   crime_summary$avg_income,
@@ -235,6 +236,7 @@ ggplot(crime_summary, aes(x = income_quartile, y = total_crimes)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
+
 There is a clear inverse relationship between income levesl and median crime counts, with lower income neighborhoods experienceing higher crime rates. However, variability within the low income quartile highlights that not all low-income heighborhoods are equally affected. Even in high income neighborhoods, a few outliners indicate that some wealthy areas still experience relatively high crime levels. High crime rates and variability in low-icome neighborhoods point to systemic issues like lack of economic opportunities or targeted policing. 
 
 
@@ -327,12 +329,14 @@ Predictors Considered
 ## Modeling Steps
 
 ### Poisson regression model:
+
 ```{r Poisson}
 #| echo: False 
 #| results: "hide"
 poisson_model <- glm(crime_count ~ avg_median_income + race, family = poisson(link = "log"), data = crime_race_long)
 summary(poisson_model)
 ```
+
 #### Coefficients:
 - **avg_median_income**: -0.0019821 (p < 0.001, significant)
 - **raceBlack**: 0.6206 (p = 0.007, significant)
@@ -351,12 +355,14 @@ avg_median_income is negatively associated with crime counts and is statisticall
 Certain racial categories (raceHispanic.Latin.Mexican, raceUnknown, raceWhite, and raceBlack) are positively associated with higher crime counts and are statistically significant. \
 
 ### Negative Binomial regression model:
+
 ```{r Neg. Binomial}
 #| echo: False 
 #| results: "hide"
 nb_model <- glm.nb(crime_count ~ avg_median_income * race, data = crime_race_long)
 summary(nb_model)
 ```
+
 #### Coefficients:
 - **raceHispanic.Latin.Mexican**: 1.0450 (p = 0.013, significant)
 - **raceUnknown**: 0.7903 (p = 0.061, marginally significant)
@@ -382,6 +388,7 @@ We evaluate model fit using AIC and residual diagnostics, concluding the Negativ
 
 ## Predicted Trends
 Using the model, we predict crime counts across income ranges for each racial group:
+
 ```{r Predicted Trends}
 #| echo: False
 
@@ -391,7 +398,9 @@ grid <- expand.grid(
 )
 grid$predicted_crimes <- predict(nb_model, newdata = grid, type = "response")
 ```
+
 ### Visualization
+
 ```{r}
 #| echo: False
 significant_races <- summary(nb_model)$coefficients %>%
@@ -422,6 +431,7 @@ ggplot(filtered_crime_race_long, aes(x = avg_median_income, y = predicted_crimes
     legend.position = "none"              # Hide legend if redundant
   )
 ```
+
 This figure illustrates how income impacts predicted crime counts, highlighting disparities among racial groups.\
 This also removed any race with a P-Value over 0.8 and any races like "unknown" and "other" because that doesn't give much information. We can see that for the most part, as median income increases, the likelihood of a crime decreases. This is not the case for White, Chinese, and Filipino which might be worth looking into. 
 
@@ -445,6 +455,7 @@ This also removed any race with a P-Value over 0.8 and any races like "unknown" 
 
 - Integrate additional predictors like unemployment rates, educational attainment, or policing density to refine insights.\
 - Perform robustness checks by using alternative categorizations for racial groups or income brackets.\
+
 
 
 
