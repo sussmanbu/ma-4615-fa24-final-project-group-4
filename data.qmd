@@ -86,7 +86,7 @@ You will
   * This page should be self-contained.
   
 
-Analysis and Cleaning of LAPD Crime Data (2020–Present)
+## Analysis and Cleaning of LAPD Crime Data (2020–Present)
 
 ## 1. Finding the Data
 The dataset we use reflects incidents of crime in Los Angeles reported by the LAPD since 2020. The original data source is:
