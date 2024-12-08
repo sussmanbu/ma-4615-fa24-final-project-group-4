@@ -215,6 +215,27 @@ ggplot(median_income_by_neighborhood, aes(x = median_income, y = total_crimes)) 
   )
 
 ```
+```{r}
+crime_summary$income_quartile <- cut(
+  crime_summary$avg_income,
+  breaks = quantile(crime_summary$avg_income, probs = seq(0, 1, by = 0.25), na.rm = TRUE),
+  include.lowest = TRUE,
+  labels = c("Low Income", "Lower Middle Income", "Upper Middle Income", "High Income")
+)
+
+ggplot(crime_summary, aes(x = income_quartile, y = total_crimes)) +
+  geom_boxplot(aes(fill = income_quartile)) +
+  scale_fill_viridis_d(name = "Income Quartile") +
+  labs(
+    title = "Distribution of Crime Counts by Income Quartile",
+    x = "Income Quartile",
+    y = "Total Crimes"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+```
 
 
 ## Note on Attribution
