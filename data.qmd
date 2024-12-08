@@ -84,3 +84,78 @@ You will
 * Organization, clarity, cleanliness of the page
   * Make sure to remove excessive warnings, use clean easy-to-read code (without side scrolling), organize with sections, use bullets and other organization tools, etc.
   * This page should be self-contained.
+  
+
+Analysis and Cleaning of LAPD Crime Data (2020–Present)
+
+## 1. Finding the Data
+The dataset we use reflects incidents of crime in Los Angeles reported by the LAPD since 2020. The original data source is:
+  * Source: https://data.lacity.org/Public-Safety/Crime-Data-from-2020-to-Present/2nrs-mtv8/data_preview
+  * Attribution: This data is transcribed from original crime reports that are typed on paper.
+  * Purpose of Collection: The LAPD collects this data as part of routine public safety operations in order to better track crime patterns, allocating resources, and for transparency purposes, ensuring that the public has access to crime data. By making this dataset publicly accessible, the LAPD ensures that the public has access to crime data, fostering accountability in law enforcement operations.
+  * Potential Challenges: Handling a large volume of data could present computational challenges, especially if we plan to conduct detailed spatial or temporal analyses. Cleaning might involve filtering duplicates or dealing with incomplete reports.
+
+## 2. Variable Interpretations
+  * There are 5 types of files of this dataset that were provided on the link we mentioned above, they are Comma Separated Values(CSV) File, Tab Separated Values(TSV) File, RDF File, JSON File, and XML File. We chose to download the CSV file.
+  * There are more than 987K rows and 28 columns for the original dataset, which means that there are 28 different variables, they are DR_NO, Date Rptd, DATE OCC, TIME OCC, AREA, AREA NAME, Rpt Dist No, Part 1-2, Crm Cd, Crm Cd Desc, Mocodes, Vict Age, Vict Sex, Vict Descent, Premis Cd, Premis Desc, Weapon Used Cd, Weapon Desc, Status, Status Desc, Crm Cd 1, Crm Cd 2, Crm Cd 3, Crm Cd 4, LOCATION, Cross Street, LAT, and LON.
+  * Here's the description and datatype of these variables:
+    * DR_NO(Text): Division of Records Number: Official file number made up of a 2 digit year, area ID, and 5 digits.
+    * Date Rptd(Floating Timestamp): The date the crime was reported to the LAPD, formatted as MM/DD/YYYY.
+    * DATE OCC(Floating Timestamp): The date the crime occurred, formatted as MM/DD/YYYY.
+    * TIME OCC(Text): The time the crime occurred, recorded in 24-hour military time.
+    * AREA(Text): The LAPD has 21 Community Police Stations referred to as Geographic Areas within the department. These Geographic Areas are sequentially numbered from 1-21.
+    * AREA NAME(Text): The 21 Geographic Areas or Patrol Divisions are also given a name designation that references a landmark or the surrounding community that it is responsible for. For example 77th Street Division is located at the intersection of South Broadway and 77th Street, serving neighborhoods in South Los Angeles.
+    * Rpt Dist No(Text): A four-digit code that represents a sub-area within a Geographic Area. All crime records reference the "RD" that it occurred in for statistical comparisons.
+    * Part 1-2(Number): Classification of the crime as Part I or Part II offense.
+    * Crm Cd(Text): Indicates the crime committed. (Same as Crime Code 1)
+    * Crm Cd Desc(Text): Defines the Crime Code provided.
+    * Mocodes(Text): Activities associated with the suspect in commission of the crime.
+    * Vict Age(Text): Age of the victim involved in the incident.
+    * Vict Sex(Text): Gender of the victim (M for Male, F for Female, X for Unknown).
+    * Vict Descent(Text): Ethnic descent of the victim, coded (e.g., H for Hispanic, W for White).
+    * Premis Cd(Number): The type of structure, vehicle, or location where the crime took place.
+    * Premis Desc(Text): Defines the Premise Code provided.
+    * Weapon Used Cd(Text): The type of weapon used in the crime.
+    * Weapon Desc(Text): Defines the Weapon Used Code provided.
+    * Status(Text): Status of the case. (IC is the default)
+    * Status Desc(Text): Defines the Status Code provided.
+    * Crm Cd 1(Text): Indicates the crime committed. Crime Code 1 is the primary and most serious one.
+    * Crm Cd 2(Text): May contain a code for an additional crime, less serious than Crime Code 1.
+    * Crm Cd 3(Text): May contain a code for an additional crime, less serious than Crime Code 1.
+    * Crm Cd 4(Text): May contain a code for an additional crime, less serious than Crime Code 1.
+    * LOCATION(Text): Street address of crime incident rounded to the nearest hundred block to maintain anonymity.
+    * Cross Street(Text): Cross Street of rounded Address.
+    * LAT(Number): Latitude
+    * LON(Number): Longtitude
+
+## 3. Data Cleaning
+Here is the original Dataset that we have:
+```{r}
+library(here)
+library(readr)
+data <- read_csv(here("your_file.csv"))
+```
+
+Then we start the data cleaning process. 
+
+The initial data cleaning focused on filtering and sampling the dataset to ensure manageable and relevant data for analysis. After loading the raw data, the DATE.OCC column, which represents the date the crime occurred, was converted into a numerical year column. This transformation allowed us to filter data for the specific range of years between 2020 and 2024. The filtered dataset was further refined by grouping it by year and sampling up to 2,500 rows per year to balance representation while ensuring computational efficiency. 
+
+The following r chunk is the exact code we use by following the previous steps.
+```{r}
+# Convert the date column to year format
+data$year <- format(as.Date(data$DATE.OCC, format = "%m/%d/%Y"), "%Y")
+# Convert year to numeric
+data$year <- as.numeric(data$year)  
+# Filter for the years 2020–2024
+filtered_years <- data %>%
+  filter(year %in% 2020:2024)
+# Split by year and sample up to 2,500 rows per year
+sampled_data <- filtered_years %>%
+  group_split(year) %>%
+  map_df(~ slice_sample(.x, n = min(2500, nrow(.x))))
+```
+
+The RDS file after first time cleaning can be found here:
+```{r}
+readRDS(here("filtered_data_copy.rds"))
+```
