@@ -73,6 +73,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -132,6 +161,13 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#video-recording" id="toc-video-recording" class="nav-link" data-scroll-target="#video-recording">Video Recording</a></li>
   <li><a href="#rest-of-the-site" id="toc-rest-of-the-site" class="nav-link" data-scroll-target="#rest-of-the-site">Rest of the Site</a></li>
+  <li><a href="#interactive-1" id="toc-interactive-1" class="nav-link" data-scroll-target="#interactive-1">Interactive</a></li>
+  </ul></li>
+  <li><a href="#rubric-on-this-page-1" id="toc-rubric-on-this-page-1" class="nav-link" data-scroll-target="#rubric-on-this-page-1">Rubric: On this page</a></li>
+  <li><a href="#rubric-other-components-1" id="toc-rubric-other-components-1" class="nav-link" data-scroll-target="#rubric-other-components-1">Rubric: Other components</a>
+  <ul class="collapse">
+  <li><a href="#video-recording-1" id="toc-video-recording-1" class="nav-link" data-scroll-target="#video-recording-1">Video Recording</a></li>
+  <li><a href="#rest-of-the-site-1" id="toc-rest-of-the-site-1" class="nav-link" data-scroll-target="#rest-of-the-site-1">Rest of the Site</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -163,63 +199,115 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><img src="images/The_Big_Picture_2.jpeg" class="img-fluid"> This comes from the file <code>big_picture.Rmd</code>.</p>
-<p>Think of this page as your 538/Upshot style article. This means that you should try to tell a story through the data and your analysis. Read articles from those sites and similar sites to get a feeling for what they are like. Try to write in the style of a news or popular article. Importantly, this page should be geared towards the general public. You shouldn’t assume the reader understands how to interpret a linear regression or a complicated plot. Focus on interpretation and visualizations.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| results: "hide"
+#| echo: false
+#| standalone: true
+library(tidyverse)
+library(sf)
+library(tidycensus)
+library(here)
+library(viridis)
+library(dplyr)
+library(MASS)
+library(tidyr)
+library(shiny)
+
+
+# Load crime data and convert to spatial format
+data &lt;- readRDS(here("filtered_data_2.rds"))
+crime_sf &lt;- st_as_sf(data, coords = c("LON", "LAT"), crs = 4326)
+
+# Load neighborhood boundaries
+neighborhoods &lt;- st_read(here("LA_Times_Neighborhood_Boundaries-shp/8494cd42-db48-4af1-a215-a2c8f61e96a22020328-1-621do0.x5yiu.shp")) %&gt;%
+  st_transform(st_crs(crime_sf))
+
+# Join crime incidents with neighborhoods
+crime_with_neighborhoods &lt;- st_join(crime_sf, neighborhoods, join = st_within)
+census_api_key("c2aebe6041f0c99e41a3458ed8d0b95ee3650fa4")
+
+# Load and transform median income data
+economic_data &lt;- get_acs(
+  geography = "block group",
+  variables = c(median_income = "B19013_001"),
+  state = "CA",
+  county = "Los Angeles",
+  year = 2020,
+  geometry = TRUE
+) %&gt;% 
+  st_transform(st_crs(crime_with_neighborhoods))
+
+crime_with_income &lt;- st_join(crime_with_neighborhoods, economic_data, join = st_within)
+
+crime_summary &lt;- crime_with_income %&gt;%
+  group_by(GEOID) %&gt;%
+  summarize(
+    total_crimes = n(),
+    avg_income = median(estimate, na.rm = TRUE),
+    geometry = st_union(geometry)
+  ) %&gt;%
+  filter(!is.na(avg_income)) %&gt;%  
+  st_as_sf()
+
+
+
+lapd_boundary &lt;- st_read(here("CityBoundaryofLosAngeles/geo_export_416eaeda-447a-4473-b003-37e2cad181ac.shp")) %&gt;%
+  st_transform(st_crs(crime_sf))  # Align CRS
+
+
+
+crime_within_lapd &lt;- crime_sf %&gt;%
+  filter(rowSums(st_within(geometry, st_geometry(lapd_boundary), sparse = FALSE)) &gt; 0)
+
+crime_with_income_lapd &lt;- st_join(crime_within_lapd, economic_data, join = st_within)
+
+economic_data_lapd &lt;- st_intersection(economic_data, lapd_boundary)
+
+ui &lt;- fluidPage(
+  titlePanel("Crime and Economic Data in LAPD Jurisdiction"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(
+        inputId = "year",
+        label = "Select Year:",
+        min = 2020, 
+        max = 2024, 
+        value = 2020,
+        step = 1
+      )
+    ),
+    mainPanel(
+      plotOutput("crimePlot")
+    )
+  )
+)
+
+server &lt;- function(input, output, session) {
+  output$crimePlot &lt;- renderPlot({
+    crime_filtered &lt;- crime_within_lapd %&gt;%
+      filter(year == input$year)
+    
+    ggplot() +
+      geom_sf(data = economic_data_lapd, aes(fill = estimate), color = NA) +  
+      scale_fill_viridis_c(option = "magma", na.value = "grey50") +
+      geom_sf(data = crime_filtered, color = "black", shape = 4, size = 0.5, alpha = 0.7) +
+      labs(
+        title = paste("Median Income and", input$year, "Crime Data within LAPD Jurisdiction"),
+        fill = "Median Income"
+      ) +
+      theme_minimal() +
+      coord_sf(xlim = c(-118.7, -118), ylim = c(33.7, 34.5),expand = FALSE)
+  })
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
 <hr>
 <section id="interactive" class="level3">
 <h3 class="anchored" data-anchor-id="interactive">Interactive</h3>
 <p>You will also be required to make an interactive dashboard like <a href="./flex/flex.html">this one</a>.</p>
 <p>Your Big Data page should also include a small interactive dashboard. The dashboard should be created either using Shinylive, as below. This interactive component should in some way support your thesis from your big picture page. Good interactives often provide both high-level understanding of the data while allowing a user to investigate specific scenarios, observations, subgroups, etc.</p>
-<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
-#|   shinylive does not work in self-contained HTML documents.
-#|   Please set `embed-resources: false` in your metadata.
-#| standalone: true
-#| viewerHeight: 640 # You will have to adjust this to fit everything
-
-
-library(shiny)
-library(tidyverse)
-options("readr.edition" = 1) # keep this to ensure you can download the data
-
-
-# Define UI for app that draws a histogram ----
-ui &lt;- fluidPage(
-
-  # App title ----
-  titlePanel("Hello Shiny!"),
-
-  # Sidebar layout with input and output definitions ----
-  verticalLayout(
-      # Input: Slider for the number of bins ----
-      sliderInput(inputId = "bins",
-                  label = "Number of bins:",
-                  min = 1,
-                  max = 50,
-                  value = 30),
-
-      # Output: Histogram ----
-      plotOutput(outputId = "distPlot")
-
-  )
-)
-
-# Define server logic required to draw a histogram ----
-server &lt;- function(input, output) {
-  # The URL below has to point to a dataset on your github pages website
-  # I recommend creating a small-ish rds file that has only the data relevant to 
-  # the interactive.
-  data &lt;- read_rds("https://sussmanbu.github.io/ma4615-final-project-quarto/dataset/loan_refusal_clean.rds")
-  
-  output$distPlot &lt;- renderPlot({
-    ggplot(data, aes(x = refusal_rate)) +
-      geom_histogram(bins = input$bins + 1)
-
-  })
-
-}
-
-# Create Shiny app ----
-shinyApp(ui = ui, server = server)</code></pre>
 <hr>
 </section>
 <section id="rubric-on-this-page" class="level2">
@@ -255,6 +343,73 @@ shinyApp(ui = ui, server = server)</code></pre>
 </section>
 <section id="rest-of-the-site" class="level3">
 <h3 class="anchored" data-anchor-id="rest-of-the-site">Rest of the Site</h3>
+<p>Finally, here are important things to keep in mind for the rest of the site.</p>
+<p>The main title of your page is informative. Each post has an author/description/informative title. All lab required posts are present. Each page (including the home page) has a nice featured image associated with it. Your about page is up to date and clean. You have removed the generic posts from the initial site template.</p>
+<pre><code>    value = 2020,
+    step = 1
+  )
+),
+mainPanel(
+  plotOutput("crimePlot")
+)</code></pre>
+<p>) )</p>
+<p>server &lt;- function(input, output, session) { output<span class="math inline">\(crimePlot &lt;- renderPlot({
+    crime_filtered &lt;- crime_within_lapd %&gt;%
+      filter(year == input\)</span>year)</p>
+<pre><code>ggplot() +
+  geom_sf(data = economic_data_lapd, aes(fill = estimate), color = NA) +  
+  scale_fill_viridis_c(option = "magma", na.value = "grey50") +
+  geom_sf(data = crime_filtered, color = "black", shape = 4, size = 0.5, alpha = 0.7) +
+  labs(
+    title = paste("Median Income and", input$year, "Crime Data within LAPD Jurisdiction"),
+    fill = "Median Income"
+  ) +
+  theme_minimal() +
+  coord_sf(xlim = c(-118.7, -118), ylim = c(33.7, 34.5),expand = FALSE)</code></pre>
+<p>}) }</p>
+<p>shinyApp(ui = ui, server = server) ```</p>
+<hr>
+</section>
+<section id="interactive-1" class="level3">
+<h3 class="anchored" data-anchor-id="interactive-1">Interactive</h3>
+<p>You will also be required to make an interactive dashboard like <a href="./flex/flex.html">this one</a>.</p>
+<p>Your Big Data page should also include a small interactive dashboard. The dashboard should be created either using Shinylive, as below. This interactive component should in some way support your thesis from your big picture page. Good interactives often provide both high-level understanding of the data while allowing a user to investigate specific scenarios, observations, subgroups, etc.</p>
+<hr>
+</section>
+</section>
+<section id="rubric-on-this-page-1" class="level2">
+<h2 class="anchored" data-anchor-id="rubric-on-this-page-1">Rubric: On this page</h2>
+<p>You will</p>
+<ul>
+<li>Title
+<ul>
+<li>Your big picture page should have a creative/click-bait-y title/headline that provides a hint about your thesis.</li>
+</ul></li>
+<li>Clarity of Explanation
+<ul>
+<li>You should have a clear thesis/goal for this page. What are you trying to show? Make sure that you explain your analysis in detail but don’t go into top much mathematics or statistics. The audience for this page is the general public (to the extent possible). Your thesis should be a statement, not a question.</li>
+<li>Each figure should be very polished and also not too complicated. There should be a clear interpretation of the figure so the figure has a clear purpose. Even something like a histogram can be difficult to interpret for non-experts.</li>
+</ul></li>
+<li>Creativity
+<ul>
+<li>Do your best to make things interesting. Think of a story. Think of how each part of your analysis supports the previous part or provides a different perspective.</li>
+</ul></li>
+<li>Interactive component
+<ul>
+<li>Quality and ease of use of the interactive components. Is it clear what can be explored using your interactive components? Does it enhance and reinforce your conclusions?</li>
+</ul></li>
+<li>This page should be self-contained.</li>
+</ul>
+<p><strong>Note</strong>: This page should have no code visible, i.e.&nbsp;use <code>#| echo: FALSE</code>.</p>
+</section>
+<section id="rubric-other-components-1" class="level2">
+<h2 class="anchored" data-anchor-id="rubric-other-components-1">Rubric: Other components</h2>
+<section id="video-recording-1" class="level3">
+<h3 class="anchored" data-anchor-id="video-recording-1">Video Recording</h3>
+<p>Make a video recording (probably using Zoom) demonstrating your interactive components. You should provide a quick explanation of your data and demonstrate some of the conclusions from your EDA. This video should be no longer than 4 minutes. Include a link to your video (and password if needed) in your README.md file on your Github repository. You are not required to provide a link on the website. This can be presented by any subset of the team members.</p>
+</section>
+<section id="rest-of-the-site-1" class="level3">
+<h3 class="anchored" data-anchor-id="rest-of-the-site-1">Rest of the Site</h3>
 <p>Finally, here are important things to keep in mind for the rest of the site.</p>
 <p>The main title of your page is informative. Each post has an author/description/informative title. All lab required posts are present. Each page (including the home page) has a nice featured image associated with it. Your about page is up to date and clean. You have removed the generic posts from the initial site template.</p>
 
