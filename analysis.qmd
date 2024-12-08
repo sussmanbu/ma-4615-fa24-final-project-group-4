@@ -218,8 +218,8 @@ ggplot(crime_race_long, aes(x = avg_median_income, y = crime_count, color = race
 
 ```
 
-
-```{r}
+## Relationship between crime and median income 
+```{r relationship between crime and income}
 #| echo: false
 crime_with_income <- st_join(crime_with_neighborhoods, economic_data, join = st_within)
 median_income_by_neighborhood <- crime_with_income %>%
@@ -247,7 +247,66 @@ ggplot(median_income_by_neighborhood, aes(x = median_income, y = total_crimes)) 
   )
 
 ```
+The graph shows that there is no clear relationship between median income and total crimes based on the data points presented. While there is a general trend of lower median incomes associated with higher total crimes, there are several outliers that do not fit this pattern. Some areas with relatively high median incomes also have high total crime rates, and vice versa. This suggests that factors beyond just income level likely play a significant role in determining crime rates within a community. Simply assuming that higher-income neighborhoods will have lower crime rates oversimplifies the complex social, economic, and environmental factors that contribute to public safety. A more nuanced analysis would be needed to fully understand the relationship between these variables across different geographic areas.
+Our team decide to investigate the frequent of property crime by the each neighborhood that sort by their median income.
+
+## Property crime in each neighborhood order by their income 
 ```{r}
+#| echo: false
+
+crime_with_income <- crime_with_income %>%
+  mutate(
+    crime_type = case_when(
+      str_detect(Crm.Cd.Desc, regex("Burglary|Theft|Shoplifting|Robbery|Vandalism|Stolen", ignore_case = TRUE)) ~ "Property Crime",
+      str_detect(Crm.Cd.Desc, regex("Assault|Battery|Homicide", ignore_case = TRUE)) ~ "Violent Crime",
+      TRUE ~ "Other"
+    )
+  )
+property_crime_summary <- crime_with_income %>%
+  filter(crime_type == "Property Crime") %>%  # Filter for property crimes
+  group_by(AREA.NAME) %>%  # Group by neighborhood
+  summarize(
+    median_income = median(estimate, na.rm = TRUE),  # Median income per neighborhood
+    property_crimes = n()  # Count the number of property crimes
+  ) %>%
+  arrange(median_income) %>%  # Order neighborhoods by median income
+  mutate(AREA.NAME = factor(AREA.NAME, levels = AREA.NAME))  # Convert to factor to preserve order
+
+# Plot the data
+ggplot(property_crime_summary, aes(x = AREA.NAME, y = property_crimes)) +
+  geom_bar(stat = "identity", aes(fill = median_income), show.legend = TRUE) +
+  scale_fill_viridis_c(option = "plasma", name = "Median Income") +
+  labs(
+    title = "Property Crimes vs Median Income by Neighborhood",
+    x = "Neighborhood (Ordered by Median Income)",
+    y = "Number of Property Crimes",
+    caption = "Source: ACS 2020 and Crime Data"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.title.x = element_text(margin = margin(t = 10)),
+    axis.title.y = element_text(margin = margin(r = 10)),
+    plot.title = element_text(hjust = 0.5)
+  )
+
+```
+A common assumption is that wealthier neighborhoods, given their higher-value properties and assets, may be more frequent targets for property crimes. However, when analyzing the relationship between property crime counts and median household income across neighborhoods (sorted in ascending order of income), the data presents a different perspective.
+
+1.Higher Property Crime Rates in Lower-Income Neighborhoods:
+
+Contrary to the assumption, neighborhoods with lower median incomes (left side of the graph) generally experience higher property crime counts. This trend suggests that property crimes may be more prevalent in economically disadvantaged areas rather than affluent ones.
+
+2.Variation Among Neighborhoods with Similar Income Levels:
+
+Even within similar income brackets, some neighborhoods experience significantly different property crime counts. For example, neighborhoods like Newton and Southeast have relatively lower property crime counts than other low-income neighborhoods, indicating that additional factors beyond income are influencing crime rates.
+
+3.No Strong Pattern to Conclude the Assumption:
+
+Although there is some indication of lower property crime rates in wealthier neighborhoods, the overall data does not reveal a strong or definitive pattern to support the assumption that richer neighborhoods are systematically targeted for property crimes. Variations across income levels highlight the complexity of factors influencing crime rates.
+
+```{r}
+#|echo: false
 crime_summary$income_quartile <- cut(
   crime_summary$avg_income,
   breaks = quantile(crime_summary$avg_income, probs = seq(0, 1, by = 0.25), na.rm = TRUE),

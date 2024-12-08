@@ -174,37 +174,6 @@ Each page (including the home page) has a nice featured image associated with it
 Your about page is up to date and clean.
 You have removed the generic posts from the initial site template.
 
-        value = 2020,
-        step = 1
-      )
-    ),
-    mainPanel(
-      plotOutput("crimePlot")
-    )
-  )
-)
-
-server <- function(input, output, session) {
-  output$crimePlot <- renderPlot({
-    crime_filtered <- crime_within_lapd %>%
-      filter(year == input$year)
-    
-    ggplot() +
-      geom_sf(data = economic_data_lapd, aes(fill = estimate), color = NA) +  
-      scale_fill_viridis_c(option = "magma", na.value = "grey50") +
-      geom_sf(data = crime_filtered, color = "black", shape = 4, size = 0.5, alpha = 0.7) +
-      labs(
-        title = paste("Median Income and", input$year, "Crime Data within LAPD Jurisdiction"),
-        fill = "Median Income"
-      ) +
-      theme_minimal() +
-      coord_sf(xlim = c(-118.7, -118), ylim = c(33.7, 34.5),expand = FALSE)
-  })
-}
-
-shinyApp(ui = ui, server = server)
-```
-
 ---
 
 
