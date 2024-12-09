@@ -156,6 +156,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#example-of-loading-data" id="toc-example-of-loading-data" class="nav-link active" data-scroll-target="#example-of-loading-data">Example of loading data</a></li>
+  <li><a href="#relationship-between-crime-and-median-income" id="toc-relationship-between-crime-and-median-income" class="nav-link" data-scroll-target="#relationship-between-crime-and-median-income">Relationship between crime and median income</a></li>
+  <li><a href="#property-crime-in-each-neighborhood-order-by-their-income" id="toc-property-crime-in-each-neighborhood-order-by-their-income" class="nav-link" data-scroll-target="#property-crime-in-each-neighborhood-order-by-their-income">Property crime in each neighborhood order by their income</a></li>
   <li><a href="#note-on-attribution" id="toc-note-on-attribution" class="nav-link" data-scroll-target="#note-on-attribution">Note on Attribution</a></li>
   <li><a href="#rubric-on-this-page" id="toc-rubric-on-this-page" class="nav-link" data-scroll-target="#rubric-on-this-page">Rubric: On this page</a></li>
   <li><a href="#what-motivated-our-data-analysis" id="toc-what-motivated-our-data-analysis" class="nav-link" data-scroll-target="#what-motivated-our-data-analysis">What Motivated Our Data Analysis:</a></li>
@@ -225,6 +227,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+</section>
+<section id="relationship-between-crime-and-median-income" class="level2">
+<h2 class="anchored" data-anchor-id="relationship-between-crime-and-median-income">Relationship between crime and median income</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="analysis_files/figure-html/relationship between crime and income-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The graph shows that there is no clear relationship between median income and total crimes based on the data points presented. While there is a general trend of lower median incomes associated with higher total crimes, there are several outliers that do not fit this pattern. Some areas with relatively high median incomes also have high total crime rates, and vice versa. This suggests that factors beyond just income level likely play a significant role in determining crime rates within a community. Simply assuming that higher-income neighborhoods will have lower crime rates oversimplifies the complex social, economic, and environmental factors that contribute to public safety. A more nuanced analysis would be needed to fully understand the relationship between these variables across different geographic areas. Our team decide to investigate the frequent of property crime by the each neighborhood that sort by their median income.</p>
+</section>
+<section id="property-crime-in-each-neighborhood-order-by-their-income" class="level2">
+<h2 class="anchored" data-anchor-id="property-crime-in-each-neighborhood-order-by-their-income">Property crime in each neighborhood order by their income</h2>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -234,24 +252,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>A common assumption is that wealthier neighborhoods, given their higher-value properties and assets, may be more frequent targets for property crimes. However, when analyzing the relationship between property crime counts and median household income across neighborhoods (sorted in ascending order of income), the data presents a different perspective.</p>
+<p>1.Higher Property Crime Rates in Lower-Income Neighborhoods:</p>
+<p>Contrary to the assumption, neighborhoods with lower median incomes (left side of the graph) generally experience higher property crime counts. This trend suggests that property crimes may be more prevalent in economically disadvantaged areas rather than affluent ones.</p>
+<p>2.Variation Among Neighborhoods with Similar Income Levels:</p>
+<p>Even within similar income brackets, some neighborhoods experience significantly different property crime counts. For example, neighborhoods like Newton and Southeast have relatively lower property crime counts than other low-income neighborhoods, indicating that additional factors beyond income are influencing crime rates.</p>
+<p>3.No Strong Pattern to Conclude the Assumption:</p>
+<p>Although there is some indication of lower property crime rates in wealthier neighborhoods, the overall data does not reveal a strong or definitive pattern to support the assumption that richer neighborhoods are systematically targeted for property crimes. Variations across income levels highlight the complexity of factors influencing crime rates.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>crime_summary<span class="sc">$</span>income_quartile <span class="ot">&lt;-</span> <span class="fu">cut</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  crime_summary<span class="sc">$</span>avg_income,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="fu">quantile</span>(crime_summary<span class="sc">$</span>avg_income, <span class="at">probs =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.25</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">include.lowest =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Low Income"</span>, <span class="st">"Lower Middle Income"</span>, <span class="st">"Upper Middle Income"</span>, <span class="st">"High Income"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(crime_summary, <span class="fu">aes</span>(<span class="at">x =</span> income_quartile, <span class="at">y =</span> total_crimes)) <span class="sc">+</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> income_quartile)) <span class="sc">+</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">name =</span> <span class="st">"Income Quartile"</span>) <span class="sc">+</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distribution of Crime Counts by Income Quartile"</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Income Quartile"</span>,</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Total Crimes"</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|echo: false</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>crime_summary<span class="sc">$</span>income_quartile <span class="ot">&lt;-</span> <span class="fu">cut</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  crime_summary<span class="sc">$</span>avg_income,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="fu">quantile</span>(crime_summary<span class="sc">$</span>avg_income, <span class="at">probs =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.25</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">include.lowest =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Low Income"</span>, <span class="st">"Lower Middle Income"</span>, <span class="st">"Upper Middle Income"</span>, <span class="st">"High Income"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(crime_summary, <span class="fu">aes</span>(<span class="at">x =</span> total_crimes, <span class="at">y =</span> income_quartile)) <span class="sc">+</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> income_quartile)) <span class="sc">+</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">name =</span> <span class="st">"Income Quartile"</span>) <span class="sc">+</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Distribution of Crime Counts by Income Quartile"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Total Crimes"</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Income Quartile"</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
