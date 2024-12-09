@@ -306,27 +306,28 @@ Even within similar income brackets, some neighborhoods experience significantly
 Although there is some indication of lower property crime rates in wealthier neighborhoods, the overall data does not reveal a strong or definitive pattern to support the assumption that richer neighborhoods are systematically targeted for property crimes. Variations across income levels highlight the complexity of factors influencing crime rates.
 
 ```{r}
-#|echo: false
-crime_summary$income_quartile <- cut(
-  crime_summary$avg_income,
-  breaks = quantile(crime_summary$avg_income, probs = seq(0, 1, by = 0.25), na.rm = TRUE),
-  include.lowest = TRUE,
-  labels = c("Low Income", "Lower Middle Income", "Upper Middle Income", "High Income")
-)
-
-ggplot(crime_summary, aes(x = income_quartile, y = total_crimes)) +
-  geom_boxplot(aes(fill = income_quartile)) +
-  scale_fill_viridis_d(name = "Income Quartile") +
+income_inequality <- crime_with_income %>%
+  group_by(AREA.NAME) %>%
+  summarize(
+    income_range = max(estimate, na.rm = TRUE) - min(estimate, na.rm = TRUE),
+    total_crimes = n()
+  )
+ggplot(income_inequality, aes(x = income_range, y = total_crimes)) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
   labs(
-    title = "Distribution of Crime Counts by Income Quartile",
-    x = "Income Quartile",
+    title = "Income Inequality vs. Total Crimes",
+    x = "Income Range (Proxy for Inequality)",
     y = "Total Crimes"
   ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme_minimal()
+
+
+
 
 ```
-There is a clear inverse relationship between income levesl and median crime counts, with lower income neighborhoods experienceing higher crime rates. However, variability within the low income quartile highlights that not all low-income heighborhoods are equally affected. Even in high income neighborhoods, a few outliners indicate that some wealthy areas still experience relatively high crime levels. High crime rates and variability in low-icome neighborhoods point to systemic issues like lack of economic opportunities or targeted policing. 
+In our earlier analysis, we observed that economic factors, such as median income, play a role in shaping crime dynamics. Here, we extend our exploration to examine whther socioeconomic inequality within neighborhoods might also contribute to crime disparities. 
+The figure above examines the relationship between income inequality and the total number of crimes in neighborhoods. The red line shows a slight negative slope, suggesting that as income inequality increases, total crimes tend to decrease marginally. The data points are widely scattered around the line, reflecting significant variability in total crimes across neighborhoods with similar income ranges. This implies that factors beyond income inequality likely influence crime rates. 
 
 
 ## Note on Attribution
