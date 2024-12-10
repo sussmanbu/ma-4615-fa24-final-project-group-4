@@ -212,7 +212,7 @@ ui &lt;- fluidPage(
 
 server &lt;- function(input, output, session) {
   output$crimePlot &lt;- renderPlot({
-    crime_filtered &lt;- crime_within_lapd %&gt;%
+    crime_filtered &lt;- crime_with_income_lapd %&gt;%
       filter(year == input$year)
     
     ggplot() +
