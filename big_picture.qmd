@@ -51,7 +51,7 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   output$crimePlot <- renderPlot({
-    crime_filtered <- crime_within_lapd %>%
+    crime_filtered <- crime_with_income_lapd %>%
       filter(year == input$year)
     
     ggplot() +
