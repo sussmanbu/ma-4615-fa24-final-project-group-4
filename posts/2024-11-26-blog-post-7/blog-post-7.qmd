@@ -303,3 +303,76 @@ ggplot(grid, aes(x = avg_median_income, y = predicted_crimes, color = race)) +
 ```
 
 
+```{r}
+crime_summary_blocks <- crime_within_lapd %>%
+  group_by(AREA.NAME) %>%
+  summarize(
+    total_crimes = n(),
+    geometry = st_union(geometry)  # Combine geometries for each group
+  ) %>%
+  filter(!is.na(total_crimes)) %>%  # Exclude areas with no crimes
+  st_as_sf()  # Ensure it remains an sf object
+
+print(crime_summary_blocks)
+crime_summary_blocks <- st_set_crs(crime_summary_blocks, 4326)
+
+```
+```{r}
+# Load LAPD boundary
+lapd_boundary <- st_read(here("CityBoundaryofLosAngeles/geo_export_416eaeda-447a-4473-b003-37e2cad181ac.shp")) %>%
+  st_make_valid() %>%                # Ensure valid geometry
+  st_transform(crs = 4326)           # Align CRS (use WGS84 as default)
+
+# Load neighborhoods
+neighborhoods <- st_read(here("LA_Times_Neighborhood_Boundaries-shp/8494cd42-db48-4af1-a215-a2c8f61e96a22020328-1-621do0.x5yiu.shp")) %>%
+  st_make_valid() %>%
+  st_transform(crs = st_crs(lapd_boundary))  # Match CRS with LAPD boundary
+
+
+neighborhoods_lapd <- st_intersection(neighborhoods, lapd_boundary)
+
+
+neighborhoods_lapd <- st_buffer(neighborhoods, dist = 0) %>%
+  st_intersection(st_buffer(lapd_boundary, dist = 0))
+
+
+crime_sf <- st_as_sf(data, coords = c("LON", "LAT"), crs = 4326)  # Crime data as sf object
+
+# Filter crimes to those within LAPD boundary
+crimes_in_lapd <- st_filter(crime_sf, lapd_boundary)
+
+neighborhoods_lapd <- st_make_valid(neighborhoods_lapd)
+crimes_in_lapd <- st_make_valid(crimes_in_lapd)
+
+# Join crimes to neighborhoods
+crimes_by_neighborhood <- st_join(crimes_in_lapd, neighborhoods_lapd, join = st_within)
+
+
+# Ensure crimes_by_neighborhood includes counts and neighborhood polygons
+crime_summary <- neighborhoods_lapd %>%
+  left_join(
+    crimes_by_neighborhood %>%
+      st_drop_geometry() %>%  # Drop point geometry to focus on attributes
+      group_by(name) %>%      # Replace "NAME" with neighborhood column in neighborhoods_lapd
+      summarize(total_crimes = n()),
+    by = "name"               # Join by neighborhood name or another matching column
+  )
+
+
+
+ggplot() +
+  geom_sf(data = neighborhoods_lapd, fill = NA, color = "black") +  # Neighborhood outlines
+  geom_sf(data = crime_summary, aes(fill = total_crimes), color = NA) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey50") +
+  labs(
+    title = "Heatmap of Crimes by Neighborhood (LAPD Jurisdiction)",
+    fill = "Total Crimes"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(size = 18, hjust = 0.5),
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 12)
+  )
+
+```
