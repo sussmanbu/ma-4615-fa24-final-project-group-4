@@ -10,6 +10,81 @@ format:
 filters:
   - shinylive
 ---
+```{r load libraries}
+#| results: "hide"
+#| echo: false
+library(tidyverse)
+library(sf)
+library(tidycensus)
+library(here)
+library(viridis)
+library(dplyr)
+library(MASS)
+library(tidyr)
+
+# Load crime data and convert to spatial format
+data <- readRDS(here("filtered_data_2.rds"))
+crime_sf <- st_as_sf(data, coords = c("LON", "LAT"), crs = 4326)
+
+# Load neighborhood boundaries
+neighborhoods <- st_read(here("LA_Times_Neighborhood_Boundaries-shp/8494cd42-db48-4af1-a215-a2c8f61e96a22020328-1-621do0.x5yiu.shp")) %>%
+  st_transform(st_crs(crime_sf))
+
+# Join crime incidents with neighborhoods
+crime_with_neighborhoods <- st_join(crime_sf, neighborhoods, join = st_within)
+census_api_key("c2aebe6041f0c99e41a3458ed8d0b95ee3650fa4")
+
+# Load and transform median income data
+economic_data <- get_acs(
+  geography = "block group",
+  variables = c(median_income = "B19013_001"),
+  state = "CA",
+  county = "Los Angeles",
+  year = 2020,
+  geometry = TRUE
+) %>% 
+  st_transform(st_crs(crime_with_neighborhoods))
+
+# Join income with neighborhood-level crime data
+crime_with_income <- st_join(crime_with_neighborhoods, economic_data, join = st_within)
+
+# Summarize crime data by neighborhood
+crime_summary <- crime_with_income %>%
+  group_by(GEOID) %>%
+  summarize(
+    total_crimes = n(),
+    avg_income = median(estimate, na.rm = TRUE),
+    geometry = st_union(geometry)
+  ) %>%
+  filter(!is.na(avg_income)) %>%  # Remove rows with missing income
+  st_as_sf()
+
+
+
+lapd_boundary <- st_read(here("CityBoundaryofLosAngeles/geo_export_416eaeda-447a-4473-b003-37e2cad181ac.shp")) %>%
+  st_transform(st_crs(crime_sf))  # Align CRS
+
+
+
+crime_within_lapd <- crime_sf %>%
+  filter(rowSums(st_within(geometry, st_geometry(lapd_boundary), sparse = FALSE)) > 0)
+
+crime_with_income_lapd <- st_join(crime_within_lapd, economic_data, join = st_within)
+
+economic_data_lapd <- st_intersection(economic_data, lapd_boundary)
+
+
+# Update the crime summary
+crime_summary_lapd <- crime_with_income_lapd %>%
+  group_by(GEOID) %>%
+  summarize(
+    total_crimes = n(),
+    avg_income = mean(estimate, na.rm = TRUE),
+    geometry = st_union(geometry)
+  ) %>%
+  filter(!is.na(avg_income)) %>%  # Exclude rows with missing income
+  st_as_sf()
+```
 
 ```{shinylive-r}
 #| results: "hide"
@@ -69,6 +144,162 @@ server <- function(input, output, session) {
 
 shinyApp(ui = ui, server = server)
 ```
+
+
+## Beyond the Poverty Myth: Unraveling Los Angeles' Crime Landscape
+
+
+When you think about crime, you might picture dangerous streets in low-income neighborhoods and pristine, secure communities in wealthier areas. Normally, you would avoid that one sketchy neighborhood when it is late at night. It’s a common narrative, repeated so often that it feels like fact: crime is a symptom of poverty, and wealth provides a safety net against it. But is this common perception really the truth?
+
+Using the LAPD crime reports and Census data from the past 4 years, we set out to explore the connection between income levels and crime rates across different neighborhoods in Los Angeles. The results might surprise you. While crime does concentrate in economically disadvantaged areas, the relationship between median income and crime is far from straightforward—and some of our findings challenge these well-worn assumptions. The stereotype that low median areas experience higher crime rates is overly simplistic. While violent crimes show some correlation with lower-income neighborhoods, broader crime patterns reveal that income alone does not explain crime rates. Our analysis uncovers complexities and outliers that challenge conventional beliefs. 
+
+The idea that crime is concentrated solely in low-income areas is pervasive but overly simplistic. While economically disadvantaged neighborhoods often face greater crime challenges, wealthier areas aren’t immune. 
+
+```{r, heatmap}
+#| results: "hide"
+#| warning: false
+#| echo: false
+# Load LAPD boundary
+lapd_boundary <- st_read(here("CityBoundaryofLosAngeles/geo_export_416eaeda-447a-4473-b003-37e2cad181ac.shp")) %>%
+  st_make_valid() %>%                # Ensure valid geometry
+  st_transform(crs = 4326)           # Align CRS (use WGS84 as default)
+
+# Load neighborhoods
+neighborhoods <- st_read(here("LA_Times_Neighborhood_Boundaries-shp/8494cd42-db48-4af1-a215-a2c8f61e96a22020328-1-621do0.x5yiu.shp")) %>%
+  st_make_valid() %>%
+  st_transform(crs = st_crs(lapd_boundary))  # Match CRS with LAPD boundary
+
+
+neighborhoods_lapd <- st_intersection(neighborhoods, lapd_boundary)
+
+
+neighborhoods_lapd <- st_buffer(neighborhoods, dist = 0) %>%
+  st_intersection(st_buffer(lapd_boundary, dist = 0))
+
+
+crime_sf <- st_as_sf(data, coords = c("LON", "LAT"), crs = 4326)  # Crime data as sf object
+
+# Filter crimes to those within LAPD boundary
+crimes_in_lapd <- st_filter(crime_sf, lapd_boundary)
+
+neighborhoods_lapd <- st_make_valid(neighborhoods_lapd)
+crimes_in_lapd <- st_make_valid(crimes_in_lapd)
+
+# Join crimes to neighborhoods
+crimes_by_neighborhood <- st_join(crimes_in_lapd, neighborhoods_lapd, join = st_within)
+
+
+# Ensure crimes_by_neighborhood includes counts and neighborhood polygons
+crime_summary <- neighborhoods_lapd %>%
+  left_join(
+    crimes_by_neighborhood %>%
+      st_drop_geometry() %>%  # Drop point geometry to focus on attributes
+      group_by(name) %>%      # Replace "NAME" with neighborhood column in neighborhoods_lapd
+      summarize(total_crimes = n()),
+    by = "name"               # Join by neighborhood name or another matching column
+  )
+
+
+
+ggplot() +
+  geom_sf(data = neighborhoods_lapd, fill = NA, color = "black") +  # Neighborhood outlines
+  geom_sf(data = crime_summary, aes(fill = total_crimes), color = NA) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey50") +
+  labs(
+    title = "Heatmap of Crimes by Neighborhood (LAPD Jurisdiction)",
+    fill = "Total Crimes"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(size = 18, hjust = 0.5),
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 12)
+  )
+
+
+
+```
+This heatmap visualizes the total crime distribution across Los Angeles neighborhoods under LAPD jurisdiction.  Darker areas indicate lower crime counts, while lighter areas signify higher crime activity. At a glance, the map reveals significant disparities in crime concentration across the city. High counts of crime are apparent in neighborhoods in Central and West.
+
+```{r violent crime in each neighborhood}
+#| echo: false
+
+crime_with_income <- crime_with_income %>%
+  mutate(
+    crime_type = case_when(
+      str_detect(Crm.Cd.Desc, regex("Burglary|Theft|Shoplifting|Robbery|Vandalism|Stolen", ignore_case = TRUE)) ~ "Property Crime",
+      str_detect(Crm.Cd.Desc, "ASSAULT|ROBBERY|HOMICIDE|KIDNAPPING|SEXUAL ASSAULT") ~ "Violent Crime",
+      TRUE ~ "Other"
+    )
+  )
+property_crime_summary <- crime_with_income %>%
+  filter(crime_type == "Violent Crime") %>%  # Filter for property crimes
+  group_by(AREA.NAME) %>%  # Group by neighborhood
+  summarize(
+    median_income = median(estimate, na.rm = TRUE),  # Median income per neighborhood
+    property_crimes = n()  # Count the number of property crimes
+  ) %>%
+  arrange(median_income) %>%  # Order neighborhoods by median income
+  mutate(AREA.NAME = factor(AREA.NAME, levels = AREA.NAME))  # Convert to factor to preserve order
+
+# Plot the data
+ggplot(property_crime_summary, aes(x = AREA.NAME, y = property_crimes)) +
+  geom_bar(stat = "identity", aes(fill = median_income), show.legend = TRUE) +
+  scale_fill_viridis_c(option = "plasma", name = "Median Income") +
+  labs(
+    title = "Violent
+    Crimes vs Median Income by Neighborhood",
+    x = "Neighborhood (Ordered by Median Income)",
+    y = "Number of Violent Crimes",
+    caption = "Source: ACS 2020 and Crime Data"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.title.x = element_text(margin = margin(t = 10)),
+    axis.title.y = element_text(margin = margin(r = 10)),
+    plot.title = element_text(hjust = 0.5)
+  )
+
+```
+To further examine the relationship between income and crime, we analyzed crime rates across neighborhoods, sorting them by median income.  Based on common conception, most people would expect to see a decreasing trend where neighborhoods with lower median income would have higher crime count. However, notable neighborhoods like Pacific and Central have the higher crime counts among Los Angeles neighborhoods that sit in the upper echelon of median income. 
+
+```{r relationship between crime and income}
+#| echo: false
+crime_with_income <- st_join(crime_with_neighborhoods, economic_data, join = st_within)
+median_income_by_neighborhood <- crime_with_income %>%
+  group_by(AREA.NAME) %>%
+  summarize(
+    median_income = median(estimate, na.rm = TRUE),
+    total_crimes = n(),  # Optional: Include total crimes
+    geometry = st_union(geometry)
+  ) %>%
+  filter(!is.na(median_income)) %>% 
+  st_as_sf()
+ggplot(median_income_by_neighborhood, aes(x = median_income, y = total_crimes)) +
+  geom_point(aes(color = median_income), alpha = 0.7, size=4) +
+  scale_color_viridis_c(option = "plasma", name = "Median Income") +
+  labs(
+    title = "Relationship Between Median Income and Total Crimes",
+    x = "Median Income (USD)",
+    y = "Total Crimes",
+    caption = "Source: ACS 2020 and Crime Data"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "right",
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+```
+
+This scatterplot shows the relationship between median income and total crimes across neighborhoods in Los Angeles. Each point represents a neighborhood, with the x-axis showing median income and the y-axis showing the total number of crimes. The colors range from dark purple to bright yellow, indicating neighborhoods with lower to higher median incomes, respectively.
+At first look, the graph reveals no clear or consistent correlation between median income and total crime levels. While some low-income neighborhoods (darker points) experience higher crime rates, several high-income neighborhoods (yellow points) also show significant crime activity.
+This pattern underscores that the relationship between income and crime is not straightforward. Factors beyond income, such as population density, local policies, or social dynamics, likely play a significant role in shaping crime rates. This finding challenges traditional stereotypes and invites a deeper examination of what drives crime in Los Angeles communities.
+
+
+Crime in Los Angeles is a multifaceted issue. Our analysis challenges the simplistic narrative linking poverty and crime, showing that even wealthy neighborhoods can face significant crime challenges. These findings underscore the need to look beyond income when addressing public safety and building stronger communities. 
+
 
 ---
 
