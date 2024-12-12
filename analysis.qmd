@@ -179,8 +179,14 @@ crime_race_long <- crime_race_long %>%
   mutate(predicted_crimes = predict(nb_model, newdata = crime_race_long, type = "response"))
 
 
+lapd_boundary <- st_read(here("CityBoundaryofLosAngeles/geo_export_416eaeda-447a-4473-b003-37e2cad181ac.shp")) %>%
+  st_make_valid() %>%                # Ensure valid geometry
+  st_transform(crs = 4326)           # Align CRS (use WGS84 as default)
 
-
+# Load neighborhoods
+neighborhoods <- st_read(here("LA_Times_Neighborhood_Boundaries-shp/8494cd42-db48-4af1-a215-a2c8f61e96a22020328-1-621do0.x5yiu.shp")) %>%
+  st_make_valid() %>%
+  st_transform(crs = st_crs(lapd_boundary))  # Match CRS with LAPD boundary
 
 
 ```
@@ -232,7 +238,7 @@ median_income_by_neighborhood <- crime_with_income %>%
   filter(!is.na(median_income)) %>% 
   st_as_sf()
 ggplot(median_income_by_neighborhood, aes(x = median_income, y = total_crimes)) +
-  geom_point(aes(color = median_income, size = total_crimes), alpha = 0.7) +
+  geom_point(aes(color = median_income), alpha = 0.7, size=4) +
   scale_color_viridis_c(option = "plasma", name = "Median Income") +
   labs(
     title = "Relationship Between Median Income and Total Crimes",
@@ -247,25 +253,25 @@ ggplot(median_income_by_neighborhood, aes(x = median_income, y = total_crimes)) 
   )
 
 ```
-Graph explanation: the size of dot means the number of crime. As number of crime increase, the size of dot increase. The color from dark to bright means median income from low to high.
+Graph explanation: The color from dark to bright means median income from low to high.
 
 The graph shows that there is no clear relationship between median income and total crimes based on the data points presented. While there is a general trend of lower median incomes associated with higher total crimes, there are several outliers that do not fit this pattern. Some areas with relatively high median incomes also have high total crime rates, and vice versa. This suggests that factors beyond just income level likely play a significant role in determining crime rates within a community. Simply assuming that higher-income neighborhoods will have lower crime rates oversimplifies the complex social, economic, and environmental factors that contribute to public safety. A more nuanced analysis would be needed to fully understand the relationship between these variables across different geographic areas.
 Our team decide to investigate the frequent of property crime by the each neighborhood that sort by their median income.
 
-## Property crime in each neighborhood order by their income 
-```{r}
+## Violent crime in each neighborhood order by their income 
+```{r violent crime in each neighborhood}
 #| echo: false
 
 crime_with_income <- crime_with_income %>%
   mutate(
     crime_type = case_when(
       str_detect(Crm.Cd.Desc, regex("Burglary|Theft|Shoplifting|Robbery|Vandalism|Stolen", ignore_case = TRUE)) ~ "Property Crime",
-      str_detect(Crm.Cd.Desc, regex("Assault|Battery|Homicide", ignore_case = TRUE)) ~ "Violent Crime",
+      str_detect(Crm.Cd.Desc, "ASSAULT|ROBBERY|HOMICIDE|KIDNAPPING|SEXUAL ASSAULT") ~ "Violent Crime",
       TRUE ~ "Other"
     )
   )
 property_crime_summary <- crime_with_income %>%
-  filter(crime_type == "Property Crime") %>%  # Filter for property crimes
+  filter(crime_type == "Violent Crime") %>%  # Filter for property crimes
   group_by(AREA.NAME) %>%  # Group by neighborhood
   summarize(
     median_income = median(estimate, na.rm = TRUE),  # Median income per neighborhood
@@ -279,9 +285,10 @@ ggplot(property_crime_summary, aes(x = AREA.NAME, y = property_crimes)) +
   geom_bar(stat = "identity", aes(fill = median_income), show.legend = TRUE) +
   scale_fill_viridis_c(option = "plasma", name = "Median Income") +
   labs(
-    title = "Property Crimes vs Median Income by Neighborhood",
+    title = "Violent
+    Crimes vs Median Income by Neighborhood",
     x = "Neighborhood (Ordered by Median Income)",
-    y = "Number of Property Crimes",
+    y = "Number of Violent Crimes",
     caption = "Source: ACS 2020 and Crime Data"
   ) +
   theme_minimal() +
@@ -309,6 +316,58 @@ Even within similar income brackets, some neighborhoods experience significantly
 
 Although there is some indication of lower property crime rates in wealthier neighborhoods, the overall data does not reveal a strong or definitive pattern to support the assumption that richer neighborhoods are systematically targeted for property crimes. Variations across income levels highlight the complexity of factors influencing crime rates.
 
+## Crime count distribution in heatmap
+```{r heatmap for crime count}
+#| echo: false
+#| warning: false
+
+neighborhoods_lapd <- st_intersection(neighborhoods, lapd_boundary)
+
+
+neighborhoods_lapd <- st_buffer(neighborhoods, dist = 0) %>%
+  st_intersection(st_buffer(lapd_boundary, dist = 0))
+
+
+crime_sf <- st_as_sf(data, coords = c("LON", "LAT"), crs = 4326)  # Crime data as sf object
+
+# Filter crimes to those within LAPD boundary
+crimes_in_lapd <- st_filter(crime_sf, lapd_boundary)
+
+neighborhoods_lapd <- st_make_valid(neighborhoods_lapd)
+crimes_in_lapd <- st_make_valid(crimes_in_lapd)
+
+# Join crimes to neighborhoods
+crimes_by_neighborhood <- st_join(crimes_in_lapd, neighborhoods_lapd, join = st_within)
+
+
+# Ensure crimes_by_neighborhood includes counts and neighborhood polygons
+crime_summary <- neighborhoods_lapd %>%
+  left_join(
+    crimes_by_neighborhood %>%
+      st_drop_geometry() %>%  # Drop point geometry to focus on attributes
+      group_by(name) %>%      # Replace "NAME" with neighborhood column in neighborhoods_lapd
+      summarize(total_crimes = n()),
+    by = "name"               # Join by neighborhood name or another matching column
+  )
+
+
+
+ggplot() +
+  geom_sf(data = neighborhoods_lapd, fill = NA, color = "black") +  # Neighborhood outlines
+  geom_sf(data = crime_summary, aes(fill = total_crimes), color = NA) +
+  scale_fill_viridis_c(option = "plasma", na.value = "grey50") +
+  labs(
+    title = "Heatmap of Crimes by Neighborhood (LAPD Jurisdiction)",
+    fill = "Total Crimes"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 12, hjust = 0.5),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 10)
+  )
+
+```
 ```{r}
 income_inequality <- crime_with_income %>%
   group_by(AREA.NAME) %>%
@@ -334,46 +393,7 @@ In our earlier analysis, we observed that economic factors, such as median incom
 The figure above examines the relationship between income inequality and the total number of crimes in neighborhoods. The red line shows a slight negative slope, suggesting that as income inequality increases, total crimes tend to decrease marginally. The data points are widely scattered around the line, reflecting significant variability in total crimes across neighborhoods with similar income ranges. This implies that factors beyond income inequality likely influence crime rates. 
 
 
-## Note on Attribution
 
-In general, you should try to provide links to relevant resources, especially those that helped you. You don't have to link to every StackOverflow post you used but if there are explainers on aspects of the data or specific models that you found helpful, try to link to those. Also, try to link to other sources that might support (or refute) your analysis. These can just be regular hyperlinks. You don't need a formal citation.
-
-If you are directly quoting from a source, please make that clear. You can show quotes using `>` like this
-
-```         
-> To be or not to be.
-```
-
-> To be or not to be.
-
-------------------------------------------------------------------------
-
-## Rubric: On this page
-
-You will
-
--   Introduce what motivates your Data Analysis (DA)
-    -   Which variables and relationships are you most interested in?
-    -   What questions are you interested in answering?
-    -   Provide context for the rest of the page. This will include figures/tables that illustrate aspects of the data of your question.
--   Modeling and Inference
-    -   The page will include some kind of formal statistical model. This could be a linear regression, logistic regression, or another modeling framework.
-    -   Explain the ideas and techniques you used to choose the predictors for your model. (Think about including interaction terms and other transformations of your variables.)
-    -   Describe the results of your modelling and make sure to give a sense of the uncertainty in your estimates and conclusions.
--   Explain the flaws and limitations of your analysis
-    -   Are there some assumptions that you needed to make that might not hold? Is there other data that would help to answer your questions?
--   Clarity Figures
-    -   Are your figures/tables/results easy to read, informative, without problems like overplotting, hard-to-read labels, etc?
-    -   Each figure should provide a key insight. Too many figures or other data summaries can detract from this. (While not a hard limit, around 5 total figures is probably a good target.)
-    -   Default `lm` output and plots are typically not acceptable.
--   Clarity of Explanations
-    -   How well do you explain each figure/result?
-    -   Do you provide interpretations that suggest further analysis or explanations for observed phenomenon?
--   Organization and cleanliness.
-    -   Make sure to remove excessive warnings, hide most or all code, organize with sections or multiple pages, use bullets, etc.
-    -   This page should be self-contained, i.e. provide a description of the relevant data.
-    
-    
     
 # What Motivated Our Data Analysis:
 Crime is a pervasive issue that affects communities differently based on various socioeconomic, demographic, and geographic factors. Understanding what drives crime frequency is crucial for developing effective policies and interventions to promote equity and public safety.
