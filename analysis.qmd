@@ -340,11 +340,15 @@ crime_summary <- neighborhoods_lapd %>%
   )
 
 
-
 ggplot() +
   geom_sf(data = neighborhoods_lapd, fill = NA, color = "black") +  # Neighborhood outlines
   geom_sf(data = crime_summary, aes(fill = total_crimes), color = NA) +
-  scale_fill_viridis_c(option = "plasma", na.value = "grey50") +
+  scale_fill_distiller(
+    palette = "YlOrRd", 
+    direction = 1, 
+    na.value = "grey50",
+    name = "Total Crimes"
+  ) +
   labs(
     title = "Heatmap of Crimes by Neighborhood (LAPD Jurisdiction)",
     fill = "Total Crimes"
@@ -355,6 +359,7 @@ ggplot() +
     legend.title = element_text(size = 10),
     legend.text = element_text(size = 10)
   )
+
 
 ```
 This heatmap visualizes the spatial distribution of total crimes across neighborhoods under the LAPD jurisdiction, with higher crime rates indicated by brighter yellow hues and lower crime rates shown in darker purple. The outlier observed in the previous bar chart, Central, is corroborated here as one of the brightest regions on the map, indicating a notably high concentration of crimes.
