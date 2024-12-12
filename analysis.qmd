@@ -302,19 +302,8 @@ ggplot(property_crime_summary, aes(x = AREA.NAME, y = property_crimes)) +
 ```
 Graph explanation: The x-axis(areas) are order in ascending median income order, which we will expected from left to right neighborhood, the count of property crime will increase. 
 
-A common assumption is that wealthier neighborhoods, given their higher-value properties and assets, may be more frequent targets for property crimes. However, when analyzing the relationship between property crime counts and median household income across neighborhoods (sorted in ascending order of income), the data presents a different perspective.
 
-1.Higher Property Crime Rates in Lower-Income Neighborhoods:
-
-Contrary to the assumption, neighborhoods with lower median incomes (left side of the graph) generally experience higher property crime counts. This trend suggests that property crimes may be more prevalent in economically disadvantaged areas rather than affluent ones.
-
-2.Variation Among Neighborhoods with Similar Income Levels:
-
-Even within similar income brackets, some neighborhoods experience significantly different property crime counts. For example, neighborhoods like Newton and Southeast have relatively lower property crime counts than other low-income neighborhoods, indicating that additional factors beyond income are influencing crime rates.
-
-3.No Strong Pattern to Conclude the Assumption:
-
-Although there is some indication of lower property crime rates in wealthier neighborhoods, the overall data does not reveal a strong or definitive pattern to support the assumption that richer neighborhoods are systematically targeted for property crimes. Variations across income levels highlight the complexity of factors influencing crime rates.
+The chart reveals a notable outlier: the Central neighborhood, which reports a disproportionately high number of violent crimes relative to its median income. While the general trend aligns with the assumption—often rooted in societal stereotypes—that lower-income neighborhoods experience higher levels of violent crime, Central deviates from this expectation. Despite not having the lowest median income, its violent crime rate far exceeds those of other neighborhoods. This suggests that relying solely on income as a predictor of crime may oversimplify a more complex issue. Factors such as geographic location, population density, proximity to transit hubs, or the concentration of commercial and nightlife activities might better explain the elevated crime rate in Central. This highlights the importance of challenging stereotypes and exploring a broader range of influences when analyzing crime patterns.
 
 ## Crime count distribution in heatmap
 ```{r heatmap for crime count}
@@ -368,6 +357,9 @@ ggplot() +
   )
 
 ```
+This heatmap visualizes the spatial distribution of total crimes across neighborhoods under the LAPD jurisdiction, with higher crime rates indicated by brighter yellow hues and lower crime rates shown in darker purple. The outlier observed in the previous bar chart, Central, is corroborated here as one of the brightest regions on the map, indicating a notably high concentration of crimes.
+
+When connecting this to the previous graph, we see that Central's geographic location likely plays a significant role in its elevated crime levels. The neighborhood's centrality and potential proximity to high-density areas, transit hubs, or commercial districts could contribute to the high crime numbers. This geographic clustering of crime challenges the stereotype that violent crime is solely tied to lower-income areas, as Central's median income is not the lowest yet its crime rate is disproportionately high. It suggests that spatial dynamics, such as the presence of key urban features and high activity zones, may compound the crime rate independent of income alone.
 ```{r}
 income_inequality <- crime_with_income %>%
   group_by(AREA.NAME) %>%
