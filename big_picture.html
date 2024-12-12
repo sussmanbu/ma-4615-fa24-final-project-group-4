@@ -126,7 +126,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#interactive" id="toc-interactive" class="nav-link active" data-scroll-target="#interactive">Interactive</a></li>
+  <li><a href="#beyond-the-poverty-myth-unraveling-los-angeles-crime-landscape" id="toc-beyond-the-poverty-myth-unraveling-los-angeles-crime-landscape" class="nav-link active" data-scroll-target="#beyond-the-poverty-myth-unraveling-los-angeles-crime-landscape">Beyond the Poverty Myth: Unraveling Los Angeles’ Crime Landscape</a>
+  <ul class="collapse">
+  <li><a href="#interactive" id="toc-interactive" class="nav-link" data-scroll-target="#interactive">Interactive</a></li>
+  </ul></li>
   <li><a href="#rubric-on-this-page" id="toc-rubric-on-this-page" class="nav-link" data-scroll-target="#rubric-on-this-page">Rubric: On this page</a></li>
   <li><a href="#rubric-other-components" id="toc-rubric-other-components" class="nav-link" data-scroll-target="#rubric-other-components">Rubric: Other components</a>
   <ul class="collapse">
@@ -170,6 +173,44 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors
+Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE
+
+here() starts at /Users/seanfung/Documents/BU Fall 2024/MA 415/MA415 G4 Final Project
+
+Loading required package: viridisLite
+
+
+Attaching package: 'MASS'
+
+
+The following object is masked from 'package:dplyr':
+
+    select
+
+
+To install your API key for use in future sessions, run this function with `install = TRUE`.
+
+Getting data from the 2016-2020 5-year ACS
+
+Downloading feature geometry from the Census website.  To cache shapefiles for use in future sessions, set `options(tigris_use_cache = TRUE)`.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: attribute variables are assumed to be spatially constant throughout
+all geometries</code></pre>
+</div>
+</div>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
@@ -229,12 +270,49 @@ server &lt;- function(input, output, session) {
 }
 
 shinyApp(ui = ui, server = server)</code></pre>
+<section id="beyond-the-poverty-myth-unraveling-los-angeles-crime-landscape" class="level2">
+<h2 class="anchored" data-anchor-id="beyond-the-poverty-myth-unraveling-los-angeles-crime-landscape">Beyond the Poverty Myth: Unraveling Los Angeles’ Crime Landscape</h2>
+<p>When you think about crime, you might picture dangerous streets in low-income neighborhoods and pristine, secure communities in wealthier areas. Normally, you would avoid that one sketchy neighborhood when it is late at night. It’s a common narrative, repeated so often that it feels like fact: crime is a symptom of poverty, and wealth provides a safety net against it. But is this common perception really the truth?</p>
+<p>Using the LAPD crime reports and Census data from the past 4 years, we set out to explore the connection between income levels and crime rates across different neighborhoods in Los Angeles. The results might surprise you. While crime does concentrate in economically disadvantaged areas, the relationship between median income and crime is far from straightforward—and some of our findings challenge these well-worn assumptions. The stereotype that low median areas experience higher crime rates is overly simplistic. While violent crimes show some correlation with lower-income neighborhoods, broader crime patterns reveal that income alone does not explain crime rates. Our analysis uncovers complexities and outliers that challenge conventional beliefs.</p>
+<p>The idea that crime is concentrated solely in low-income areas is pervasive but overly simplistic. While economically disadvantaged neighborhoods often face greater crime challenges, wealthier areas aren’t immune.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="big_picture_files/figure-html/heatmap-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This heatmap visualizes the total crime distribution across Los Angeles neighborhoods under LAPD jurisdiction. Darker areas indicate lower crime counts, while lighter areas signify higher crime activity. At a glance, the map reveals significant disparities in crime concentration across the city. High counts of crime are apparent in neighborhoods in Central and West.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="big_picture_files/figure-html/violent crime in each neighborhood-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To further examine the relationship between income and crime, we analyzed crime rates across neighborhoods, sorting them by median income. Based on common conception, most people would expect to see a decreasing trend where neighborhoods with lower median income would have higher crime count. However, notable neighborhoods like Pacific and Central have the higher crime counts among Los Angeles neighborhoods that sit in the upper echelon of median income.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="big_picture_files/figure-html/relationship between crime and income-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This scatterplot shows the relationship between median income and total crimes across neighborhoods in Los Angeles. Each point represents a neighborhood, with the x-axis showing median income and the y-axis showing the total number of crimes. The colors range from dark purple to bright yellow, indicating neighborhoods with lower to higher median incomes, respectively. At first look, the graph reveals no clear or consistent correlation between median income and total crime levels. While some low-income neighborhoods (darker points) experience higher crime rates, several high-income neighborhoods (yellow points) also show significant crime activity. This pattern underscores that the relationship between income and crime is not straightforward. Factors beyond income, such as population density, local policies, or social dynamics, likely play a significant role in shaping crime rates. This finding challenges traditional stereotypes and invites a deeper examination of what drives crime in Los Angeles communities.</p>
+<p>Crime in Los Angeles is a multifaceted issue. Our analysis challenges the simplistic narrative linking poverty and crime, showing that even wealthy neighborhoods can face significant crime challenges. These findings underscore the need to look beyond income when addressing public safety and building stronger communities.</p>
 <hr>
 <section id="interactive" class="level3">
 <h3 class="anchored" data-anchor-id="interactive">Interactive</h3>
 <p>You will also be required to make an interactive dashboard like <a href="./flex/flex.html">this one</a>.</p>
 <p>Your Big Data page should also include a small interactive dashboard. The dashboard should be created either using Shinylive, as below. This interactive component should in some way support your thesis from your big picture page. Good interactives often provide both high-level understanding of the data while allowing a user to investigate specific scenarios, observations, subgroups, etc.</p>
 <hr>
+</section>
 </section>
 <section id="rubric-on-this-page" class="level2">
 <h2 class="anchored" data-anchor-id="rubric-on-this-page">Rubric: On this page</h2>
