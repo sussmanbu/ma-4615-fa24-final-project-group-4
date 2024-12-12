@@ -4,7 +4,7 @@ library(sf)
 library(tidycensus)
 library(here)
 
-# Load raw crime data
+
 data <- readRDS(here("filtered_data_2.rds"))
 crime_sf <- st_as_sf(data, coords = c("LON", "LAT"), crs = 4326)
 
@@ -38,5 +38,5 @@ crime_with_income_lapd <- st_join(crime_within_lapd, economic_data_lapd, join = 
 
 # Save the processed dataset
 saveRDS(crime_with_income_lapd, file = here("crime_with_income_lapd.rds"))
-cat("crime_with_income_lapd dataset has been successfully saved!")
+saveRDS(economic_data_lapd, file= here("economic_data_lapd.rds"))
 ```

@@ -157,9 +157,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#example-of-loading-data" id="toc-example-of-loading-data" class="nav-link active" data-scroll-target="#example-of-loading-data">Example of loading data</a></li>
   <li><a href="#relationship-between-crime-and-median-income" id="toc-relationship-between-crime-and-median-income" class="nav-link" data-scroll-target="#relationship-between-crime-and-median-income">Relationship between crime and median income</a></li>
-  <li><a href="#property-crime-in-each-neighborhood-order-by-their-income" id="toc-property-crime-in-each-neighborhood-order-by-their-income" class="nav-link" data-scroll-target="#property-crime-in-each-neighborhood-order-by-their-income">Property crime in each neighborhood order by their income</a></li>
-  <li><a href="#note-on-attribution" id="toc-note-on-attribution" class="nav-link" data-scroll-target="#note-on-attribution">Note on Attribution</a></li>
-  <li><a href="#rubric-on-this-page" id="toc-rubric-on-this-page" class="nav-link" data-scroll-target="#rubric-on-this-page">Rubric: On this page</a></li>
+  <li><a href="#violent-crime-in-each-neighborhood-order-by-their-income" id="toc-violent-crime-in-each-neighborhood-order-by-their-income" class="nav-link" data-scroll-target="#violent-crime-in-each-neighborhood-order-by-their-income">Violent crime in each neighborhood order by their income</a></li>
+  <li><a href="#crime-count-distribution-in-heatmap" id="toc-crime-count-distribution-in-heatmap" class="nav-link" data-scroll-target="#crime-count-distribution-in-heatmap">Crime count distribution in heatmap</a></li>
   <li><a href="#what-motivated-our-data-analysis" id="toc-what-motivated-our-data-analysis" class="nav-link" data-scroll-target="#what-motivated-our-data-analysis">What Motivated Our Data Analysis:</a></li>
   <li><a href="#variables-of-interest" id="toc-variables-of-interest" class="nav-link" data-scroll-target="#variables-of-interest">Variables of Interest</a></li>
   <li><a href="#key-questions" id="toc-key-questions" class="nav-link" data-scroll-target="#key-questions">Key Questions</a></li>
@@ -239,16 +238,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Graph explanation: the size of dot means the number of crime. As number of crime increase, the size of dot increase. The color from dark to bright means median income from low to high.</p>
+<p>Graph explanation: The color from dark to bright means median income from low to high.</p>
 <p>The graph shows that there is no clear relationship between median income and total crimes based on the data points presented. While there is a general trend of lower median incomes associated with higher total crimes, there are several outliers that do not fit this pattern. Some areas with relatively high median incomes also have high total crime rates, and vice versa. This suggests that factors beyond just income level likely play a significant role in determining crime rates within a community. Simply assuming that higher-income neighborhoods will have lower crime rates oversimplifies the complex social, economic, and environmental factors that contribute to public safety. A more nuanced analysis would be needed to fully understand the relationship between these variables across different geographic areas. Our team decide to investigate the frequent of property crime by the each neighborhood that sort by their median income.</p>
 </section>
-<section id="property-crime-in-each-neighborhood-order-by-their-income" class="level2">
-<h2 class="anchored" data-anchor-id="property-crime-in-each-neighborhood-order-by-their-income">Property crime in each neighborhood order by their income</h2>
+<section id="violent-crime-in-each-neighborhood-order-by-their-income" class="level2">
+<h2 class="anchored" data-anchor-id="violent-crime-in-each-neighborhood-order-by-their-income">Violent crime in each neighborhood order by their income</h2>
 <div class="cell">
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="analysis_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="analysis_files/figure-html/violent crime in each neighborhood-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -261,6 +260,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Even within similar income brackets, some neighborhoods experience significantly different property crime counts. For example, neighborhoods like Newton and Southeast have relatively lower property crime counts than other low-income neighborhoods, indicating that additional factors beyond income are influencing crime rates.</p>
 <p>3.No Strong Pattern to Conclude the Assumption:</p>
 <p>Although there is some indication of lower property crime rates in wealthier neighborhoods, the overall data does not reveal a strong or definitive pattern to support the assumption that richer neighborhoods are systematically targeted for property crimes. Variations across income levels highlight the complexity of factors influencing crime rates.</p>
+</section>
+<section id="crime-count-distribution-in-heatmap" class="level2">
+<h2 class="anchored" data-anchor-id="crime-count-distribution-in-heatmap">Crime count distribution in heatmap</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="analysis_files/figure-html/heatmap for crime count-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>income_inequality <span class="ot">&lt;-</span> crime_with_income <span class="sc">%&gt;%</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AREA.NAME) <span class="sc">%&gt;%</span></span>
@@ -283,60 +294,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="analysis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="analysis_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>In our earlier analysis, we observed that economic factors, such as median income, play a role in shaping crime dynamics. Here, we extend our exploration to examine whther socioeconomic inequality within neighborhoods might also contribute to crime disparities. The figure above examines the relationship between income inequality and the total number of crimes in neighborhoods. The red line shows a slight negative slope, suggesting that as income inequality increases, total crimes tend to decrease marginally. The data points are widely scattered around the line, reflecting significant variability in total crimes across neighborhoods with similar income ranges. This implies that factors beyond income inequality likely influence crime rates.</p>
-</section>
-<section id="note-on-attribution" class="level2">
-<h2 class="anchored" data-anchor-id="note-on-attribution">Note on Attribution</h2>
-<p>In general, you should try to provide links to relevant resources, especially those that helped you. You don’t have to link to every StackOverflow post you used but if there are explainers on aspects of the data or specific models that you found helpful, try to link to those. Also, try to link to other sources that might support (or refute) your analysis. These can just be regular hyperlinks. You don’t need a formal citation.</p>
-<p>If you are directly quoting from a source, please make that clear. You can show quotes using <code>&gt;</code> like this</p>
-<pre><code>&gt; To be or not to be.</code></pre>
-<blockquote class="blockquote">
-<p>To be or not to be.</p>
-</blockquote>
-<hr>
-</section>
-<section id="rubric-on-this-page" class="level2">
-<h2 class="anchored" data-anchor-id="rubric-on-this-page">Rubric: On this page</h2>
-<p>You will</p>
-<ul>
-<li>Introduce what motivates your Data Analysis (DA)
-<ul>
-<li>Which variables and relationships are you most interested in?</li>
-<li>What questions are you interested in answering?</li>
-<li>Provide context for the rest of the page. This will include figures/tables that illustrate aspects of the data of your question.</li>
-</ul></li>
-<li>Modeling and Inference
-<ul>
-<li>The page will include some kind of formal statistical model. This could be a linear regression, logistic regression, or another modeling framework.</li>
-<li>Explain the ideas and techniques you used to choose the predictors for your model. (Think about including interaction terms and other transformations of your variables.)</li>
-<li>Describe the results of your modelling and make sure to give a sense of the uncertainty in your estimates and conclusions.</li>
-</ul></li>
-<li>Explain the flaws and limitations of your analysis
-<ul>
-<li>Are there some assumptions that you needed to make that might not hold? Is there other data that would help to answer your questions?</li>
-</ul></li>
-<li>Clarity Figures
-<ul>
-<li>Are your figures/tables/results easy to read, informative, without problems like overplotting, hard-to-read labels, etc?</li>
-<li>Each figure should provide a key insight. Too many figures or other data summaries can detract from this. (While not a hard limit, around 5 total figures is probably a good target.)</li>
-<li>Default <code>lm</code> output and plots are typically not acceptable.</li>
-</ul></li>
-<li>Clarity of Explanations
-<ul>
-<li>How well do you explain each figure/result?</li>
-<li>Do you provide interpretations that suggest further analysis or explanations for observed phenomenon?</li>
-</ul></li>
-<li>Organization and cleanliness.
-<ul>
-<li>Make sure to remove excessive warnings, hide most or all code, organize with sections or multiple pages, use bullets, etc.</li>
-<li>This page should be self-contained, i.e.&nbsp;provide a description of the relevant data.</li>
-</ul></li>
-</ul>
 </section>
 <section id="what-motivated-our-data-analysis" class="level1">
 <h1>What Motivated Our Data Analysis:</h1>
@@ -456,7 +419,7 @@ prediction from rank-deficient fit; attr(*, "non-estim") has doubtful cases</cod
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="analysis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="analysis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
