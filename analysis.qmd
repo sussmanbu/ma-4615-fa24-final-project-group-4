@@ -189,7 +189,77 @@ neighborhoods <- st_read(here("LA_Times_Neighborhood_Boundaries-shp/8494cd42-db4
   st_transform(crs = st_crs(lapd_boundary))  # Match CRS with LAPD boundary
 
 
+lapd_boundary <- st_read(here("CityBoundaryofLosAngeles/geo_export_416eaeda-447a-4473-b003-37e2cad181ac.shp")) %>%
+  st_make_valid() %>%                # Ensure valid geometry
+  st_transform(crs = 4326)           # Align CRS (use WGS84 as default)
+
+# Load neighborhoods
+neighborhoods <- st_read(here("LA_Times_Neighborhood_Boundaries-shp/8494cd42-db48-4af1-a215-a2c8f61e96a22020328-1-621do0.x5yiu.shp")) %>%
+  st_make_valid() %>%
+  st_transform(crs = st_crs(lapd_boundary))  # Match CRS with LAPD boundary
+
+
+population_data <- get_acs(
+  geography = "block group",
+  variables = c(total_population = "B01003_001"),
+  state = "CA",
+  county = "Los Angeles",
+  year = 2020,
+  geometry = TRUE
+)
+
+neighborhoods <- st_read(here("LA_Times_Neighborhood_Boundaries-shp/8494cd42-db48-4af1-a215-a2c8f61e96a22020328-1-621do0.x5yiu.shp")) %>%
+  st_make_valid() %>%
+  st_transform(st_crs(population_data))
+
+
+population_with_neighborhoods <- st_join(population_data, neighborhoods, join = st_within)
+
+
+# Summarize total population by neighborhood
+neighborhood_population <- population_with_neighborhoods %>%
+  group_by(name) %>%  # Assuming 'name' is the neighborhood name column
+  summarize(total_population = sum(estimate, na.rm = TRUE)) %>%
+  filter(!is.na(total_population))  # Exclude rows with missing population
+
+
+areaData <- readRDS(here("crime_counts_by_area_with_coords.rds"))
+
+# Convert crime data into a spatial object (assuming coordinates are in 'avg_longitude' and 'avg_latitude')
+crime_data_sf <- st_as_sf(areaData, coords = c("avg_longitude", "avg_latitude"), crs = 4326)
+
+# Ensure that the neighborhood population data and neighborhoods are in the same CRS
+neighborhood_population <- st_transform(neighborhood_population, st_crs(crime_data_sf))
+neighborhoods <- st_transform(neighborhoods, st_crs(crime_data_sf))
+
+# Ensure both datasets have valid geometries
+crime_data_sf <- st_make_valid(crime_data_sf)
+neighborhood_population <- st_make_valid(neighborhood_population)
+
+# Check the CRS of both datasets to ensure they match
+print(st_crs(crime_data_sf))  # CRS of crime data
+print(st_crs(neighborhood_population))  # CRS of neighborhood population
+
+# If necessary, transform the neighborhood population data to the same CRS as crime data
+# This step should be redundant if CRS checks show they already match
+neighborhood_population <- st_transform(neighborhood_population, st_crs(crime_data_sf))
+
+# Perform the spatial join to associate crime data with the neighborhood polygons
+crime_population_with_data <- st_join(crime_data_sf, neighborhood_population, join = st_within)
+
+# Now calculate the crime-to-population ratio for each record
+crime_population_summary <- crime_population_with_data %>%
+  mutate(crime_to_population_ratio = crime_count / total_population)  # Divide total crime by total population
+
+
+
+
 ```
+
+
+
+
+
 ```{r}
 #| echo: false
 
@@ -304,6 +374,29 @@ Graph explanation: The x-axis(areas) are order in ascending median income order,
 
 
 The chart reveals a notable outlier: the Central neighborhood, which reports a disproportionately high number of violent crimes relative to its median income. While the general trend aligns with the assumption—often rooted in societal stereotypes—that lower-income neighborhoods experience higher levels of violent crime, Central deviates from this expectation. Despite not having the lowest median income, its violent crime rate far exceeds those of other neighborhoods. This suggests that relying solely on income as a predictor of crime may oversimplify a more complex issue. Factors such as geographic location, population density, proximity to transit hubs, or the concentration of commercial and nightlife activities might better explain the elevated crime rate in Central. This highlights the importance of challenging stereotypes and exploring a broader range of influences when analyzing crime patterns.
+```{r Ratio Graph}
+library(ggplot2)
+library(dplyr)
+
+# Filter for 2024 data, remove NA values, and calculate crime-to-population ratio
+crime_population_2024 <- crime_population_summary %>%
+  filter(year == 2024) %>%
+  mutate(crime_to_population_ratio = ifelse(total_population > 0, crime_count / total_population, NA)) %>%
+  filter(!is.na(crime_to_population_ratio) & !is.na(`AREA NAME`))  # Remove rows with NA in crime ratio or area name
+
+# Plot the crime-to-population ratio per area for 2024
+ggplot(crime_population_2024, aes(x = reorder(`AREA NAME`, crime_to_population_ratio), y = crime_to_population_ratio)) +
+  geom_bar(stat = "identity", fill = "blue") +  # Set the bar color to blue
+  coord_flip() +  # Flip the axes
+  labs(
+    title = "Crime-to-Population Ratio per Area (2024)",
+    x = "Neighborhood",
+    y = "Crime-to-Population Ratio"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 8))  # Adjust text size for readability
+
+```
 
 ## Crime count distribution in heatmap
 ```{r heatmap for crime count}
