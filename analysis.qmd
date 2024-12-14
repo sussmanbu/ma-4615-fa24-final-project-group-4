@@ -1,26 +1,10 @@
 ---
 title: Analysis
-description: Here we provide a detailed analysis using more sophisticated statistics techniques.
+description: This dataset includes 2,500 crime cases per year from the LAPD (2020-2024), detailing crime type, location, time, and demographics. Our analysis focuses on identifying crime hotspots, peak activity periods, and correlations between crime rates and median income by area.
 toc: true
 draft: false
+#runtime: shiny
 ---
-
-![](https://upload.wikimedia.org/wikipedia/commons/7/77/Pebbleswithquarzite.jpg)
-
-This comes from the file `analysis.qmd`.
-
-We describe here our detailed data analysis. This page will provide an overview of what questions you addressed, illustrations of relevant aspects of the data with tables and figures, and a statistical model that attempts to answer part of the question. You'll also reflect on next steps and further analysis.
-
-The audience for this page is someone like your class mates, so you can expect that they have some level of statistical and quantitative sophistication and understand ideas like linear and logistic regression, coefficients, confidence intervals, overfitting, etc. 
-
-While the exact number of figures and tables will vary and depend on your analysis, you should target around 5 to 6. An overly long analysis could lead to losing points.
-If you want you can link back to your blog posts or create separate pages with more details.
-
-The style of this paper should aim to be that of an academic paper. 
-I don't expect this to be of publication quality but you should keep that aim in mind.
-Avoid using "we" too frequently, for example "We also found that ...". Describe your methodology and your findings but don't describe your whole process.
-
-### Example of loading data
 
 ```{r load libraries}
 #| results: "hide"
@@ -256,6 +240,92 @@ crime_population_summary <- crime_population_with_data %>%
 
 ```
 
+# Introduction:
+Crime rates can be interesting to analyze for policymakers, politicians, law enforcement or for students working on a data project. In this project, we wanted to look at the factors impacting crime, specifically under the LAPD's jurisdiction and looking at some variables that we thought might impact crimes. 
+```{r Shiny map}
+#| echo: false
+#| message: false
+#| warning: false
+library(shiny)
+library(leaflet)
+library(sf)
+library(here)
+
+# Load data
+lapd_boundary <- st_read(
+  here("CityBoundaryofLosAngeles/geo_export_416eaeda-447a-4473-b003-37e2cad181ac.shp"),
+  quiet = TRUE
+) %>%
+  st_make_valid() %>%
+  st_transform(crs = 4326)
+
+neighborhoods <- st_read(
+  here("LA_Times_Neighborhood_Boundaries-shp/8494cd42-db48-4af1-a215-a2c8f61e96a22020328-1-621do0.x5yiu.shp"),
+  quiet = TRUE
+) %>%
+  st_make_valid() %>%
+  st_transform(crs = 4326)
+
+# Define UI
+ui <- fluidPage(
+  titlePanel("Map of Los Angeles with LAPD Jurisdiction and Neighborhoods"),
+  leafletOutput("map", height = "600px")
+)
+
+# Define Server
+server <- function(input, output, session) {
+  output$map <- renderLeaflet({
+    leaflet() %>%
+      addTiles() %>%
+      addPolygons(data = lapd_boundary, color = "black", weight = 2, fillOpacity = 0.1, group = "LAPD Boundary") %>%
+      addPolygons(data = neighborhoods, color = "blue", weight = 1, fillOpacity = 0.2, group = "Neighborhoods") %>%
+      addLayersControl(
+        overlayGroups = c("LAPD Boundary", "Neighborhoods"),
+        options = layersControlOptions(collapsed = FALSE)
+      )
+  })
+}
+
+# Run the application
+shinyApp(ui, server)
+
+
+```
+
+
+
+## What Motivated Our Data Analysis:
+Crime is a pervasive issue that affects communities differently based on various socioeconomic, demographic, and geographic factors. Understanding what drives crime frequency is crucial for developing effective policies and interventions to promote equity and public safety.
+
+Our data analysis was motivated by the desire to uncover relationships between crime and the following key factors:
+
+**Economic Status** (e.g., median income) \
+**Demographics** (e.g., racial composition) \
+**Location** (e.g., neighborhood characteristics) \
+\
+
+
+
+## Variables of Interest
+
+The primary variables we analyzed included:
+
+**Crime Frequency:** The total number of reported crimes in a neighborhood. \
+**Economic Data:** Median household income from the American Community Survey (ACS). \
+**Neighborhood Boundaries:** Spatial boundaries defined by the LA Times. \
+**Location Data:** Geospatial coordinates (latitude and longitude) for reported crime incidents. \
+\
+To explore these variables, we integrated datasets from LAPD crime reports, U.S. Census economic data, and geospatial shapefiles for Los Angeles neighborhoods. This allowed us to analyze both spatial and statistical relationships. \
+
+## Key Questions
+**Economic Status and Crime:** Does a neighborhood's median income influence the number of crimes reported? \
+**Geographic Crime Hotspots:** Are there specific areas with persistently high crime rates? \
+**Disparities in Crime Impact:** How do demographic or socioeconomic disparities correlate with crime?
+
+
+
+
+
 
 
 
@@ -485,35 +555,6 @@ The figure above examines the relationship between income inequality and the tot
 
 
     
-# What Motivated Our Data Analysis:
-Crime is a pervasive issue that affects communities differently based on various socioeconomic, demographic, and geographic factors. Understanding what drives crime frequency is crucial for developing effective policies and interventions to promote equity and public safety.
-
-Our data analysis was motivated by the desire to uncover relationships between crime and the following key factors:
-
-**Economic Status** (e.g., median income) \
-**Demographics** (e.g., racial composition) \
-**Location** (e.g., neighborhood characteristics) \
-\
-
-
-
-# Variables of Interest
-
-The primary variables we analyzed included:
-
-**Crime Frequency:** The total number of reported crimes in a neighborhood. \
-**Economic Data:** Median household income from the American Community Survey (ACS). \
-**Neighborhood Boundaries:** Spatial boundaries defined by the LA Times. \
-**Location Data:** Geospatial coordinates (latitude and longitude) for reported crime incidents. \
-#Add to here as necessary \
-To explore these variables, we integrated datasets from LAPD crime reports, U.S. Census economic data, and geospatial shapefiles for Los Angeles neighborhoods. This allowed us to analyze both spatial and statistical relationships. \
-#Add links here
-
-# Key Questions
-**Economic Status and Crime:** Does a neighborhood's median income influence the number of crimes reported? \
-**Geographic Crime Hotspots:** Are there specific areas with persistently high crime rates? \
-**Disparities in Crime Impact:** How do demographic or socioeconomic disparities correlate with crime?
-#Add here as necessary \
 
 # Modeling and Inference
 ## Motivation for the Model
@@ -539,23 +580,28 @@ Predictors Considered
 poisson_model <- glm(crime_count ~ avg_median_income + race, family = poisson(link = "log"), data = crime_race_long)
 summary(poisson_model)
 ```
-#### Coefficients:
-- **avg_median_income**: -0.0019821 (p < 0.001, significant)
-- **raceBlack**: 0.6206 (p = 0.007, significant)
-- **raceHispanic.Latin.Mexican**: 0.8102 (p < 0.001, significant)
-- **raceUnknown**: 0.7717 (p < 0.001, significant)
-- **raceWhite**: 0.6654 (p = 0.004, significant)
-
-#### Model Metrics:
-- Null deviance: 6300.2 on 5907 degrees of freedom
-- Residual deviance: 5790.0 on 5891 degrees of freedom
-- AIC: 20106
 
 **Key Insights:**
+Average median income is negatively associated with crime counts and is statistically significant in this analysis.
+To interpret the effect of average median income on crime count, we need to exponentiate the coefficient:
+e
+−
+0.0019821
+≈
+0.9980196
+e 
+−0.0019821
+ ≈0.9980196
+This means that for each dollar increase in average median income, the expected crime count is multiplied by approximately 0.9980196. To express this as a percentage decrease:
+1
+−
+0.9980196
+≈
+0.0019804
+1−0.9980196≈0.0019804
+Therefore, for each dollar increase in average median income, the expected crime count decreases by about 0.19804%, assuming other variables constant.
 
-avg_median_income is negatively associated with crime counts and is statistically significant. \
-Certain racial categories (raceHispanic.Latin.Mexican, raceUnknown, raceWhite, and raceBlack) are positively associated with higher crime counts and are statistically significant. \
-
+In terms of race, there were several that were statistically significant, meaning that they had a p-value less than 0.05. The races (Black, Hispanic/Latin/Mexican, Unknown, White) showed significant positive associations with crime count. We have to see if these trends carry over to the negative binomial model. 
 ### Negative Binomial regression model:
 ```{r Neg. Binomial}
 #| echo: False 
@@ -563,22 +609,29 @@ Certain racial categories (raceHispanic.Latin.Mexican, raceUnknown, raceWhite, a
 nb_model <- glm.nb(crime_count ~ avg_median_income * race, data = crime_race_long)
 summary(nb_model)
 ```
-#### Coefficients:
-- **raceHispanic.Latin.Mexican**: 1.0450 (p = 0.013, significant)
-- **raceUnknown**: 0.7903 (p = 0.061, marginally significant)
-- **raceBlack**: 0.7862 (p = 0.064, marginally significant)
-
-#### Model Metrics:
-- Null deviance: 4800.1 on 5907 degrees of freedom
-- Residual deviance: 4305.8 on 5877 degrees of freedom
-- AIC: 19758
-- Dispersion parameter: Theta = 9.252 (SE = 0.706)
 
 **Key Insights:**
 
-raceHispanic.Latin.Mexican remains statistically significant and positively associated with crime counts. \
-The inclusion of overdispersion (via the Negative Binomial model) leads to better model fit metrics (lower AIC and deviance) compared to the Poisson regression. \
-We evaluate model fit using AIC and residual diagnostics, concluding the Negative Binomial model better accounts for data characteristics. \
+Unlike the poisson distribution, the negative binomial's median income was not as statistically significant with a p-value of 0.79 which is much higher than the poisson's p-value of 7.42e-15. In practical terms, this means that after accounting for overdispersion in the negative binomial model, there is no strong evidence of a relationship between average median income and crime count in this dataset, however it may be small.\
+
+Based on the negative binomial regression results, the coefficient for avg_median_income is -0.0016531. This means that for each dollar increase in average median income, the expected log count of crimes decreases by 0.0016531, holding other variables constant.
+To interpret this in terms of the actual crime count, we can exponentiate the coefficient:
+e
+−
+0.0016531
+≈
+0.9983472
+e 
+−0.0016531
+ ≈0.9983472
+This indicates that for each dollar increase in average median income, the expected crime count is multiplied by approximately 0.9983472. In other words, there is a decrease of about 0.17% (1 - 0.9983472 = 0.0016528) in the expected crime count for every dollar increase in average median income. 
+
+From the several races with correlation from the Poisson graph, the two races that remain significant are Hispanic/Latin/Mexican and Black. As the LAPD only take victim descriptions, there could be larger, more broad implications at play that warrant further research. 
+
+These associations do not imply causation and may reflect complex socioeconomic factors not fully captured in the model.
+The marginally significant result for the Black category suggests a trend, but there's less certainty about this relationship compared to the Hispanic/Latin/Mexican category.
+Other factors not included in the model could be influencing these relationships.
+These findings should be considered in the broader context of potential reporting biases, policing practices, and socioeconomic conditions in different neighborhoods.
 
 ### Why Negative Binomial Was Better
 **Dispersion Issue:** The Poisson model assumes that the mean and variance of the dependent variable (crime counts) are equal. However, the data exhibits overdispersion (variance > mean), as indicated by the high residual deviance in the Poisson model. \
@@ -589,47 +642,60 @@ We evaluate model fit using AIC and residual diagnostics, concluding the Negativ
 ## Predicted Trends
 Using the model, we predict crime counts across income ranges for each racial group:
 ```{r Predicted Trends}
-#| echo: False
+#| echo: false
 
 grid <- expand.grid(
-  avg_median_income = seq(min(crime_race_long$avg_median_income), max(crime_race_long$avg_median_income), length.out = 100),
+  avg_median_income = seq(
+    length.out = 100
+  ),
   race = unique(crime_race_long$race)
 )
 grid$predicted_crimes <- predict(nb_model, newdata = grid, type = "response")
+
 ```
 ### Visualization
-```{r}
+```{r Visual of Prediction}
 #| echo: False
+# Filter races with p-values <= 0.09 and exclude "Unknown", "Other", "Other.Asian"
 significant_races <- summary(nb_model)$coefficients %>%
   as.data.frame() %>%
   rownames_to_column("race") %>%
   filter(grepl("race", race)) %>%  # Keep only race-related coefficients
   mutate(race = gsub("race", "", race)) %>%  # Clean up race names
-  filter(`Pr(>|z|)` <= 0.8) %>%  # Keep only races with p-values <= 0.7
-  filter(!race %in% c("Unknown", "Other")) %>%  # Exclude "Unknown" and "Other"
+  filter(`Pr(>|z|)` <= 0.9) %>%  # Keep races with p-values <= 0.09
+  filter(!race %in% c("Unknown", "Other", "Other.Asian", "Hawaiian")) %>%  # Exclude "Unknown", "Other", "Other.Asian"
   pull(race)
 
 # Filter the data to include only significant races
 filtered_crime_race_long <- crime_race_long %>%
+  mutate(avg_median_income = avg_median_income / 1000) %>%
+  filter(race %in% significant_races)
+grid <- grid %>%
+  filter(race %in% significant_races)
+# Ensure `grid` is filtered
+filtered_grid <- grid %>%
   filter(race %in% significant_races)
 
-# Plot the ggplot
+# Updated ggplot code
 ggplot(filtered_crime_race_long, aes(x = avg_median_income, y = predicted_crimes, color = race)) +
-  geom_line() +
-  facet_wrap(~race, scales = "free_y") +  # Facet by race, allowing y-axis to vary by panel
+  geom_line(data = filtered_grid, aes(x = avg_median_income, y = predicted_crimes, color = race), size = 1) +
+  facet_wrap(~race, scales = "free_y") +
   labs(
-    title = "Predicted Crime Counts vs Median Income by Race (Facet by Race)",
+    title = "Predicted Crime Counts vs Median Income by Race",
     x = "Average Median Income (in $1,000s)",
     y = "Predicted Crime Counts"
   ) +
   theme_minimal() +
   theme(
-    strip.text = element_text(size = 10),  # Adjust facet labels
-    legend.position = "none"              # Hide legend if redundant
+    strip.text = element_text(size = 10),
+    legend.position = "none"
   )
+
 ```
 This figure illustrates how income impacts predicted crime counts, highlighting disparities among racial groups.\
-This also removed any race with a P-Value over 0.8 and any races like "unknown" and "other" because that doesn't give much information. We can see that for the most part, as median income increases, the likelihood of a crime decreases. This is not the case for White, Chinese, and Filipino which might be worth looking into. 
+
+We can see that there are some outliers to the general trend that as median income goes up, crime counts goes down. White, chinese, and Filipinos are the outliers and this could be from more broad implications. It could mean that on average whites, Filipinos and Chinese live in wealthier neighborhoods so that crimes may go up due to population differences in income. We would have to do further analysis using something like census data to see if this is true. 
+
 
 ### Uncertainty and Limitations
 **1. Uncertainty in Estimates:**
