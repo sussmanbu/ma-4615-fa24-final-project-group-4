@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="description" content="We describe the sources of our data and the cleaning process.">
 
-<title>Data – MA [46]15 Final Project</title>
+<title>MA [46]15 Final Project - Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -34,7 +34,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -118,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -141,7 +141,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
+          <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -261,7 +261,7 @@ Attaching package: 'dplyr'</code></pre>
 &gt; library(here)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>here() starts at /Users/zzzhao/Desktop/MA415/ma-4615-fa24-final-project-group-4</code></pre>
+<pre><code>here() starts at /Users/yz/Desktop/Fall24/MA415/ma-4615-fa24-final-project-group-4</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -297,31 +297,31 @@ Attaching package: 'dplyr'</code></pre>
 
 &gt; str(sampled_data)
 tibble [12,500 × 25] (S3: tbl_df/tbl/data.frame)
- $ DR_NO              : int [1:12500] 200321001 201105226 200707168 200605755 201009017 201716744 202018953 201911573 202105350 200115568 ...
- $ Date.Rptd          : chr [1:12500] "11/27/2020 12:00:00 AM" "01/29/2020 12:00:00 AM" "03/08/2020 12:00:00 AM" "02/06/2020 12:00:00 AM" ...
- $ DATE.OCC           : POSIXct[1:12500], format: "2020-11-25" "2020-01-29" ...
- $ TIME.OCC           : int [1:12500] 1300 220 1500 1755 2230 1600 2000 1100 1355 2000 ...
- $ AREA               : int [1:12500] 3 11 7 6 10 17 20 19 21 1 ...
- $ AREA.NAME          : chr [1:12500] "Southwest" "Northeast" "Wilshire" "Hollywood" ...
- $ Rpt.Dist.No        : int [1:12500] 375 1144 747 646 1035 1729 2024 1967 2156 161 ...
- $ Part.1.2           : int [1:12500] 1 1 2 1 2 1 1 2 1 1 ...
- $ Crm.Cd             : int [1:12500] 420 330 354 440 946 420 510 627 442 330 ...
- $ Crm.Cd.Desc        : chr [1:12500] "THEFT FROM MOTOR VEHICLE - PETTY ($950 &amp; UNDER)" "BURGLARY FROM VEHICLE" "THEFT OF IDENTITY" "THEFT PLAIN - PETTY ($950 &amp; UNDER)" ...
- $ Mocodes            : chr [1:12500] "1606 1300 1822 0344" "0344" "1822" "0344" ...
- $ Vict.Age           : int [1:12500] 59 31 44 24 0 36 0 12 33 38 ...
- $ Vict.Sex           : chr [1:12500] "F" "M" "M" "F" ...
- $ Vict.Descent       : chr [1:12500] "H" "O" "B" "W" ...
- $ Premis.Cd          : int [1:12500] 101 101 501 210 101 118 101 501 404 108 ...
- $ Premis.Desc        : chr [1:12500] "STREET" "STREET" "SINGLE FAMILY DWELLING" "RESTAURANT/FAST FOOD" ...
- $ Status             : chr [1:12500] "IC" "IC" "IC" "IC" ...
- $ Status.Desc        : chr [1:12500] "Invest Cont" "Invest Cont" "Invest Cont" "Invest Cont" ...
- $ Crm.Cd.1           : int [1:12500] 420 330 354 440 946 420 510 627 442 330 ...
- $ LOCATION           : chr [1:12500] "1800    BROWNING                     BL" "2400    GRIFFITH PARK                BL" "1100 S  HUDSON                       AV" "HOLLYWOOD" ...
- $ LAT                : num [1:12500] 34 34.1 34.1 34.1 34.2 ...
- $ LON                : num [1:12500] -118 -118 -118 -118 -119 ...
+ $ DR_NO              : int [1:12500] 200515848 201711918 201505652 201611415 200810977 201519048 201114672 201108408 201012145 200121183 ...
+ $ Date.Rptd          : chr [1:12500] "10/27/2020 12:00:00 AM" "08/05/2020 12:00:00 AM" "02/02/2020 12:00:00 AM" "07/26/2020 12:00:00 AM" ...
+ $ DATE.OCC           : POSIXct[1:12500], format: "2020-10-27" "2020-07-16" ...
+ $ TIME.OCC           : int [1:12500] 200 1300 1400 1420 1600 2230 1100 1500 1500 10 ...
+ $ AREA               : int [1:12500] 5 17 15 16 8 15 11 11 10 1 ...
+ $ AREA.NAME          : chr [1:12500] "Harbor" "Devonshire" "N Hollywood" "Foothill" ...
+ $ Rpt.Dist.No        : int [1:12500] 529 1723 1555 1619 811 1599 1151 1173 1027 111 ...
+ $ Part.1.2           : int [1:12500] 1 1 1 2 1 1 1 1 2 2 ...
+ $ Crm.Cd             : int [1:12500] 310 341 341 624 510 440 510 420 626 956 ...
+ $ Crm.Cd.Desc        : chr [1:12500] "BURGLARY" "THEFT-GRAND ($950.01 &amp; OVER)EXCPT,GUNS,FOWL,LIVESTK,PROD" "THEFT-GRAND ($950.01 &amp; OVER)EXCPT,GUNS,FOWL,LIVESTK,PROD" "BATTERY - SIMPLE ASSAULT" ...
+ $ Mocodes            : chr [1:12500] "2004 1602 0358 0329 0397" "0344 0352 1202" "0344" "0361 0416 0913" ...
+ $ Vict.Age           : int [1:12500] 22 74 0 33 0 74 0 0 28 36 ...
+ $ Vict.Sex           : chr [1:12500] "F" "F" "M" "M" ...
+ $ Vict.Descent       : chr [1:12500] "H" "W" "W" "O" ...
+ $ Premis.Cd          : int [1:12500] 108 501 702 502 101 121 101 101 502 751 ...
+ $ Premis.Desc        : chr [1:12500] "PARKING LOT" "SINGLE FAMILY DWELLING" "OFFICE BUILDING/OFFICE" "MULTI-UNIT DWELLING (APARTMENT, DUPLEX, ETC)" ...
+ $ Status             : chr [1:12500] "IC" "IC" "IC" "AO" ...
+ $ Status.Desc        : chr [1:12500] "Invest Cont" "Invest Cont" "Invest Cont" "Adult Other" ...
+ $ Crm.Cd.1           : int [1:12500] 310 341 341 624 510 440 510 420 626 956 ...
+ $ LOCATION           : chr [1:12500] "600    BROAD                        AV" "20600    TRIBUNE                      ST" "5000    LANKERSHIM                   BL" "7500    HILLROSE                     ST" ...
+ $ LAT                : num [1:12500] 33.8 34.3 34.2 34.3 34 ...
+ $ LON                : num [1:12500] -118 -119 -118 -118 -119 ...
  $ year               : num [1:12500] 2020 2020 2020 2020 2020 2020 2020 2020 2020 2020 ...
- $ Descent_Description: chr [1:12500] "Hispanic/Latin/Mexican" "Other" "Black" "White" ...
- $ month              : chr [1:12500] "2020-11" "2020-01" "2020-02" "2020-02" ...</code></pre>
+ $ Descent_Description: chr [1:12500] "Hispanic/Latin/Mexican" "White" "White" "Other" ...
+ $ month              : chr [1:12500] "2020-10" "2020-07" "2020-01" "2020-07" ...</code></pre>
 </div>
 </div>
 <p>You should never use absolute paths (eg. <code>/Users/danielsussman/path/to/project/</code> or <code>C:\MA415\\Final_Project\</code>).</p>
@@ -736,7 +736,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -768,29 +779,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp("https:\/\/sussmanbu\.github\.io\/ma-4615-fa24-final-project-group-4\/");
@@ -798,7 +787,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
