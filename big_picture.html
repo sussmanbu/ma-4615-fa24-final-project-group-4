@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="description" content="A 538/Upshot style article about the data.">
 
-<title>MA [46]15 Final Project - Big Picture</title>
+<title>Big Picture – MA [46]15 Final Project</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -89,7 +89,7 @@ ul.task-list li input[type="checkbox"] {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -112,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -128,20 +128,12 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#beyond-the-poverty-myth-unraveling-los-angeles-crime-landscape" id="toc-beyond-the-poverty-myth-unraveling-los-angeles-crime-landscape" class="nav-link active" data-scroll-target="#beyond-the-poverty-myth-unraveling-los-angeles-crime-landscape">Beyond the Poverty Myth: Unraveling Los Angeles’ Crime Landscape</a>
   <ul class="collapse">
-  <li><a href="#interactive" id="toc-interactive" class="nav-link" data-scroll-target="#interactive">Interactive</a></li>
-  </ul></li>
-  <li><a href="#rubric-on-this-page" id="toc-rubric-on-this-page" class="nav-link" data-scroll-target="#rubric-on-this-page">Rubric: On this page</a></li>
-  <li><a href="#rubric-other-components" id="toc-rubric-other-components" class="nav-link" data-scroll-target="#rubric-other-components">Rubric: Other components</a>
-  <ul class="collapse">
-  <li><a href="#video-recording" id="toc-video-recording" class="nav-link" data-scroll-target="#video-recording">Video Recording</a></li>
-  <li><a href="#rest-of-the-site" id="toc-rest-of-the-site" class="nav-link" data-scroll-target="#rest-of-the-site">Rest of the Site</a></li>
-  <li><a href="#interactive-1" id="toc-interactive-1" class="nav-link" data-scroll-target="#interactive-1">Interactive</a></li>
-  </ul></li>
-  <li><a href="#rubric-on-this-page-1" id="toc-rubric-on-this-page-1" class="nav-link" data-scroll-target="#rubric-on-this-page-1">Rubric: On this page</a></li>
-  <li><a href="#rubric-other-components-1" id="toc-rubric-other-components-1" class="nav-link" data-scroll-target="#rubric-other-components-1">Rubric: Other components</a>
-  <ul class="collapse">
-  <li><a href="#video-recording-1" id="toc-video-recording-1" class="nav-link" data-scroll-target="#video-recording-1">Video Recording</a></li>
-  <li><a href="#rest-of-the-site-1" id="toc-rest-of-the-site-1" class="nav-link" data-scroll-target="#rest-of-the-site-1">Rest of the Site</a></li>
+  <li><a href="#the-story-behind-the-data" id="toc-the-story-behind-the-data" class="nav-link" data-scroll-target="#the-story-behind-the-data">The Story Behind the Data</a></li>
+  <li><a href="#visualizing-crime-trends" id="toc-visualizing-crime-trends" class="nav-link" data-scroll-target="#visualizing-crime-trends">Visualizing Crime Trends</a></li>
+  <li><a href="#median-income-vs.-total-crimes" id="toc-median-income-vs.-total-crimes" class="nav-link" data-scroll-target="#median-income-vs.-total-crimes">Median Income vs.&nbsp;Total Crimes</a></li>
+  <li><a href="#delving-into-violent-crime" id="toc-delving-into-violent-crime" class="nav-link" data-scroll-target="#delving-into-violent-crime">Delving Into Violent Crime</a></li>
+  <li><a href="#crime-to-population-ratios" id="toc-crime-to-population-ratios" class="nav-link" data-scroll-target="#crime-to-population-ratios">Crime-to-Population Ratios</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -235,8 +227,21 @@ shinyApp(ui = ui, server = server)</code></pre>
 <section id="beyond-the-poverty-myth-unraveling-los-angeles-crime-landscape" class="level2">
 <h2 class="anchored" data-anchor-id="beyond-the-poverty-myth-unraveling-los-angeles-crime-landscape">Beyond the Poverty Myth: Unraveling Los Angeles’ Crime Landscape</h2>
 <p>When you think about crime, you might picture dangerous streets in low-income neighborhoods and pristine, secure communities in wealthier areas. Normally, you would avoid that one sketchy neighborhood when it is late at night. It’s a common narrative, repeated so often that it feels like fact: crime is a symptom of poverty, and wealth provides a safety net against it. But is this common perception really the truth?</p>
-<p>Using the LAPD crime reports and Census data from the past 4 years, we set out to explore the connection between income levels and crime rates across different neighborhoods in Los Angeles. The results might surprise you. While crime does concentrate in economically disadvantaged areas, the relationship between median income and crime is far from straightforward—and some of our findings challenge these well-worn assumptions. The stereotype that low median areas experience higher crime rates is overly simplistic. While violent crimes show some correlation with lower-income neighborhoods, broader crime patterns reveal that income alone does not explain crime rates. Our analysis uncovers complexities and outliers that challenge conventional beliefs.</p>
-<p>The idea that crime is concentrated solely in low-income areas is pervasive but overly simplistic. While economically disadvantaged neighborhoods often face greater crime challenges, wealthier areas aren’t immune.</p>
+<p>We attempt to take a closer look at the relationship between income levels and crime rates in Los Angeles, aiming to uncover patterns that challenge conventional wisdom about the link between poverty and crime. Using the LAPD crime reports and Census data from the past 4 years, we set out to explore the connection between income levels and crime rates across different neighborhoods in Los Angeles. The results might surprise you. While crime does concentrate in economically disadvantaged areas, the relationship between median income and crime is far from straightforward—and some of our findings challenge these well-worn assumptions. The stereotype that low median areas experience higher crime rates is overly simplistic. While violent crimes show some correlation with lower-income neighborhoods, broader crime patterns reveal that income alone does not explain crime rates. Our analysis uncovers complexities and outliers that challenge conventional beliefs.</p>
+<section id="the-story-behind-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="the-story-behind-the-data">The Story Behind the Data</h3>
+<p>When you think about crime, certain images likely come to mind—run-down neighborhoods with boarded-up windows or wealthy enclaves guarded by private security. But how do crime rates really distribute across the city, and what role does income play?</p>
+<p>To answer these questions, we dove into LAPD crime reports and Census data from the past four years, breaking down crime trends by income, neighborhood population, and crime type. We looked beyond total crime counts to analyze violent crimes, population-adjusted metrics, and outliers that defy expectations.</p>
+<p>Here’s what we examined:</p>
+<ul>
+<li>Which neighborhoods experience the highest total crime rates?</li>
+<li>How does violent crime correlate with median income?</li>
+<li>Which areas have the highest crime-to-population ratios?</li>
+</ul>
+<p>Through this analysis, we paint a clearer picture of crime patterns in Los Angeles, revealing where the traditional narratives hold true—and where they fall apart.</p>
+</section>
+<section id="visualizing-crime-trends" class="level3">
+<h3 class="anchored" data-anchor-id="visualizing-crime-trends">Visualizing Crime Trends</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -246,8 +251,11 @@ shinyApp(ui = ui, server = server)</code></pre>
 </div>
 </div>
 </div>
-<p>This heatmap visualizes the total crime distribution across Los Angeles neighborhoods under LAPD jurisdiction. Darker areas indicate lower crime counts, while lighter areas signify higher crime activity. At a glance, the map reveals significant disparities in crime concentration across the city. High counts of crime are apparent in neighborhoods in Central and West where those neighborhoods are darker than the rest of the neighborhoods in Los Angeles.</p>
+<p>Using LAPD data, we mapped total crime counts across Los Angeles neighborhoods. The heatmap shows darker areas for lower crime counts and lighter areas for higher crime activity. Darker areas indicate lower crime counts, while lighter areas signify higher crime activity. At a glance, neighborhoods in Central LA and parts of West LA emerge as hotspots for criminal activity.</p>
 <p>However, this heatmap only shows the total crime counts geographically, without considering the underlying economic conditions of each neighborhood. By incorporating median income into the data and visualizations, we can better understand the relationship between crime and median income.</p>
+</section>
+<section id="median-income-vs.-total-crimes" class="level3">
+<h3 class="anchored" data-anchor-id="median-income-vs.-total-crimes">Median Income vs.&nbsp;Total Crimes</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -257,9 +265,11 @@ shinyApp(ui = ui, server = server)</code></pre>
 </div>
 </div>
 </div>
-<p>This scatterplot shows the relationship between median income and total crimes across neighborhoods in Los Angeles. Each point represents a neighborhood, with the x-axis showing median income and the y-axis showing the total number of crimes. The colors range from dark purple to bright yellow, indicating neighborhoods with lower to higher median incomes, respectively.</p>
-<p>At first look, the graph reveals no clear or consistent correlation between median income and total crime levels. While some low-income neighborhoods (darker points) experience higher crime rates, several high-income neighborhoods (yellow points) also show significant crime activity.</p>
-<p>This pattern underscores that the relationship between income and crime is not straightforward. Factors beyond income, such as population density, local policies, or social dynamics, likely play a significant role in shaping crime rates. This finding challenges traditional stereotypes and invites a deeper examination of what drives crime in Los Angeles communities.</p>
+<p>A scatterplot illustrates the relationship between median income and total crime rates for each neighborhood. Each point represents a neighborhood, with median income on the x-axis and total crimes on the y-axis. Points are color-coded, ranging from dark purple (lower income) to bright yellow (higher income).</p>
+<p>Interestingly, the scatterplot reveals no consistent correlation between income and total crime. While some low-income neighborhoods see higher crime rates, several affluent areas also report significant crime activity. This challenges the simplistic view that wealth equals safety, suggesting other factors—like population density and social dynamics—play a role.</p>
+</section>
+<section id="delving-into-violent-crime" class="level3">
+<h3 class="anchored" data-anchor-id="delving-into-violent-crime">Delving Into Violent Crime</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -269,8 +279,12 @@ shinyApp(ui = ui, server = server)</code></pre>
 </div>
 </div>
 </div>
-<p>However, when we shift focus from total crime counts to violent crimes and sort neighborhoods by median income, a more structured trend emerges. The bar chart highlights that neighborhoods with lower median incomes—such as Newton and Rampart consistently report the highest levels of violent crime. In contrast, wealthier areas like West LA and Devonshire show significantly fewer violent incidents.This displays a clear negative correlation between median income and violent crime rates. Neighborhoods with lower median incomes tend to experience higher levels of violent crime, while neighborhoods with higher median incomes report fewer violent crimes.</p>
-<p>There is a glaring outlier of Central LA facing high crime counts despite being on the higher median income relative to the other Los Angeles Neighborhood which doesn’t fit with the correlation between median income and violent crime. However, this only devles into a certain category of crime. Crime in Los Angeles is a multifaceted issue. Our analysis challenges the simplistic narrative linking poverty and crime, showing that even wealthy neighborhoods can face significant crime challenges. While focusing on violent crimes reveals a clear negative correlation with median income, examining crime relative to neighborhood populations adds another layer of complexity. Being in more dense-populated neighborhoods may contribute to more crime which scaling the crime count in proportion to population give a more accurate look into the relationship with median income and crime.</p>
+<p>When we shift focus to violent crime, a more distinct pattern emerges. Bar charts sorting neighborhoods by median income reveal a negative correlation: lower-income areas like Newton and Rampart report significantly higher violent crime rates, while wealthier neighborhoods like West LA and Devonshire see fewer incidents.</p>
+<p>There is a glaring outlier of Central LA facing high crime counts despite being on the higher median income relative to the other Los Angeles Neighborhood which doesn’t fit with the correlation between median income and violent crime. However, this only delves into a certain category of crime. Crime in Los Angeles is a multifaceted issue. Our analysis challenges the simplistic narrative linking poverty and crime, showing that even wealthy neighborhoods can face significant crime challenges.</p>
+<p>While focusing on violent crimes reveals a clear negative correlation with median income, examining crime relative to neighborhood populations adds another layer of complexity. Being in more dense-populated neighborhoods may contribute to more crime which scaling the crime count in proportion to population give a more accurate look into the relationship with median income and crime.</p>
+</section>
+<section id="crime-to-population-ratios" class="level3">
+<h3 class="anchored" data-anchor-id="crime-to-population-ratios">Crime-to-Population Ratios</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -280,95 +294,11 @@ shinyApp(ui = ui, server = server)</code></pre>
 </div>
 </div>
 </div>
-<p>Areas like 77th Street, Southwest, and Southeast stand out with significantly higher crime-to-population ratios, indicating that residents in these neighborhoods experience crime at a much higher rate compared to others. This metric underscores the unequal distribution of crime intensity across Los Angeles, revealing how population size can amplify the impact of crime on communities. Most of the neighborhoods that stand out with significantly high crime-to-population ratios all fall on the lower end of the median income.</p>
+<p>To account for population differences, we analyzed crime-to-population ratios across neighborhoods. Areas like 77th Street, Southwest, and Southeast show disproportionately high ratios, meaning residents in these neighborhoods face crime at significantly higher rates. Unsurprisingly, these neighborhoods tend to fall on the lower end of the median income spectrum.</p>
+</section>
+<section id="key-takeaways" class="level3">
+<h3 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h3>
 <p>The relationship between median income and crime in Los Angeles is far from straightforward. While there is a noticeable negative correlation—lower median income neighborhoods often experience higher crime rates—this relationship becomes less clear when accounting for factors like population density and proportional impacts. Population size, density, and local factors significantly shape crime distribution across neighborhoods. A simple link between poverty and crime oversimplifies a complex issue. Addressing crime in Los Angeles requires considering economic conditions, community dynamics, and residents’ lived experiences.</p>
-<hr>
-<section id="interactive" class="level3">
-<h3 class="anchored" data-anchor-id="interactive">Interactive</h3>
-<p>You will also be required to make an interactive dashboard like <a href="./flex/flex.html">this one</a>.</p>
-<p>Your Big Data page should also include a small interactive dashboard. The dashboard should be created either using Shinylive, as below. This interactive component should in some way support your thesis from your big picture page. Good interactives often provide both high-level understanding of the data while allowing a user to investigate specific scenarios, observations, subgroups, etc.</p>
-<hr>
-</section>
-</section>
-<section id="rubric-on-this-page" class="level2">
-<h2 class="anchored" data-anchor-id="rubric-on-this-page">Rubric: On this page</h2>
-<p>You will</p>
-<ul>
-<li>Title
-<ul>
-<li>Your big picture page should have a creative/click-bait-y title/headline that provides a hint about your thesis.</li>
-</ul></li>
-<li>Clarity of Explanation
-<ul>
-<li>You should have a clear thesis/goal for this page. What are you trying to show? Make sure that you explain your analysis in detail but don’t go into top much mathematics or statistics. The audience for this page is the general public (to the extent possible). Your thesis should be a statement, not a question.</li>
-<li>Each figure should be very polished and also not too complicated. There should be a clear interpretation of the figure so the figure has a clear purpose. Even something like a histogram can be difficult to interpret for non-experts.</li>
-</ul></li>
-<li>Creativity
-<ul>
-<li>Do your best to make things interesting. Think of a story. Think of how each part of your analysis supports the previous part or provides a different perspective.</li>
-</ul></li>
-<li>Interactive component
-<ul>
-<li>Quality and ease of use of the interactive components. Is it clear what can be explored using your interactive components? Does it enhance and reinforce your conclusions?</li>
-</ul></li>
-<li>This page should be self-contained.</li>
-</ul>
-<p><strong>Note</strong>: This page should have no code visible, i.e.&nbsp;use <code>#| echo: FALSE</code>.</p>
-</section>
-<section id="rubric-other-components" class="level2">
-<h2 class="anchored" data-anchor-id="rubric-other-components">Rubric: Other components</h2>
-<section id="video-recording" class="level3">
-<h3 class="anchored" data-anchor-id="video-recording">Video Recording</h3>
-<p>Make a video recording (probably using Zoom) demonstrating your interactive components. You should provide a quick explanation of your data and demonstrate some of the conclusions from your EDA. This video should be no longer than 4 minutes. Include a link to your video (and password if needed) in your README.md file on your Github repository. You are not required to provide a link on the website. This can be presented by any subset of the team members.</p>
-</section>
-<section id="rest-of-the-site" class="level3">
-<h3 class="anchored" data-anchor-id="rest-of-the-site">Rest of the Site</h3>
-<p>Finally, here are important things to keep in mind for the rest of the site.</p>
-<p>The main title of your page is informative. Each post has an author/description/informative title. All lab required posts are present. Each page (including the home page) has a nice featured image associated with it. Your about page is up to date and clean. You have removed the generic posts from the initial site template.</p>
-<hr>
-</section>
-<section id="interactive-1" class="level3">
-<h3 class="anchored" data-anchor-id="interactive-1">Interactive</h3>
-<p>You will also be required to make an interactive dashboard like <a href="./flex/flex.html">this one</a>.</p>
-<p>Your Big Data page should also include a small interactive dashboard. The dashboard should be created either using Shinylive, as below. This interactive component should in some way support your thesis from your big picture page. Good interactives often provide both high-level understanding of the data while allowing a user to investigate specific scenarios, observations, subgroups, etc.</p>
-<hr>
-</section>
-</section>
-<section id="rubric-on-this-page-1" class="level2">
-<h2 class="anchored" data-anchor-id="rubric-on-this-page-1">Rubric: On this page</h2>
-<p>You will</p>
-<ul>
-<li>Title
-<ul>
-<li>Your big picture page should have a creative/click-bait-y title/headline that provides a hint about your thesis.</li>
-</ul></li>
-<li>Clarity of Explanation
-<ul>
-<li>You should have a clear thesis/goal for this page. What are you trying to show? Make sure that you explain your analysis in detail but don’t go into top much mathematics or statistics. The audience for this page is the general public (to the extent possible). Your thesis should be a statement, not a question.</li>
-<li>Each figure should be very polished and also not too complicated. There should be a clear interpretation of the figure so the figure has a clear purpose. Even something like a histogram can be difficult to interpret for non-experts.</li>
-</ul></li>
-<li>Creativity
-<ul>
-<li>Do your best to make things interesting. Think of a story. Think of how each part of your analysis supports the previous part or provides a different perspective.</li>
-</ul></li>
-<li>Interactive component
-<ul>
-<li>Quality and ease of use of the interactive components. Is it clear what can be explored using your interactive components? Does it enhance and reinforce your conclusions?</li>
-</ul></li>
-<li>This page should be self-contained.</li>
-</ul>
-<p><strong>Note</strong>: This page should have no code visible, i.e.&nbsp;use <code>#| echo: FALSE</code>.</p>
-</section>
-<section id="rubric-other-components-1" class="level2">
-<h2 class="anchored" data-anchor-id="rubric-other-components-1">Rubric: Other components</h2>
-<section id="video-recording-1" class="level3">
-<h3 class="anchored" data-anchor-id="video-recording-1">Video Recording</h3>
-<p>Make a video recording (probably using Zoom) demonstrating your interactive components. You should provide a quick explanation of your data and demonstrate some of the conclusions from your EDA. This video should be no longer than 4 minutes. Include a link to your video (and password if needed) in your README.md file on your Github repository. You are not required to provide a link on the website. This can be presented by any subset of the team members.</p>
-</section>
-<section id="rest-of-the-site-1" class="level3">
-<h3 class="anchored" data-anchor-id="rest-of-the-site-1">Rest of the Site</h3>
-<p>Finally, here are important things to keep in mind for the rest of the site.</p>
-<p>The main title of your page is informative. Each post has an author/description/informative title. All lab required posts are present. Each page (including the home page) has a nice featured image associated with it. Your about page is up to date and clean. You have removed the generic posts from the initial site template.</p>
 
 
 </section>
@@ -410,18 +340,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -453,7 +372,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp("https:\/\/sussmanbu\.github\.io\/ma-4615-fa24-final-project-group-4\/");
@@ -461,7 +402,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

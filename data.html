@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="description" content="We describe the sources of our data and the cleaning process.">
 
-<title>MA [46]15 Final Project - Data</title>
+<title>Data – MA [46]15 Final Project</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -34,7 +34,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -118,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -141,7 +141,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -155,14 +155,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#what-makes-a-good-data-set" id="toc-what-makes-a-good-data-set" class="nav-link active" data-scroll-target="#what-makes-a-good-data-set">What makes a good data set?</a></li>
-  <li><a href="#where-to-keep-data" id="toc-where-to-keep-data" class="nav-link" data-scroll-target="#where-to-keep-data">Where to keep data?</a>
-  <ul class="collapse">
-  <li><a href="#sharing-your-data" id="toc-sharing-your-data" class="nav-link" data-scroll-target="#sharing-your-data">Sharing your data</a></li>
-  <li><a href="#load-and-clean-data-script" id="toc-load-and-clean-data-script" class="nav-link" data-scroll-target="#load-and-clean-data-script">Load and clean data script</a></li>
-  </ul></li>
-  <li><a href="#rubric-on-this-page" id="toc-rubric-on-this-page" class="nav-link" data-scroll-target="#rubric-on-this-page">Rubric: On this page</a></li>
-  <li><a href="#analysis-and-cleaning-of-lapd-crime-data-2020present" id="toc-analysis-and-cleaning-of-lapd-crime-data-2020present" class="nav-link" data-scroll-target="#analysis-and-cleaning-of-lapd-crime-data-2020present">Analysis and Cleaning of LAPD Crime Data (2020–Present)</a></li>
+  <li><a href="#analysis-and-cleaning-of-lapd-crime-data-2020present" id="toc-analysis-and-cleaning-of-lapd-crime-data-2020present" class="nav-link active" data-scroll-target="#analysis-and-cleaning-of-lapd-crime-data-2020present">Analysis and Cleaning of LAPD Crime Data (2020–Present)</a></li>
   <li><a href="#data-documentation" id="toc-data-documentation" class="nav-link" data-scroll-target="#data-documentation">Data Documentation</a>
   <ul class="collapse">
   <li><a href="#data-overview" id="toc-data-overview" class="nav-link" data-scroll-target="#data-overview">1. Data Overview</a></li>
@@ -174,6 +167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#updated-dataset-with-years-spread-across-multiple-years" id="toc-updated-dataset-with-years-spread-across-multiple-years" class="nav-link" data-scroll-target="#updated-dataset-with-years-spread-across-multiple-years">Updated Dataset with Years Spread Across Multiple Years</a></li>
   </ul></li>
   <li><a href="#census-data-utilized-in-crime-analysis" id="toc-census-data-utilized-in-crime-analysis" class="nav-link" data-scroll-target="#census-data-utilized-in-crime-analysis">Census Data Utilized in Crime Analysis</a></li>
+  <li><a href="#crimes-in-neighborhoods" id="toc-crimes-in-neighborhoods" class="nav-link" data-scroll-target="#crimes-in-neighborhoods">Crimes in Neighborhoods:</a></li>
   </ul>
 </nav>
     </div>
@@ -204,163 +198,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><img src="images/data-import-cheatsheet-thumbs.png" class="img-fluid"></p>
-<p>This comes from the file <code>data.qmd</code>.</p>
-<p>Your first steps in this project will be to find data to work on.</p>
-<p>I recommend trying to find data that interests you and that you are knowledgeable about. A bad example would be if you have no interest in video games but your data set is about video games. I also recommend finding data that is related to current events, social justice, and other areas that have an impact.</p>
-<p>Initially, you will study <em>one dataset</em> but later you will need to combine that data with another dataset. For this reason, I recommend finding data that has some date and/or location components. These types of data are conducive to interesting visualizations and analysis and you can also combine this data with other data that also has a date or location variable. Data from the census, weather data, economic data, are all relatively easy to combine with other data with time/location components.</p>
-<section id="what-makes-a-good-data-set" class="level2">
-<h2 class="anchored" data-anchor-id="what-makes-a-good-data-set">What makes a good data set?</h2>
-<ul>
-<li>Data you are interested in and care about.</li>
-<li>Data where there are a lot of potential questions that you can explore.</li>
-<li>A data set that isn’t completely cleaned already.</li>
-<li>Multiple sources for data that you can combine.</li>
-<li>Some type of time and/or location component.</li>
-</ul>
-</section>
-<section id="where-to-keep-data" class="level2">
-<h2 class="anchored" data-anchor-id="where-to-keep-data">Where to keep data?</h2>
-<p>Below 50mb: In <code>dataset</code> folder</p>
-<p>Above 50mb: In <code>dataset_ignore</code> folder. This folder will be ignored by <code>git</code> so you’ll have to manually sync these files across your team.</p>
-<section id="sharing-your-data" class="level3">
-<h3 class="anchored" data-anchor-id="sharing-your-data">Sharing your data</h3>
-<p>For small datasets (&lt;50mb), you can use the <code>dataset</code> folder that is tracked by github. Add the files just like you would any other file.</p>
-<p>If you create a folder named <code>data</code> this will cause problems.</p>
-<p>For larger datasets, you’ll need to create a new folder in the project root directory named <code>dataset-ignore</code>. This will be ignored by git (based off the <code>.gitignore</code> file in the project root directory) which will help you avoid issues with Github’s size limits. Your team will have to manually make sure the data files in <code>dataset-ignore</code> are synced across team members.</p>
-<p>Your <a href="./scripts/load_and_clean_data.R">load_and_clean_data.R</a> file is how you will load and clean your data. Here is a an example of a very simple one.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"scripts/load_and_clean_data.R"</span>,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">echo =</span> <span class="cn">TRUE</span> <span class="co"># Use echo=FALSE or omit it to avoid code output  </span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-&gt; library(dplyr)</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'dplyr'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:stats':
-
-    filter, lag</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:base':
-
-    intersect, setdiff, setequal, union</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-&gt; library(purrr)
-
-&gt; library(tidyr)
-
-&gt; library(here)</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>here() starts at /Users/yz/Desktop/Fall24/MA415/ma-4615-fa24-final-project-group-4</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-&gt; data &lt;- readRDS(here("filtered_data_copy.rds"))
-
-&gt; data$DATE.OCC &lt;- as.POSIXct(data$DATE.OCC, format = "%m/%d/%Y %I:%M:%S %p")
-
-&gt; data$year &lt;- as.numeric(format(data$DATE.OCC, "%Y"))
-
-&gt; filtered_years &lt;- data %&gt;% filter(year %in% 2020:2024)
-
-&gt; descent_codes &lt;- tribble(~Descent_Code, ~Descent_Description, 
-+     "A", "Other Asian", "B", "Black", "C", "Chinese", "D", "Cambodian", 
-+     "F", .... [TRUNCATED] 
-
-&gt; data_clean &lt;- filtered_years %&gt;% left_join(descent_codes, 
-+     by = c(Vict.Descent = "Descent_Code"))
-
-&gt; data_clean$Descent_Description[is.na(data_clean$Descent_Description)] &lt;- "Unknown"
-
-&gt; data_clean &lt;- data_clean %&gt;% select(-c(Crm.Cd.2, Crm.Cd.3, 
-+     Crm.Cd.4, Weapon.Used.Cd, Weapon.Desc, Cross.Street))
-
-&gt; data_clean$month &lt;- format(data_clean$DATE.OCC, "%Y-%m")
-
-&gt; sampled_data &lt;- data_clean %&gt;% group_split(year) %&gt;% 
-+     map_df(~slice_sample(.x, n = min(2500, nrow(.x))))
-
-&gt; saveRDS(sampled_data, "filtered_data_2.rds")
-
-&gt; nrow(sampled_data)
-[1] 12500
-
-&gt; str(sampled_data)
-tibble [12,500 × 25] (S3: tbl_df/tbl/data.frame)
- $ DR_NO              : int [1:12500] 201518560 201909785 201518712 201226807 201609169 201114672 222117980 200912346 200409313 200400577 ...
- $ Date.Rptd          : chr [1:12500] "12/11/2020 12:00:00 AM" "05/14/2020 12:00:00 AM" "12/15/2020 12:00:00 AM" "12/20/2020 12:00:00 AM" ...
- $ DATE.OCC           : POSIXct[1:12500], format: "2020-12-11" "2020-05-14" ...
- $ TIME.OCC           : int [1:12500] 930 10 1615 1430 1400 1100 1200 1300 2200 1957 ...
- $ AREA               : int [1:12500] 15 19 15 12 16 11 21 9 4 4 ...
- $ AREA.NAME          : chr [1:12500] "N Hollywood" "Mission" "N Hollywood" "77th Street" ...
- $ Rpt.Dist.No        : int [1:12500] 1521 1954 1555 1266 1685 1151 2177 926 464 464 ...
- $ Part.1.2           : int [1:12500] 1 1 1 2 1 1 2 2 2 1 ...
- $ Crm.Cd             : int [1:12500] 210 330 330 624 420 510 354 354 745 440 ...
- $ Crm.Cd.Desc        : chr [1:12500] "ROBBERY" "BURGLARY FROM VEHICLE" "BURGLARY FROM VEHICLE" "BATTERY - SIMPLE ASSAULT" ...
- $ Mocodes            : chr [1:12500] "0344 1313 0342 0319 0448 0421 0449 1822 0355 0400" "1307 0344 1609" "1300 0344 1609 1307" "0913 0446" ...
- $ Vict.Age           : int [1:12500] 22 27 54 60 0 0 48 61 45 0 ...
- $ Vict.Sex           : chr [1:12500] "M" "F" "M" "M" ...
- $ Vict.Descent       : chr [1:12500] "H" "H" "W" "B" ...
- $ Premis.Cd          : int [1:12500] 101 101 101 501 707 101 501 501 101 203 ...
- $ Premis.Desc        : chr [1:12500] "STREET" "STREET" "STREET" "SINGLE FAMILY DWELLING" ...
- $ Status             : chr [1:12500] "IC" "IC" "IC" "IC" ...
- $ Status.Desc        : chr [1:12500] "Invest Cont" "Invest Cont" "Invest Cont" "Invest Cont" ...
- $ Crm.Cd.1           : int [1:12500] 210 330 330 624 420 510 354 354 745 440 ...
- $ LOCATION           : chr [1:12500] "7000    ATOLL                        AV" "10200 N  SEPULVEDA                    BL" "11300    MAGNOLIA                     BL" "700 W  81ST                         ST" ...
- $ LAT                : num [1:12500] 34.2 34.3 34.2 34 34.2 ...
- $ LON                : num [1:12500] -118 -118 -118 -118 -118 ...
- $ year               : num [1:12500] 2020 2020 2020 2020 2020 2020 2020 2020 2020 2020 ...
- $ Descent_Description: chr [1:12500] "Hispanic/Latin/Mexican" "Hispanic/Latin/Mexican" "White" "Black" ...
- $ month              : chr [1:12500] "2020-12" "2020-05" "2020-12" "2020-12" ...</code></pre>
-</div>
-</div>
-<p>You should never use absolute paths (eg. <code>/Users/danielsussman/path/to/project/</code> or <code>C:\MA415\\Final_Project\</code>).</p>
-<p>You might consider using the <code>here</code> function from the <a href="https://here.r-lib.org/articles/here.html"><code>here</code> package</a> to avoid path problems.</p>
-</section>
-<section id="load-and-clean-data-script" class="level3">
-<h3 class="anchored" data-anchor-id="load-and-clean-data-script">Load and clean data script</h3>
-<p>The idea behind this file is that someone coming to your website could largely replicate your analyses after running this script on the original data sets to clean them. This file might create a derivative data set that you then use for your subsequent analysis. Note that you don’t need to run this script from every post/page. Instead, you can load in the results of this script, which could be plain text files or <code>.RData</code> files. In your data page you’ll describe how these results were created. If you have a very large data set, you might save smaller data sets that you can use for exploration purposes. To link to this file, you can use <code>[cleaning script](/scripts/load_and_clean_data.R)</code> wich appears as <a href="./scripts/load_and_clean_data.R">cleaning script</a>.</p>
-<hr>
-</section>
-</section>
-<section id="rubric-on-this-page" class="level2">
-<h2 class="anchored" data-anchor-id="rubric-on-this-page">Rubric: On this page</h2>
-<p>You will</p>
-<ul>
-<li>Describe where/how to find data.
-<ul>
-<li>You must include a link to the original data source(s). Make sure to provide attribution to those who collected the data.</li>
-<li>Why was the data collected/curated? Who put it together? (This is important, if you don’t know why it was collected then that might not be a good dataset to look at.</li>
-</ul></li>
-<li>Describe the different data files used and what each variable means.
-<ul>
-<li>If you have many variables then only describe the most relevant ones and summarize the rest.</li>
-</ul></li>
-<li>Describe any cleaning you had to do for your data.
-<ul>
-<li>You <em>must</em> include a link to your <code>load_and_clean_data.R</code> file.</li>
-<li>Rrename variables and recode factors to make data more clear.</li>
-<li>Also, describe any additional R packages you used outside of those covered in class.</li>
-<li>Describe and show code for how you combined multiple data files and any cleaning that was necessary for that.</li>
-<li>Some repetition of what you do in your <code>load_and_clean_data.R</code> file is fine and encouraged if it helps explain what you did.</li>
-</ul></li>
-<li>Organization, clarity, cleanliness of the page
-<ul>
-<li>Make sure to remove excessive warnings, use clean easy-to-read code (without side scrolling), organize with sections, use bullets and other organization tools, etc.</li>
-<li>This page should be self-contained.</li>
-</ul></li>
-</ul>
-</section>
 <section id="analysis-and-cleaning-of-lapd-crime-data-2020present" class="level1">
 <h1>Analysis and Cleaning of LAPD Crime Data (2020–Present)</h1>
 </section>
@@ -538,9 +375,11 @@ tibble [12,500 × 25] (S3: tbl_df/tbl/data.frame)
 <h3 class="anchored" data-anchor-id="initial-dataset-loading">Initial Dataset Loading</h3>
 <p>The dataset was loaded as a CSV file for easier manipulation. Here’s the R code for loading it:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"your_file.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"your_file.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then we start the data cleaning process.</p>
 <p>To reduce the dataset size (because it was too big previously) and balance representation across years, we:<br>
@@ -555,17 +394,17 @@ tibble [12,500 × 25] (S3: tbl_df/tbl/data.frame)
 </ul>
 <p>The following r chunk is the exact code we use by following the previous steps.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the date column to year format</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="fu">format</span>(<span class="fu">as.Date</span>(data<span class="sc">$</span>DATE.OCC, <span class="at">format =</span> <span class="st">"%m/%d/%Y"</span>), <span class="st">"%Y"</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert year to numeric</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(data<span class="sc">$</span>year)  </span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for the years 2020–2024</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>filtered_years <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">%in%</span> <span class="dv">2020</span><span class="sc">:</span><span class="dv">2024</span>)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Split by year and sample up to 2,500 rows per year</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>sampled_data <span class="ot">&lt;-</span> filtered_years <span class="sc">%&gt;%</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_split</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_df</span>(<span class="sc">~</span> <span class="fu">slice_sample</span>(.x, <span class="at">n =</span> <span class="fu">min</span>(<span class="dv">2500</span>, <span class="fu">nrow</span>(.x))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the date column to year format</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="fu">format</span>(<span class="fu">as.Date</span>(data<span class="sc">$</span>DATE.OCC, <span class="at">format =</span> <span class="st">"%m/%d/%Y"</span>), <span class="st">"%Y"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert year to numeric</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(data<span class="sc">$</span>year)  </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for the years 2020–2024</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>filtered_years <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">%in%</span> <span class="dv">2020</span><span class="sc">:</span><span class="dv">2024</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Split by year and sample up to 2,500 rows per year</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>sampled_data <span class="ot">&lt;-</span> filtered_years <span class="sc">%&gt;%</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_split</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_df</span>(<span class="sc">~</span> <span class="fu">slice_sample</span>(.x, <span class="at">n =</span> <span class="fu">min</span>(<span class="dv">2500</span>, <span class="fu">nrow</span>(.x))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The RDS file after first time cleaning can look like this (some columns filtered out for readability):</p>
 </section>
@@ -696,6 +535,179 @@ tibble [12,500 × 25] (S3: tbl_df/tbl/data.frame)
 <p>For this analysis, the census data was matched with specific crime locations, enabling us to explore whether crime rates differ significantly based on income levels. Median income was a particularly important variable, used to examine potential relationships between socioeconomic status and crime prevalence. Median income was used instead of average income due to high income areas which might have extreme outliers with certain individuals making a large amount of money.</p>
 <p>We ensured the census data was updated every decade, so this comes from 2020 but is mapped to the corresponding regions where crimes occurred. This allowed for a comprehensive analysis that moves beyond raw crime figures and considers underlying socioeconomic conditions, facilitating a more nuanced interpretation of trends and patterns.</p>
 <p>By integrating census data, we aimed to uncover deeper insights, such as whether economically disadvantaged areas experience higher crime rates.</p>
+</section>
+<section id="crimes-in-neighborhoods" class="level1">
+<h1>Crimes in Neighborhoods:</h1>
+<p>Instead of just looking at the 12,500 crimes that we initially filtered for the sake of files being too large, it was suggested that geographic data would be filtered already as there were a lot of crimes which were being left out which could lead to bias,. So, we went back to the dataset and got all the crimes that had a latitude and longitude in the LA City era. Here is the code for that:</p>
+<p>Here we got a new RDS File and we got the crime amounts in the different regions for a specific year from 2020-2024. Since not all years had data, the heatmap you see on the big picture page is of the year 2024 which had data from all regions of LA.</p>
+<p>Here is what the data could look like after cleaning.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 12%">
+<col style="width: 22%">
+<col style="width: 22%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>AREA NAME</strong></th>
+<th><strong>Year</strong></th>
+<th><strong>Crime Count</strong></th>
+<th><strong>Avg Latitude</strong></th>
+<th><strong>Avg Longitude</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>77th Street</td>
+<td>2024</td>
+<td>13343</td>
+<td>33.86060</td>
+<td>-117.8887</td>
+</tr>
+<tr class="even">
+<td>Central</td>
+<td>2024</td>
+<td>11600</td>
+<td>33.84789</td>
+<td>-117.5570</td>
+</tr>
+<tr class="odd">
+<td>Devonshire</td>
+<td>2024</td>
+<td>7982</td>
+<td>34.06148</td>
+<td>-117.8855</td>
+</tr>
+<tr class="even">
+<td>Foothill</td>
+<td>2024</td>
+<td>7106</td>
+<td>34.13832</td>
+<td>-117.9937</td>
+</tr>
+<tr class="odd">
+<td>Harbor</td>
+<td>2024</td>
+<td>8874</td>
+<td>33.67433</td>
+<td>-117.9386</td>
+</tr>
+<tr class="even">
+<td>Hollenbeck</td>
+<td>2024</td>
+<td>7805</td>
+<td>33.88906</td>
+<td>-117.6273</td>
+</tr>
+<tr class="odd">
+<td>Hollywood</td>
+<td>2024</td>
+<td>10171</td>
+<td>33.87138</td>
+<td>-117.5391</td>
+</tr>
+<tr class="even">
+<td>Mission</td>
+<td>2024</td>
+<td>8480</td>
+<td>34.05963</td>
+<td>-117.7660</td>
+</tr>
+<tr class="odd">
+<td>N Hollywood</td>
+<td>2024</td>
+<td>10167</td>
+<td>34.05776</td>
+<td>-117.9891</td>
+</tr>
+<tr class="even">
+<td>Newton</td>
+<td>2024</td>
+<td>9994</td>
+<td>33.87209</td>
+<td>-117.7877</td>
+</tr>
+<tr class="odd">
+<td>Northeast</td>
+<td>2024</td>
+<td>8452</td>
+<td>34.02285</td>
+<td>-117.9502</td>
+</tr>
+<tr class="even">
+<td>Olympic</td>
+<td>2024</td>
+<td>9639</td>
+<td>33.91484</td>
+<td>-117.7972</td>
+</tr>
+<tr class="odd">
+<td>Pacific</td>
+<td>2024</td>
+<td>11575</td>
+<td>33.79474</td>
+<td>-117.7623</td>
+</tr>
+<tr class="even">
+<td>Rampart</td>
+<td>2024</td>
+<td>9025</td>
+<td>33.90471</td>
+<td>-117.7237</td>
+</tr>
+<tr class="odd">
+<td>Southeast</td>
+<td>2024</td>
+<td>10847</td>
+<td>33.77965</td>
+<td>-117.7112</td>
+</tr>
+<tr class="even">
+<td>Southwest</td>
+<td>2024</td>
+<td>11178</td>
+<td>33.91014</td>
+<td>-117.9367</td>
+</tr>
+<tr class="odd">
+<td>Topanga</td>
+<td>2024</td>
+<td>8106</td>
+<td>34.13290</td>
+<td>-118.3959</td>
+</tr>
+<tr class="even">
+<td>Van Nuys</td>
+<td>2024</td>
+<td>8763</td>
+<td>34.11259</td>
+<td>-118.2174</td>
+</tr>
+<tr class="odd">
+<td>West LA</td>
+<td>2024</td>
+<td>9309</td>
+<td>34.01168</td>
+<td>-118.3017</td>
+</tr>
+<tr class="even">
+<td>West Valley</td>
+<td>2024</td>
+<td>8091</td>
+<td>34.13708</td>
+<td>-118.3457</td>
+</tr>
+<tr class="odd">
+<td>Wilshire</td>
+<td>2024</td>
+<td>9291</td>
+<td>33.89677</td>
+<td>-117.7792</td>
+</tr>
+</tbody>
+</table>
 
 
 </section>
@@ -736,18 +748,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -779,7 +780,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp("https:\/\/sussmanbu\.github\.io\/ma-4615-fa24-final-project-group-4\/");
@@ -787,7 +810,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

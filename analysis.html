@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Here we provide a detailed analysis using more sophisticated statistics techniques.">
+<meta name="description" content="Here we provide a detailed analysis using more sophisticated statistics techniques on LAPD crime.">
 
-<title>MA [46]15 Final Project - Analysis</title>
+<title>Analysis – MA [46]15 Final Project</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -118,7 +84,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -141,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -155,13 +121,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#example-of-loading-data" id="toc-example-of-loading-data" class="nav-link active" data-scroll-target="#example-of-loading-data">Example of loading data</a></li>
-  <li><a href="#relationship-between-crime-and-median-income" id="toc-relationship-between-crime-and-median-income" class="nav-link" data-scroll-target="#relationship-between-crime-and-median-income">Relationship between crime and median income</a></li>
-  <li><a href="#violent-crime-in-each-neighborhood-order-by-their-income" id="toc-violent-crime-in-each-neighborhood-order-by-their-income" class="nav-link" data-scroll-target="#violent-crime-in-each-neighborhood-order-by-their-income">Violent crime in each neighborhood order by their income</a></li>
-  <li><a href="#crime-count-distribution-in-heatmap" id="toc-crime-count-distribution-in-heatmap" class="nav-link" data-scroll-target="#crime-count-distribution-in-heatmap">Crime count distribution in heatmap</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#what-motivated-our-data-analysis" id="toc-what-motivated-our-data-analysis" class="nav-link" data-scroll-target="#what-motivated-our-data-analysis">What Motivated Our Data Analysis:</a></li>
   <li><a href="#variables-of-interest" id="toc-variables-of-interest" class="nav-link" data-scroll-target="#variables-of-interest">Variables of Interest</a></li>
   <li><a href="#key-questions" id="toc-key-questions" class="nav-link" data-scroll-target="#key-questions">Key Questions</a></li>
+  <li><a href="#relationship-between-crime-and-median-income" id="toc-relationship-between-crime-and-median-income" class="nav-link" data-scroll-target="#relationship-between-crime-and-median-income">Relationship between crime and median income</a></li>
+  <li><a href="#violent-crime-in-each-neighborhood-order-by-their-income" id="toc-violent-crime-in-each-neighborhood-order-by-their-income" class="nav-link" data-scroll-target="#violent-crime-in-each-neighborhood-order-by-their-income">Violent crime in each neighborhood order by their income</a></li>
+  <li><a href="#crime-to-population-ratio-per-area" id="toc-crime-to-population-ratio-per-area" class="nav-link" data-scroll-target="#crime-to-population-ratio-per-area">Crime-to-Population Ratio per Area</a></li>
+  <li><a href="#crime-count-distribution-in-heatmap" id="toc-crime-count-distribution-in-heatmap" class="nav-link" data-scroll-target="#crime-count-distribution-in-heatmap">Crime count distribution in heatmap</a></li>
   <li><a href="#modeling-and-inference" id="toc-modeling-and-inference" class="nav-link" data-scroll-target="#modeling-and-inference">Modeling and Inference</a>
   <ul class="collapse">
   <li><a href="#motivation-for-the-model" id="toc-motivation-for-the-model" class="nav-link" data-scroll-target="#motivation-for-the-model">Motivation for the Model</a></li>
@@ -169,7 +136,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#modeling-steps" id="toc-modeling-steps" class="nav-link" data-scroll-target="#modeling-steps">Modeling Steps</a>
   <ul class="collapse">
   <li><a href="#poisson-regression-model" id="toc-poisson-regression-model" class="nav-link" data-scroll-target="#poisson-regression-model">Poisson regression model:</a></li>
-  <li><a href="#negative-binomial-regression-model" id="toc-negative-binomial-regression-model" class="nav-link" data-scroll-target="#negative-binomial-regression-model">Negative Binomial regression model:</a></li>
   <li><a href="#why-negative-binomial-was-better" id="toc-why-negative-binomial-was-better" class="nav-link" data-scroll-target="#why-negative-binomial-was-better">Why Negative Binomial Was Better</a></li>
   </ul></li>
   <li><a href="#predicted-trends" id="toc-predicted-trends" class="nav-link" data-scroll-target="#predicted-trends">Predicted Trends</a>
@@ -179,6 +145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#future-directions" id="toc-future-directions" class="nav-link" data-scroll-target="#future-directions">Future Directions</a></li>
   </ul></li>
   </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion:</a></li>
   </ul>
 </nav>
     </div>
@@ -192,7 +159,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div>
   <div class="description">
-    Here we provide a detailed analysis using more sophisticated statistics techniques.
+    Here we provide a detailed analysis using more sophisticated statistics techniques on LAPD crime.
   </div>
 </div>
 
@@ -209,23 +176,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><img src="https://upload.wikimedia.org/wikipedia/commons/7/77/Pebbleswithquarzite.jpg" class="img-fluid"></p>
-<p>This comes from the file <code>analysis.qmd</code>.</p>
-<p>We describe here our detailed data analysis. This page will provide an overview of what questions you addressed, illustrations of relevant aspects of the data with tables and figures, and a statistical model that attempts to answer part of the question. You’ll also reflect on next steps and further analysis.</p>
-<p>The audience for this page is someone like your class mates, so you can expect that they have some level of statistical and quantitative sophistication and understand ideas like linear and logistic regression, coefficients, confidence intervals, overfitting, etc.</p>
-<p>While the exact number of figures and tables will vary and depend on your analysis, you should target around 5 to 6. An overly long analysis could lead to losing points. If you want you can link back to your blog posts or create separate pages with more details.</p>
-<p>The style of this paper should aim to be that of an academic paper. I don’t expect this to be of publication quality but you should keep that aim in mind. Avoid using “we” too frequently, for example “We also found that …”. Describe your methodology and your findings but don’t describe your whole process.</p>
-<section id="example-of-loading-data" class="level3">
-<h3 class="anchored" data-anchor-id="example-of-loading-data">Example of loading data</h3>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="analysis_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/5/57/LA_Skyline_Mountains2.jpg" class="img-fluid"></p>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Crime patterns within urban environments are shaped by a complex interplay of socioeconomic, demographic, and spatial factors. This analysis focuses on the city of Los Angeles, examining how median household income, neighborhood boundaries, and racial demographics relate to variations in crime frequency. By integrating data from local law enforcement reports, U.S. Census surveys, and geospatial neighborhood shapefiles, we aim to uncover meaningful relationships that go beyond simplistic assumptions and stereotypes.</p>
+<p>Here is the area that is specifically under the jurisdiction of the LAPD and while the areas might not align directly, this gives a better picture when we start to look at heatmaps for crimes.</p>
+<p><img src="https://i.redd.it/gb3do15kxw0d1.jpeg" class="img-fluid"></p>
+</section>
+<section id="what-motivated-our-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="what-motivated-our-data-analysis">What Motivated Our Data Analysis:</h2>
+<p>Crime is a pervasive issue that affects communities differently based on various socioeconomic, demographic, and geographic factors. Understanding what drives crime frequency is crucial for developing effective policies and interventions to promote equity and public safety.</p>
+<p>Our data analysis was motivated by the desire to uncover relationships between crime and the following key factors:</p>
+<p><strong>Economic Status</strong> (e.g., median income)<br>
+<strong>Demographics</strong> (e.g., racial composition)<br>
+<strong>Location</strong> (e.g., neighborhood characteristics)<br>
+<br>
+</p>
+</section>
+<section id="variables-of-interest" class="level2">
+<h2 class="anchored" data-anchor-id="variables-of-interest">Variables of Interest</h2>
+<p>The primary variables we analyzed included:</p>
+<p><strong>Crime Frequency:</strong> The total number of reported crimes in a neighborhood.<br>
+<strong>Economic Data:</strong> Median household income from the American Community Survey (ACS).<br>
+<strong>Neighborhood Boundaries:</strong> Spatial boundaries defined by the LA Times.<br>
+<strong>Location Data:</strong> Geospatial coordinates (latitude and longitude) for reported crime incidents.<br>
+<br>
+To explore these variables, we integrated datasets from LAPD crime reports, U.S. Census economic data, and geospatial shapefiles for Los Angeles neighborhoods. This allowed us to analyze both spatial and statistical relationships.<br>
+</p>
+</section>
+<section id="key-questions" class="level2">
+<h2 class="anchored" data-anchor-id="key-questions">Key Questions</h2>
+<p><strong>Economic Status and Crime:</strong> Does a neighborhood’s median income influence the number of crimes reported?<br>
+<strong>Geographic Crime Hotspots:</strong> Are there specific areas with persistently high crime rates?<br>
+<strong>Disparities in Crime Impact:</strong> How do demographic or socioeconomic disparities correlate with crime?</p>
 </section>
 <section id="relationship-between-crime-and-median-income" class="level2">
 <h2 class="anchored" data-anchor-id="relationship-between-crime-and-median-income">Relationship between crime and median income</h2>
@@ -238,8 +221,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Graph explanation: The color from dark to bright means median income from low to high.</p>
-<p>The graph shows that there is no clear relationship between median income and total crimes based on the data points presented. While there is a general trend of lower median incomes associated with higher total crimes, there are several outliers that do not fit this pattern. Some areas with relatively high median incomes also have high total crime rates, and vice versa. This suggests that factors beyond just income level likely play a significant role in determining crime rates within a community. Simply assuming that higher-income neighborhoods will have lower crime rates oversimplifies the complex social, economic, and environmental factors that contribute to public safety. A more nuanced analysis would be needed to fully understand the relationship between these variables across different geographic areas. Our team decide to investigate the frequent of property crime by the each neighborhood that sort by their median income.</p>
+<p>Based on initial data representation, this graph shows that there is no clear relationship between median income and total crimes based on the data points presented. While there is a general trend of lower median incomes associated with higher total crimes, there are several outliers that do not fit this pattern. Some areas with relatively high median incomes also have high total crime rates, and vice versa. This suggests that factors beyond just income level likely play a significant role in determining crime rates within a community. Simply assuming that higher-income neighborhoods will have lower crime rates oversimplifies the complex social, economic, and environmental factors that contribute to public safety. A more nuanced analysis would be needed to fully understand the relationship between these variables across different geographic areas. Our team decided to investigate the frequency of violent crimes by the each neighborhood that sort by their median income.</p>
 </section>
 <section id="violent-crime-in-each-neighborhood-order-by-their-income" class="level2">
 <h2 class="anchored" data-anchor-id="violent-crime-in-each-neighborhood-order-by-their-income">Violent crime in each neighborhood order by their income</h2>
@@ -254,27 +236,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Graph explanation: The x-axis(areas) are order in ascending median income order, which we will expected from left to right neighborhood, the count of property crime will increase.</p>
 <p>The chart reveals a notable outlier: the Central neighborhood, which reports a disproportionately high number of violent crimes relative to its median income. While the general trend aligns with the assumption—often rooted in societal stereotypes—that lower-income neighborhoods experience higher levels of violent crime, Central deviates from this expectation. Despite not having the lowest median income, its violent crime rate far exceeds those of other neighborhoods. This suggests that relying solely on income as a predictor of crime may oversimplify a more complex issue. Factors such as geographic location, population density, proximity to transit hubs, or the concentration of commercial and nightlife activities might better explain the elevated crime rate in Central. This highlights the importance of challenging stereotypes and exploring a broader range of influences when analyzing crime patterns.</p>
+</section>
+<section id="crime-to-population-ratio-per-area" class="level2">
+<h2 class="anchored" data-anchor-id="crime-to-population-ratio-per-area">Crime-to-Population Ratio per Area</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter for 2024 data, remove NA values, and calculate crime-to-population ratio</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>crime_population_2024 <span class="ot">&lt;-</span> crime_population_summary <span class="sc">%&gt;%</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2024</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">crime_to_population_ratio =</span> <span class="fu">ifelse</span>(total_population <span class="sc">&gt;</span> <span class="dv">0</span>, crime_count <span class="sc">/</span> total_population, <span class="cn">NA</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(crime_to_population_ratio) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(<span class="st">`</span><span class="at">AREA NAME</span><span class="st">`</span>))  <span class="co"># Remove rows with NA in crime ratio or area name</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the crime-to-population ratio per area for 2024</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(crime_population_2024, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(<span class="st">`</span><span class="at">AREA NAME</span><span class="st">`</span>, crime_to_population_ratio), <span class="at">y =</span> crime_to_population_ratio)) <span class="sc">+</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">fill =</span> <span class="st">"blue"</span>) <span class="sc">+</span>  <span class="co"># Set the bar color to blue</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span>  <span class="co"># Flip the axes</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Crime-to-Population Ratio per Area (2024)"</span>,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Neighborhood"</span>,</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Crime-to-Population Ratio"</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>))  <span class="co"># Adjust text size for readability</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -283,6 +248,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>This graph illustrates the crime-to-population ratio for various neighborhoods in Los Angeles for the year 2024, highlighting how certain areas experience disproportionately high levels of crime relative to their population size. Neighborhoods like 77th Street, Southwest, and Southeast top the list, with crime-to-population ratios well above 0.2, suggesting that their residents may face a higher per capita exposure to crime.</p>
+<p>Previously, our analysis noted that Central, despite not having the lowest median income, still exhibited a notably high number of crimes. This new visualization broadens that insight, confirming that elevated crime rates are not confined to just one outlier. While Central still appears high on this chart, it is now evident that other neighborhoods—such as 77th Street and Southwest—exceed these levels, indicating that income alone does not fully explain crime density.</p>
+<p>These patterns challenge the simplistic assumption that higher-income neighborhoods automatically experience lower crime rates. Instead, the data underscores the importance of considering a range of factors. Geographic location, local commercial activity, transit hubs, population density, and other environmental or social variables may all play pivotal roles in shaping these crime-to-population ratios. This complexity supports our earlier conclusions that a nuanced, multifaceted approach is necessary to understand and address the distribution of crime across urban landscapes.</p>
 </section>
 <section id="crime-count-distribution-in-heatmap" class="level2">
 <h2 class="anchored" data-anchor-id="crime-count-distribution-in-heatmap">Crime count distribution in heatmap</h2>
@@ -297,62 +265,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>This heatmap visualizes the spatial distribution of total crimes across neighborhoods under the LAPD jurisdiction, with higher crime rates indicated by brighter yellow hues and lower crime rates shown in darker purple. The outlier observed in the previous bar chart, Central, is corroborated here as one of the brightest regions on the map, indicating a notably high concentration of crimes.</p>
 <p>When connecting this to the previous graph, we see that Central’s geographic location likely plays a significant role in its elevated crime levels. The neighborhood’s centrality and potential proximity to high-density areas, transit hubs, or commercial districts could contribute to the high crime numbers. This geographic clustering of crime challenges the stereotype that violent crime is solely tied to lower-income areas, as Central’s median income is not the lowest yet its crime rate is disproportionately high. It suggests that spatial dynamics, such as the presence of key urban features and high activity zones, may compound the crime rate independent of income alone.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>income_inequality <span class="ot">&lt;-</span> crime_with_income <span class="sc">%&gt;%</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(AREA.NAME) <span class="sc">%&gt;%</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">income_range =</span> <span class="fu">max</span>(estimate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">-</span> <span class="fu">min</span>(estimate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">total_crimes =</span> <span class="fu">n</span>()</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(income_inequality, <span class="fu">aes</span>(<span class="at">x =</span> income_range, <span class="at">y =</span> total_crimes)) <span class="sc">+</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Income Inequality vs. Total Crimes"</span>,</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Income Range (Proxy for Inequality)"</span>,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Total Crimes"</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="analysis_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>In our earlier analysis, we observed that economic factors, such as median income, play a role in shaping crime dynamics. Here, we extend our exploration to examine whther socioeconomic inequality within neighborhoods might also contribute to crime disparities. The figure above examines the relationship between income inequality and the total number of crimes in neighborhoods. The red line shows a slight negative slope, suggesting that as income inequality increases, total crimes tend to decrease marginally. The data points are widely scattered around the line, reflecting significant variability in total crimes across neighborhoods with similar income ranges. This implies that factors beyond income inequality likely influence crime rates.</p>
-</section>
-<section id="what-motivated-our-data-analysis" class="level1">
-<h1>What Motivated Our Data Analysis:</h1>
-<p>Crime is a pervasive issue that affects communities differently based on various socioeconomic, demographic, and geographic factors. Understanding what drives crime frequency is crucial for developing effective policies and interventions to promote equity and public safety.</p>
-<p>Our data analysis was motivated by the desire to uncover relationships between crime and the following key factors:</p>
-<p><strong>Economic Status</strong> (e.g., median income)<br>
-<strong>Demographics</strong> (e.g., racial composition)<br>
-<strong>Location</strong> (e.g., neighborhood characteristics)<br>
-<br>
-</p>
-</section>
-<section id="variables-of-interest" class="level1">
-<h1>Variables of Interest</h1>
-<p>The primary variables we analyzed included:</p>
-<p><strong>Crime Frequency:</strong> The total number of reported crimes in a neighborhood.<br>
-<strong>Economic Data:</strong> Median household income from the American Community Survey (ACS).<br>
-<strong>Neighborhood Boundaries:</strong> Spatial boundaries defined by the LA Times.<br>
-<strong>Location Data:</strong> Geospatial coordinates (latitude and longitude) for reported crime incidents.<br>
-#Add to here as necessary<br>
-To explore these variables, we integrated datasets from LAPD crime reports, U.S. Census economic data, and geospatial shapefiles for Los Angeles neighborhoods. This allowed us to analyze both spatial and statistical relationships.<br>
-#Add links here</p>
-</section>
-<section id="key-questions" class="level1">
-<h1>Key Questions</h1>
-<p><strong>Economic Status and Crime:</strong> Does a neighborhood’s median income influence the number of crimes reported?<br>
-<strong>Geographic Crime Hotspots:</strong> Are there specific areas with persistently high crime rates?<br>
-<strong>Disparities in Crime Impact:</strong> How do demographic or socioeconomic disparities correlate with crime? #Add here as necessary<br>
-</p>
 </section>
 <section id="modeling-and-inference" class="level1">
 <h1>Modeling and Inference</h1>
@@ -374,53 +286,14 @@ Overdispersion (variance exceeding the mean) was evident, prompting the use of a
 <h2 class="anchored" data-anchor-id="modeling-steps">Modeling Steps</h2>
 <section id="poisson-regression-model" class="level3">
 <h3 class="anchored" data-anchor-id="poisson-regression-model">Poisson regression model:</h3>
-<section id="coefficients" class="level4">
-<h4 class="anchored" data-anchor-id="coefficients">Coefficients:</h4>
-<ul>
-<li><strong>avg_median_income</strong>: -0.0019821 (p &lt; 0.001, significant)</li>
-<li><strong>raceBlack</strong>: 0.6206 (p = 0.007, significant)</li>
-<li><strong>raceHispanic.Latin.Mexican</strong>: 0.8102 (p &lt; 0.001, significant)</li>
-<li><strong>raceUnknown</strong>: 0.7717 (p &lt; 0.001, significant)</li>
-<li><strong>raceWhite</strong>: 0.6654 (p = 0.004, significant)</li>
-</ul>
-</section>
-<section id="model-metrics" class="level4">
-<h4 class="anchored" data-anchor-id="model-metrics">Model Metrics:</h4>
-<ul>
-<li>Null deviance: 6300.2 on 5907 degrees of freedom</li>
-<li>Residual deviance: 5790.0 on 5891 degrees of freedom</li>
-<li>AIC: 20106</li>
-</ul>
+<p><strong>Key Insights:</strong> Average median income is negatively associated with crime counts and is statistically significant in this analysis. To interpret the effect of average median income on crime count, we need to exponentiate the coefficient: e − 0.0019821 ≈ 0.9980196 e −0.0019821 ≈0.9980196 This means that for each dollar increase in average median income, the expected crime count is multiplied by approximately 0.9980196. To express this as a percentage decrease: 1 − 0.9980196 ≈ 0.0019804 1−0.9980196≈0.0019804 Therefore, for each dollar increase in average median income, the expected crime count decreases by about 0.19804%, assuming other variables constant.</p>
+<p>In terms of race, there were several that were statistically significant, meaning that they had a p-value less than 0.05. The races (Black, Hispanic/Latin/Mexican, Unknown, White) showed significant positive associations with crime count. We have to see if these trends carry over to the negative binomial model. ### Negative Binomial regression model:</p>
 <p><strong>Key Insights:</strong></p>
-<p>avg_median_income is negatively associated with crime counts and is statistically significant.<br>
-Certain racial categories (raceHispanic.Latin.Mexican, raceUnknown, raceWhite, and raceBlack) are positively associated with higher crime counts and are statistically significant.<br>
+<p>Unlike the poisson distribution, the negative binomial’s median income was not as statistically significant with a p-value of 0.79 which is much higher than the poisson’s p-value of 7.42e-15. In practical terms, this means that after accounting for overdispersion in the negative binomial model, there is no strong evidence of a relationship between average median income and crime count in this dataset, however it may be small.<br>
 </p>
-</section>
-</section>
-<section id="negative-binomial-regression-model" class="level3">
-<h3 class="anchored" data-anchor-id="negative-binomial-regression-model">Negative Binomial regression model:</h3>
-<section id="coefficients-1" class="level4">
-<h4 class="anchored" data-anchor-id="coefficients-1">Coefficients:</h4>
-<ul>
-<li><strong>raceHispanic.Latin.Mexican</strong>: 1.0450 (p = 0.013, significant)</li>
-<li><strong>raceUnknown</strong>: 0.7903 (p = 0.061, marginally significant)</li>
-<li><strong>raceBlack</strong>: 0.7862 (p = 0.064, marginally significant)</li>
-</ul>
-</section>
-<section id="model-metrics-1" class="level4">
-<h4 class="anchored" data-anchor-id="model-metrics-1">Model Metrics:</h4>
-<ul>
-<li>Null deviance: 4800.1 on 5907 degrees of freedom</li>
-<li>Residual deviance: 4305.8 on 5877 degrees of freedom</li>
-<li>AIC: 19758</li>
-<li>Dispersion parameter: Theta = 9.252 (SE = 0.706)</li>
-</ul>
-<p><strong>Key Insights:</strong></p>
-<p>raceHispanic.Latin.Mexican remains statistically significant and positively associated with crime counts.<br>
-The inclusion of overdispersion (via the Negative Binomial model) leads to better model fit metrics (lower AIC and deviance) compared to the Poisson regression.<br>
-We evaluate model fit using AIC and residual diagnostics, concluding the Negative Binomial model better accounts for data characteristics.<br>
-</p>
-</section>
+<p>Based on the negative binomial regression results, the coefficient for avg_median_income is -0.0016531. This means that for each dollar increase in average median income, the expected log count of crimes decreases by 0.0016531, holding other variables constant. To interpret this in terms of the actual crime count, we can exponentiate the coefficient: e − 0.0016531 ≈ 0.9983472 e −0.0016531 ≈0.9983472 This indicates that for each dollar increase in average median income, the expected crime count is multiplied by approximately 0.9983472. In other words, there is a decrease of about 0.17% (1 - 0.9983472 = 0.0016528) in the expected crime count for every dollar increase in average median income.</p>
+<p>From the several races with correlation from the Poisson graph, the two races that remain significant are Hispanic/Latin/Mexican and Black. As the LAPD only take victim descriptions, there could be larger, more broad implications at play that warrant further research.</p>
+<p>These associations do not imply causation and may reflect complex socioeconomic factors not fully captured in the model. The marginally significant result for the Black category suggests a trend, but there’s less certainty about this relationship compared to the Hispanic/Latin/Mexican category. Other factors not included in the model could be influencing these relationships. These findings should be considered in the broader context of potential reporting biases, policing practices, and socioeconomic conditions in different neighborhoods.</p>
 </section>
 <section id="why-negative-binomial-was-better" class="level3">
 <h3 class="anchored" data-anchor-id="why-negative-binomial-was-better">Why Negative Binomial Was Better</h3>
@@ -444,13 +317,14 @@ prediction from rank-deficient fit; attr(*, "non-estim") has doubtful cases</cod
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="analysis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="analysis_files/figure-html/Visual of Prediction-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>This figure illustrates how income impacts predicted crime counts, highlighting disparities among racial groups.<br>
-This also removed any race with a P-Value over 0.8 and any races like “unknown” and “other” because that doesn’t give much information. We can see that for the most part, as median income increases, the likelihood of a crime decreases. This is not the case for White, Chinese, and Filipino which might be worth looking into.</p>
+</p>
+<p>We can see that there are some outliers to the general trend that as median income goes up, crime counts goes down. White, chinese, and Filipinos are the outliers and this could be from more broad implications. It could mean that on average whites, Filipinos and Chinese live in wealthier neighborhoods so that crimes may go up due to population differences in income. We would have to do further analysis using something like census data to see if this is true.</p>
 </section>
 <section id="uncertainty-and-limitations" class="level3">
 <h3 class="anchored" data-anchor-id="uncertainty-and-limitations">Uncertainty and Limitations</h3>
@@ -484,10 +358,14 @@ This also removed any race with a P-Value over 0.8 and any races like “unknown
 <li>Perform robustness checks by using alternative categorizations for racial groups or income brackets.<br>
 </li>
 </ul>
-
-
 </section>
 </section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion:</h1>
+<p>This analysis examines the relationship between crime frequency, socioeconomic factors, and demographics across Los Angeles neighborhoods. While a general trend suggests that lower-income neighborhoods experience higher crime rates, outliers like Central challenge this assumption, with its crime levels influenced by geographic and environmental factors such as population density and proximity to high-activity areas. A heatmap further highlights spatial clusters of crime, with neighborhoods like 77th Street and Southeast exhibiting high crime-to-population ratios. Statistical modeling revealed mixed results: while Poisson regression identified significant negative relationships between income and crime, the Negative Binomial model, which accounts for overdispersion, found these effects to be marginal. Demographic analysis highlighted Hispanic/Latin/Mexican and Black groups as having significant associations with crime counts, reflecting potential systemic factors like reporting practices or socioeconomic disparities. These findings underscore the complexity of crime patterns, which cannot be explained solely by income or race but require a nuanced approach considering environmental, social, and institutional variables.</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -526,18 +404,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -569,7 +436,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp("https:\/\/sussmanbu\.github\.io\/ma-4615-fa24-final-project-group-4\/");
@@ -577,7 +466,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
