@@ -5,22 +5,11 @@ toc: true
 draft: false
 ---
 
-![](https://upload.wikimedia.org/wikipedia/commons/7/77/Pebbleswithquarzite.jpg)
+![](https://upload.wikimedia.org/wikipedia/commons/5/57/LA_Skyline_Mountains2.jpg)
 
-This comes from the file `analysis.qmd`.
+## Introduction
 
-We describe here our detailed data analysis. This page will provide an overview of what questions you addressed, illustrations of relevant aspects of the data with tables and figures, and a statistical model that attempts to answer part of the question. You'll also reflect on next steps and further analysis.
-
-The audience for this page is someone like your class mates, so you can expect that they have some level of statistical and quantitative sophistication and understand ideas like linear and logistic regression, coefficients, confidence intervals, overfitting, etc. 
-
-While the exact number of figures and tables will vary and depend on your analysis, you should target around 5 to 6. An overly long analysis could lead to losing points.
-If you want you can link back to your blog posts or create separate pages with more details.
-
-The style of this paper should aim to be that of an academic paper. 
-I don't expect this to be of publication quality but you should keep that aim in mind.
-Avoid using "we" too frequently, for example "We also found that ...". Describe your methodology and your findings but don't describe your whole process.
-
-### Example of loading data
+Crime patterns within urban environments are shaped by a complex interplay of socioeconomic, demographic, and spatial factors. This analysis focuses on the city of Los Angeles, examining how median household income, neighborhood boundaries, and racial demographics relate to variations in crime frequency. By integrating data from local law enforcement reports, U.S. Census surveys, and geospatial neighborhood shapefiles, we aim to uncover meaningful relationships that go beyond simplistic assumptions and stereotypes.
 
 ```{r load libraries}
 #| results: "hide"
@@ -374,9 +363,11 @@ Graph explanation: The x-axis(areas) are order in ascending median income order,
 
 
 The chart reveals a notable outlier: the Central neighborhood, which reports a disproportionately high number of violent crimes relative to its median income. While the general trend aligns with the assumption—often rooted in societal stereotypes—that lower-income neighborhoods experience higher levels of violent crime, Central deviates from this expectation. Despite not having the lowest median income, its violent crime rate far exceeds those of other neighborhoods. This suggests that relying solely on income as a predictor of crime may oversimplify a more complex issue. Factors such as geographic location, population density, proximity to transit hubs, or the concentration of commercial and nightlife activities might better explain the elevated crime rate in Central. This highlights the importance of challenging stereotypes and exploring a broader range of influences when analyzing crime patterns.
+
+## Crime-to-Population Ratio per Area
+
 ```{r Ratio Graph}
-library(ggplot2)
-library(dplyr)
+#| echo: false
 
 # Filter for 2024 data, remove NA values, and calculate crime-to-population ratio
 crime_population_2024 <- crime_population_summary %>%
@@ -397,6 +388,12 @@ ggplot(crime_population_2024, aes(x = reorder(`AREA NAME`, crime_to_population_r
   theme(axis.text.x = element_text(size = 8))  # Adjust text size for readability
 
 ```
+This graph illustrates the crime-to-population ratio for various neighborhoods in Los Angeles for the year 2024, highlighting how certain areas experience disproportionately high levels of crime relative to their population size. Neighborhoods like 77th Street, Southwest, and Southeast top the list, with crime-to-population ratios well above 0.2, suggesting that their residents may face a higher per capita exposure to crime.
+
+Previously, our analysis noted that Central, despite not having the lowest median income, still exhibited a notably high number of crimes. This new visualization broadens that insight, confirming that elevated crime rates are not confined to just one outlier. While Central still appears high on this chart, it is now evident that other neighborhoods—such as 77th Street and Southwest—exceed these levels, indicating that income alone does not fully explain crime density.
+
+These patterns challenge the simplistic assumption that higher-income neighborhoods automatically experience lower crime rates. Instead, the data underscores the importance of considering a range of factors. Geographic location, local commercial activity, transit hubs, population density, and other environmental or social variables may all play pivotal roles in shaping these crime-to-population ratios. This complexity supports our earlier conclusions that a nuanced, multifaceted approach is necessary to understand and address the distribution of crime across urban landscapes.
+
 
 ## Crime count distribution in heatmap
 ```{r heatmap for crime count}
@@ -458,33 +455,9 @@ ggplot() +
 This heatmap visualizes the spatial distribution of total crimes across neighborhoods under the LAPD jurisdiction, with higher crime rates indicated by brighter yellow hues and lower crime rates shown in darker purple. The outlier observed in the previous bar chart, Central, is corroborated here as one of the brightest regions on the map, indicating a notably high concentration of crimes.
 
 When connecting this to the previous graph, we see that Central's geographic location likely plays a significant role in its elevated crime levels. The neighborhood's centrality and potential proximity to high-density areas, transit hubs, or commercial districts could contribute to the high crime numbers. This geographic clustering of crime challenges the stereotype that violent crime is solely tied to lower-income areas, as Central's median income is not the lowest yet its crime rate is disproportionately high. It suggests that spatial dynamics, such as the presence of key urban features and high activity zones, may compound the crime rate independent of income alone.
-```{r}
-income_inequality <- crime_with_income %>%
-  group_by(AREA.NAME) %>%
-  summarize(
-    income_range = max(estimate, na.rm = TRUE) - min(estimate, na.rm = TRUE),
-    total_crimes = n()
-  )
-ggplot(income_inequality, aes(x = income_range, y = total_crimes)) +
-  geom_point(alpha = 0.7) +
-  geom_smooth(method = "lm", se = FALSE, color = "red") +
-  labs(
-    title = "Income Inequality vs. Total Crimes",
-    x = "Income Range (Proxy for Inequality)",
-    y = "Total Crimes"
-  ) +
-  theme_minimal()
 
 
 
-
-```
-In our earlier analysis, we observed that economic factors, such as median income, play a role in shaping crime dynamics. Here, we extend our exploration to examine whther socioeconomic inequality within neighborhoods might also contribute to crime disparities. 
-The figure above examines the relationship between income inequality and the total number of crimes in neighborhoods. The red line shows a slight negative slope, suggesting that as income inequality increases, total crimes tend to decrease marginally. The data points are widely scattered around the line, reflecting significant variability in total crimes across neighborhoods with similar income ranges. This implies that factors beyond income inequality likely influence crime rates. 
-
-
-
-    
 # What Motivated Our Data Analysis:
 Crime is a pervasive issue that affects communities differently based on various socioeconomic, demographic, and geographic factors. Understanding what drives crime frequency is crucial for developing effective policies and interventions to promote equity and public safety.
 
