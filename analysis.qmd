@@ -588,6 +588,7 @@ grid$predicted_crimes <- predict(nb_model, newdata = grid, type = "response")
 ### Visualization
 ```{r Visual of Prediction}
 #| echo: False
+#| warning: false
 # Filter races with p-values <= 0.09 and exclude "Unknown", "Other", "Other.Asian"
 significant_races <- summary(nb_model)$coefficients %>%
   as.data.frame() %>%
