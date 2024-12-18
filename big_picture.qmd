@@ -399,20 +399,28 @@ median_income_by_neighborhood <- crime_with_income %>%
   ) %>%
   filter(!is.na(median_income)) %>% 
   st_as_sf()
-ggplot(median_income_by_neighborhood, aes(x = median_income, y = total_crimes)) +
-  geom_point(aes(color = median_income), alpha = 0.7, size=4) +
-  scale_color_viridis_c(option = "plasma", name = "Median Income") +
+
+# Create new columns for scaled axes
+median_income_by_neighborhood <- median_income_by_neighborhood %>%
+  mutate(
+    median_income_scaled = median_income / 1000,
+    total_crimes_scaled = total_crimes
+  )
+
+ggplot(median_income_by_neighborhood, aes(x = median_income_scaled, y = total_crimes_scaled)) +
+  geom_point(color = "blue", alpha = 0.7, size = 4) +
   labs(
     title = "Relationship Between Median Income and Total Crimes",
-    x = "Median Income (USD)",
+    x = "Median Income (USD in thousands)",
     y = "Total Crimes",
     caption = "Source: ACS 2020 and Crime Data"
   ) +
   theme_minimal() +
   theme(
-    legend.position = "right",
+    legend.position = "none",  # Remove legend as color is no longer mapped
     axis.text.x = element_text(angle = 45, hjust = 1)
   )
+
 
 ```
 A scatterplot illustrates the relationship between median income and total crime rates for each neighborhood. Each point represents a neighborhood, with median income on the x-axis and total crimes on the y-axis. Points are color-coded, ranging from dark purple (lower income) to bright yellow (higher income).
