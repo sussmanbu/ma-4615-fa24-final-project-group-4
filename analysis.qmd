@@ -1,6 +1,6 @@
 ---
 title: Analysis
-description: Here we provide a detailed analysis using more sophisticated statistics techniques.
+description: Here we provide a detailed analysis using more sophisticated statistics techniques on LAPD crime.
 toc: true
 draft: false
 ---
@@ -315,10 +315,9 @@ ggplot(median_income_by_neighborhood, aes(x = median_income_scaled, y = total_cr
 
 
 ```
-Graph explanation: The color from dark to bright means median income from low to high.
 
-The graph shows that there is no clear relationship between median income and total crimes based on the data points presented. While there is a general trend of lower median incomes associated with higher total crimes, there are several outliers that do not fit this pattern. Some areas with relatively high median incomes also have high total crime rates, and vice versa. This suggests that factors beyond just income level likely play a significant role in determining crime rates within a community. Simply assuming that higher-income neighborhoods will have lower crime rates oversimplifies the complex social, economic, and environmental factors that contribute to public safety. A more nuanced analysis would be needed to fully understand the relationship between these variables across different geographic areas.
-Our team decide to investigate the frequent of property crime by the each neighborhood that sort by their median income.
+Based on initial data representation, this graph shows that there is no clear relationship between median income and total crimes based on the data points presented. While there is a general trend of lower median incomes associated with higher total crimes, there are several outliers that do not fit this pattern. Some areas with relatively high median incomes also have high total crime rates, and vice versa. This suggests that factors beyond just income level likely play a significant role in determining crime rates within a community. Simply assuming that higher-income neighborhoods will have lower crime rates oversimplifies the complex social, economic, and environmental factors that contribute to public safety. A more nuanced analysis would be needed to fully understand the relationship between these variables across different geographic areas.
+Our team decided to investigate the frequency of violent crimes by the each neighborhood that sort by their median income.
 
 ## Violent crime in each neighborhood order by their income 
 ```{r violent crime in each neighborhood}
@@ -626,7 +625,9 @@ We can see that there are some outliers to the general trend that as median inco
 - Perform robustness checks by using alternative categorizations for racial groups or income brackets.\
 
 
+# Conclusion:
 
+This analysis examines the relationship between crime frequency, socioeconomic factors, and demographics across Los Angeles neighborhoods. While a general trend suggests that lower-income neighborhoods experience higher crime rates, outliers like Central challenge this assumption, with its crime levels influenced by geographic and environmental factors such as population density and proximity to high-activity areas. A heatmap further highlights spatial clusters of crime, with neighborhoods like 77th Street and Southeast exhibiting high crime-to-population ratios. Statistical modeling revealed mixed results: while Poisson regression identified significant negative relationships between income and crime, the Negative Binomial model, which accounts for overdispersion, found these effects to be marginal. Demographic analysis highlighted Hispanic/Latin/Mexican and Black groups as having significant associations with crime counts, reflecting potential systemic factors like reporting practices or socioeconomic disparities. These findings underscore the complexity of crime patterns, which cannot be explained solely by income or race but require a nuanced approach considering environmental, social, and institutional variables.
 
 
 
