@@ -307,11 +307,24 @@ shinyApp(ui = ui, server = server)
 ## Beyond the Poverty Myth: Unraveling Los Angeles' Crime Landscape
 
 
-When you think about crime, you might picture dangerous streets in low-income neighborhoods and pristine, secure communities in wealthier areas. Normally, you would avoid that one sketchy neighborhood when it is late at night. It’s a common narrative, repeated so often that it feels like fact: crime is a symptom of poverty, and wealth provides a safety net against it. But is this common perception really the truth?
+When you think about crime, you might picture dangerous streets in low-income neighborhoods and pristine, secure communities in wealthier areas. Normally, you would avoid that one sketchy neighborhood when it is late at night. It’s a common narrative, repeated so often that it feels like fact: crime is a symptom of poverty, and wealth provides a safety net against it. But is this common perception really the truth? 
 
-Using the LAPD crime reports and Census data from the past 4 years, we set out to explore the connection between income levels and crime rates across different neighborhoods in Los Angeles. The results might surprise you. While crime does concentrate in economically disadvantaged areas, the relationship between median income and crime is far from straightforward—and some of our findings challenge these well-worn assumptions. The stereotype that low median areas experience higher crime rates is overly simplistic. While violent crimes show some correlation with lower-income neighborhoods, broader crime patterns reveal that income alone does not explain crime rates. Our analysis uncovers complexities and outliers that challenge conventional beliefs. 
+We attempt to take a closer look at the relationship between income levels and crime rates in Los Angeles, aiming to uncover patterns that challenge conventional wisdom about the link between poverty and crime. Using the LAPD crime reports and Census data from the past 4 years, we set out to explore the connection between income levels and crime rates across different neighborhoods in Los Angeles. The results might surprise you. While crime does concentrate in economically disadvantaged areas, the relationship between median income and crime is far from straightforward—and some of our findings challenge these well-worn assumptions. The stereotype that low median areas experience higher crime rates is overly simplistic. While violent crimes show some correlation with lower-income neighborhoods, broader crime patterns reveal that income alone does not explain crime rates. Our analysis uncovers complexities and outliers that challenge conventional beliefs. 
 
-The idea that crime is concentrated solely in low-income areas is pervasive but overly simplistic. While economically disadvantaged neighborhoods often face greater crime challenges, wealthier areas aren’t immune. 
+### The Story Behind the Data
+When you think about crime, certain images likely come to mind—run-down neighborhoods with boarded-up windows or wealthy enclaves guarded by private security. But how do crime rates really distribute across the city, and what role does income play?
+
+To answer these questions, we dove into LAPD crime reports and Census data from the past four years, breaking down crime trends by income, neighborhood population, and crime type. We looked beyond total crime counts to analyze violent crimes, population-adjusted metrics, and outliers that defy expectations.
+
+Here’s what we examined:
+
+* Which neighborhoods experience the highest total crime rates?
+* How does violent crime correlate with median income?
+* Which areas have the highest crime-to-population ratios?
+
+Through this analysis, we paint a clearer picture of crime patterns in Los Angeles, revealing where the traditional narratives hold true—and where they fall apart.
+
+### Visualizing Crime Trends
 
 ```{r heatmap for crime count}
 #| echo: false
@@ -368,9 +381,11 @@ ggplot() +
   )
 
 ```
-This heatmap visualizes the total crime distribution across Los Angeles neighborhoods under LAPD jurisdiction.  Darker areas indicate lower crime counts, while lighter areas signify higher crime activity. At a glance, the map reveals significant disparities in crime concentration across the city. High counts of crime are apparent in neighborhoods in Central and West where those neighborhoods are darker than the rest of the neighborhoods in Los Angeles.
+Using LAPD data, we mapped total crime counts across Los Angeles neighborhoods. The heatmap shows darker areas for lower crime counts and lighter areas for higher crime activity. Darker areas indicate lower crime counts, while lighter areas signify higher crime activity. At a glance, neighborhoods in Central LA and parts of West LA emerge as hotspots for criminal activity.
 
 However, this heatmap only shows the total crime counts geographically, without considering the underlying economic conditions of each neighborhood. By incorporating median income into the data and visualizations, we can better understand the relationship between crime and median income.
+
+### Median Income vs. Total Crimes
 
 ```{r relationship between crime and income}
 #| echo: false
@@ -400,11 +415,12 @@ ggplot(median_income_by_neighborhood, aes(x = median_income, y = total_crimes)) 
   )
 
 ```
-This scatterplot shows the relationship between median income and total crimes across neighborhoods in Los Angeles. Each point represents a neighborhood, with the x-axis showing median income and the y-axis showing the total number of crimes. The colors range from dark purple to bright yellow, indicating neighborhoods with lower to higher median incomes, respectively.
+A scatterplot illustrates the relationship between median income and total crime rates for each neighborhood. Each point represents a neighborhood, with median income on the x-axis and total crimes on the y-axis. Points are color-coded, ranging from dark purple (lower income) to bright yellow (higher income).
 
-At first look, the graph reveals no clear or consistent correlation between median income and total crime levels. While some low-income neighborhoods (darker points) experience higher crime rates, several high-income neighborhoods (yellow points) also show significant crime activity.
+Interestingly, the scatterplot reveals no consistent correlation between income and total crime. While some low-income neighborhoods see higher crime rates, several affluent areas also report significant crime activity. This challenges the simplistic view that wealth equals safety, suggesting other factors—like population density and social dynamics—play a role.
 
-This pattern underscores that the relationship between income and crime is not straightforward. Factors beyond income, such as population density, local policies, or social dynamics, likely play a significant role in shaping crime rates. This finding challenges traditional stereotypes and invites a deeper examination of what drives crime in Los Angeles communities.
+
+### Delving Into Violent Crime
 
 ```{r violent crime in each neighborhood}
 #| echo: false
@@ -447,10 +463,14 @@ ggplot(property_crime_summary, aes(x = AREA.NAME, y = property_crimes)) +
   )
 
 ```
-However, when we shift focus from total crime counts to violent crimes and sort neighborhoods by median income, a more structured trend emerges. The bar chart highlights that neighborhoods with lower median incomes—such as Newton and Rampart consistently report the highest levels of violent crime. In contrast, wealthier areas like West LA and Devonshire show significantly fewer violent incidents.This displays a clear negative correlation between median income and violent crime rates. Neighborhoods with lower median incomes tend to experience higher levels of violent crime, while neighborhoods with higher median incomes report fewer violent crimes. 
 
-There is a glaring outlier of Central LA facing high crime counts despite being on the higher median income relative to the other Los Angeles Neighborhood which doesn't fit with the correlation between median income and violent crime. However, this only devles into a certain category of crime. Crime in Los Angeles is a multifaceted issue. Our analysis challenges the simplistic narrative linking poverty and crime, showing that even wealthy neighborhoods can face significant crime challenges. 
+When we shift focus to violent crime, a more distinct pattern emerges. Bar charts sorting neighborhoods by median income reveal a negative correlation: lower-income areas like Newton and Rampart report significantly higher violent crime rates, while wealthier neighborhoods like West LA and Devonshire see fewer incidents.
+
+There is a glaring outlier of Central LA facing high crime counts despite being on the higher median income relative to the other Los Angeles Neighborhood which doesn't fit with the correlation between median income and violent crime. However, this only delves into a certain category of crime. Crime in Los Angeles is a multifaceted issue. Our analysis challenges the simplistic narrative linking poverty and crime, showing that even wealthy neighborhoods can face significant crime challenges. 
+
 While focusing on violent crimes reveals a clear negative correlation with median income, examining crime relative to neighborhood populations adds another layer of complexity. Being in more dense-populated neighborhoods may contribute to more crime which scaling the crime count in proportion to population give a more accurate look into the relationship with median income and crime.
+
+### Crime-to-Population Ratios
 
 ```{r Ratio Graph}
 #| echo: false
@@ -477,8 +497,9 @@ ggplot(crime_population_2024, aes(x = reorder(`AREA NAME`, crime_to_population_r
   theme(axis.text.x = element_text(size = 8))  # Adjust text size for readability
 
 ```
+To account for population differences, we analyzed crime-to-population ratios across neighborhoods. Areas like 77th Street, Southwest, and Southeast show disproportionately high ratios, meaning residents in these neighborhoods face crime at significantly higher rates. Unsurprisingly, these neighborhoods tend to fall on the lower end of the median income spectrum.
 
-Areas like 77th Street, Southwest, and Southeast stand out with significantly higher crime-to-population ratios, indicating that residents in these neighborhoods experience crime at a much higher rate compared to others. This metric underscores the unequal distribution of crime intensity across Los Angeles, revealing how population size can amplify the impact of crime on communities. Most of the neighborhoods that stand out with significantly high crime-to-population ratios all fall on the lower end of the median income. 
+### Key Takeaways
 
 The relationship between median income and crime in Los Angeles is far from straightforward. While there is a noticeable negative correlation—lower median income neighborhoods often experience higher crime rates—this relationship becomes less clear when accounting for factors like population density and proportional impacts. Population size, density, and local factors significantly shape crime distribution across neighborhoods. A simple link between poverty and crime oversimplifies a complex issue. Addressing crime in Los Angeles requires considering economic conditions, community dynamics, and residents' lived experiences.
 
