@@ -510,11 +510,13 @@ To account for population differences, we analyzed crime-to-population ratios ac
 
 The relationship between median income and crime in Los Angeles is far from straightforward. While there is a noticeable negative correlation—lower median income neighborhoods often experience higher crime rates—this relationship becomes less clear when accounting for factors like population density and proportional impacts. Population size, density, and local factors significantly shape crime distribution across neighborhoods. A simple link between poverty and crime oversimplifies a complex issue. Addressing crime in Los Angeles requires considering economic conditions, community dynamics, and residents' lived experiences.
 
+### Interactive
+
 ```{shinylive-r}
 #| results: "hide"
 #| echo: false
 #| standalone: true
-#| viewerHeight: 640
+#| viewerHeight: 740
 library(shiny)
 library(dplyr)
 library(ggplot2)
