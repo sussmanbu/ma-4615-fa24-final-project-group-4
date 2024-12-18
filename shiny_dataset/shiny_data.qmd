@@ -35,8 +35,11 @@ economic_data_lapd <- st_intersection(economic_data, lapd_boundary)
 
 # Perform spatial join to combine crime and economic data
 crime_with_income_lapd <- st_join(crime_within_lapd, economic_data_lapd, join = st_within)
+areaData <- readRDS(here("crime_counts_by_area_with_coords.rds"))
 
 # Save the processed dataset
 saveRDS(crime_with_income_lapd, file = here("crime_with_income_lapd.rds"))
 saveRDS(economic_data_lapd, file= here("economic_data_lapd.rds"))
+saveRDS(areaData, file= here("areaData.rds"))
+
 ```

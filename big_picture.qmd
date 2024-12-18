@@ -1,6 +1,5 @@
 ---
 title: "Big Picture"
-description: "A 538/Upshot style article about the data."
 toc: true
 draft: false
 format:
@@ -510,4 +509,86 @@ To account for population differences, we analyzed crime-to-population ratios ac
 ### Key Takeaways
 
 The relationship between median income and crime in Los Angeles is far from straightforward. While there is a noticeable negative correlation—lower median income neighborhoods often experience higher crime rates—this relationship becomes less clear when accounting for factors like population density and proportional impacts. Population size, density, and local factors significantly shape crime distribution across neighborhoods. A simple link between poverty and crime oversimplifies a complex issue. Addressing crime in Los Angeles requires considering economic conditions, community dynamics, and residents' lived experiences.
+
+```{shinylive-r}
+#| results: "hide"
+#| echo: false
+#| standalone: true
+#| viewerHeight: 640
+library(shiny)
+library(dplyr)
+library(ggplot2)
+options("readr.edition" = 1)
+areaData=read_rds("https://sussmanbu.github.io/ma-4615-fa24-final-project-group-4/shiny_dataset/areaData.rds")
+colnames(areaData)[colnames(areaData) == "AREA NAME"] <- "AREA_NAME"
+
+# Ensure year is numeric:
+areaData$year <- as.numeric(areaData$year)
+
+ui <- fluidPage(
+  titlePanel("Los Angeles Area Crime Dashboard"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        inputId = "selected_area",
+        label = "Select an Area:",
+        choices = unique(areaData$AREA_NAME),
+        selected = unique(areaData$AREA_NAME)[1] # default to first area
+      )
+    ),
+    mainPanel(
+      h2("Area Summary"),
+      verbatimTextOutput("summary_stats"),
+      
+      h3("Total Crime Over Time"),
+      plotOutput("crime_trend_plot")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  
+  # Filter data based on selected area
+  selected_data <- reactive({
+    req(input$selected_area)
+    areaData %>% 
+      filter(AREA_NAME == input$selected_area)
+  })
+  
+  # Summary text
+  output$summary_stats <- renderPrint({
+    d <- selected_data()
+    # Calculate some basic summary information
+    yrs <- range(d$year)
+    total_min <- min(d$crime_count, na.rm = TRUE)
+    total_max <- max(d$crime_count, na.rm = TRUE)
+    avg_lat <- mean(d$avg_latitude, na.rm = TRUE)
+    avg_lon <- mean(d$avg_longitude, na.rm = TRUE)
+    
+    cat("Selected Area:", input$selected_area, "\n",
+        "Year Range:", paste0(yrs[1], " - ", yrs[2]), "\n",
+        "Min Crime Count:", total_min, "\n",
+        "Max Crime Count:", total_max, "\n",
+        "Average Latitude:", round(avg_lat, 5), "\n",
+        "Average Longitude:", round(avg_lon, 5), "\n",
+        "Number of Records:", nrow(d), "\n")
+  })
+  
+  # Line plot of total crime over time
+  output$crime_trend_plot <- renderPlot({
+    d <- selected_data()
+    ggplot(d, aes(x = year, y = crime_count)) +
+      geom_line(color = "steelblue", size = 1) +
+      geom_point(color = "steelblue", size = 2) +
+      labs(title = paste("Crime Trends in", input$selected_area),
+           x = "Year",
+           y = "Total Crime") +
+      theme_minimal()
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
+```
 
