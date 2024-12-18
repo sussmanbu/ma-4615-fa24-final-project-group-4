@@ -1,8 +1,11 @@
 ---
-title: Analysis and Cleaning of LAPD Crime Data (2020–Present)
+title: Data
+description: We describe the sources of our data and the cleaning process.
 toc: true
 draft: false
 ---
+
+# Analysis and Cleaning of LAPD Crime Data (2020–Present)
 
 # Data Documentation
 
