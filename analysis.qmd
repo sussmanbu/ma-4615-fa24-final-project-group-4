@@ -248,41 +248,6 @@ crime_population_summary <- crime_population_with_data %>%
 
 
 
-
-```{r}
-#| echo: false
-
-# Pivot the data to long format for easier plotting
-crime_race_long <- crime_summary_race_model %>%
-  pivot_longer(
-    cols = c(Hispanic.Latin.Mexican, White, Black, Other, Other.Asian, Unknown, 
-             Japanese, Korean, Filipino, Chinese, Hawaiian, Asian.Indian, 
-             American.Indian.Alaskan.Native, Cambodian, Vietnamese, Laotian),
-    names_to = "race",
-    values_to = "crime_count"
-  ) %>%
-  filter(crime_count > 0)  # Filter out rows with zero crime counts for better visualization
-
-# Generate the scatterplot
-ggplot(crime_race_long, aes(x = avg_median_income, y = crime_count, color = race)) +
-  geom_point(alpha = 0.7, size = 3) +
-  labs(
-    title = "Relationship Between Median Income and Crime Count by Race",
-    x = "Average Median Income (USD)",
-    y = "Crime Count",
-    color = "Race"
-  ) +
-  scale_color_viridis_d(option = "turbo") +  # Use a visually appealing color palette
-  theme_minimal() +
-  theme(
-    legend.position = "right",
-    legend.title = element_text(size = 10),
-    axis.title = element_text(size = 12),
-    plot.title = element_text(size = 14, face = "bold")
-  )
-
-```
-
 ## Relationship between crime and median income 
 ```{r relationship between crime and income}
 #| echo: false
