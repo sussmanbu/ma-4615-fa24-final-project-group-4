@@ -1,92 +1,8 @@
 ---
-title: Data
-description: We describe the sources of our data and the cleaning process.
+title: Analysis and Cleaning of LAPD Crime Data (2020–Present)
 toc: true
 draft: false
 ---
-
-![](images/data-import-cheatsheet-thumbs.png)
-
-
-This comes from the file `data.qmd`.
-
-Your first steps in this project will be to find data to work on.
-
-I recommend trying to find data that interests you and that you are knowledgeable about. A bad example would be if you have no interest in video games but your data set is about video games. I also recommend finding data that is related to current events, social justice, and other areas that have an impact.
-
-
-Initially, you will study _one dataset_ but later you will need to combine that data with another dataset. For this reason, I recommend finding data that has some date and/or location components. These types of data are conducive to interesting visualizations and analysis and you can also combine this data with other data that also has a date or location variable.
-Data from the census, weather data, economic data, are all relatively easy to combine with other data with time/location components.
-
-
-## What makes a good data set?
-
-* Data you are interested in and care about.
-* Data where there are a lot of potential questions that you can explore.
-* A data set that isn't completely cleaned already.
-* Multiple sources for data that you can combine.
-* Some type of time and/or location component.
-
-
-## Where to keep data?
-
-
-Below 50mb: In `dataset` folder
-
-Above 50mb: In `dataset_ignore` folder. This folder will be ignored by `git` so you'll have to manually sync these files across your team.
-
-### Sharing your data
-
-
-For small datasets (<50mb), you can use the `dataset` folder that is tracked by github. Add the files just like you would any other file.
-
-If you create a folder named `data` this will cause problems.
-
-For larger datasets, you'll need to create a new folder in the project root directory named `dataset-ignore`. This will be ignored by git (based off the `.gitignore` file in the project root directory) which will help you avoid issues with Github's size limits. Your team will have to manually make sure the data files in `dataset-ignore` are synced across team members.
-
-Your [load_and_clean_data.R](/scripts/load_and_clean_data.R) file is how you will load and clean your data. Here is a an example of a very simple one.
-
-```{r}
-source(
-  "scripts/load_and_clean_data.R",
-  echo = TRUE # Use echo=FALSE or omit it to avoid code output  
-)
-```
-You should never use absolute paths (eg. `/Users/danielsussman/path/to/project/` or `C:\MA415\\Final_Project\`).
-
-You might consider using the `here` function from the [`here` package](https://here.r-lib.org/articles/here.html) to avoid path problems.
-
-### Load and clean data script
-
-The idea behind this file is that someone coming to your website could largely replicate your analyses after running this script on the original data sets to clean them.
-This file might create a derivative data set that you then use for your subsequent analysis.
-Note that you don't need to run this script from every post/page.
-Instead, you can load in the results of this script, which could be plain text files or `.RData` files. In your data page you'll describe how these results were created. If you have a very large data set, you might save smaller data sets that you can use for exploration purposes.
-To link to this file, you can use `[cleaning script](/scripts/load_and_clean_data.R)` wich appears as [cleaning script](/scripts/load_and_clean_data.R). 
-
-----
-
-## Rubric: On this page
-
-You will
-
-* Describe where/how to find data.
-  * You must include a link to the original data source(s). Make sure to provide attribution to those who collected the data.
-  * Why was the data collected/curated? Who put it together? (This is important, if you don't know why it was collected then that might not be a good dataset to look at.
-* Describe the different data files used and what each variable means. 
-  * If you have many variables then only describe the most relevant ones and summarize the rest.
-* Describe any cleaning you had to do for your data.
-  * You *must* include a link to your `load_and_clean_data.R` file.
-  * Rrename variables and recode factors to make data more clear.
-  * Also, describe any additional R packages you used outside of those covered in class.
-  * Describe and show code for how you combined multiple data files and any cleaning that was necessary for that.
-  * Some repetition of what you do in your `load_and_clean_data.R` file is fine and encouraged if it helps explain what you did.
-* Organization, clarity, cleanliness of the page
-  * Make sure to remove excessive warnings, use clean easy-to-read code (without side scrolling), organize with sections, use bullets and other organization tools, etc.
-  * This page should be self-contained.
-  
-
-# Analysis and Cleaning of LAPD Crime Data (2020–Present)
 
 # Data Documentation
 
@@ -150,6 +66,8 @@ The dataset was loaded as a CSV file for easier manipulation. Here’s the R cod
 #| warning: false
 library(here)
 library(readr)
+library(dplyr)
+library(tidyverse)
 data <- read_csv(here("your_file.csv"))
 ```
 Then we start the data cleaning process. 
@@ -162,6 +80,7 @@ To reduce the dataset size (because it was too big previously) and balance repre
 
 The following r chunk is the exact code we use by following the previous steps.
 ```{r}
+
 # Convert the date column to year format
 data$year <- format(as.Date(data$DATE.OCC, format = "%m/%d/%Y"), "%Y")
 # Convert year to numeric
@@ -202,5 +121,79 @@ For this analysis, the census data was matched with specific crime locations, en
 We ensured the census data was updated every decade, so this comes from 2020 but is mapped to the corresponding regions where crimes occurred. This allowed for a comprehensive analysis that moves beyond raw crime figures and considers underlying socioeconomic conditions, facilitating a more nuanced interpretation of trends and patterns.
 
 By integrating census data, we aimed to uncover deeper insights, such as whether economically disadvantaged areas experience higher crime rates.
+
+# Crimes in Neighborhoods:
+
+Instead of just looking at the 12,500 crimes that we initially filtered for the sake of files being too large, it was suggested that geographic data would be filtered already as there were a lot of crimes which were being left out which could lead to bias,. So, we went back to the dataset and got all the crimes that had a latitude and longitude in the LA City era. Here is the code for that:
+
+```{data}
+#| echo: False
+#| warning: false
+#| results: "hide"
+#| message: false
+library(dplyr)
+library(readr)
+
+# Read the CSV file
+data <- read_csv("Crime_Data_from_2020_to_Present_20241018.csv")
+
+# Convert 'DATE OCC' to Date and extract the year
+data$year <- as.numeric(format(as.Date(data$`DATE OCC`, format = "%m/%d/%Y"), "%Y"))
+
+# Filter out rows with missing AREA NAME, LAT, or LON values
+filtered_data <- data %>%
+  filter(!is.na(`AREA NAME`) & `AREA NAME` != "" & !is.na(LAT) & !is.na(LON))
+
+# Select relevant columns: AREA NAME, year, LAT, LON
+selected_data <- filtered_data %>%
+  select(`AREA NAME`, year, LAT, LON)
+
+# Count the number of crimes by AREA NAME and year
+crime_counts_by_area <- selected_data %>%
+  group_by(`AREA NAME`, year) %>%
+  summarise(
+    crime_count = n(),
+    avg_latitude = mean(LAT, na.rm = TRUE),
+    avg_longitude = mean(LON, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# View the summarized crime counts with coordinates
+print(crime_counts_by_area)
+
+# Save the summarized data as an RDS file
+saveRDS(crime_counts_by_area, "crime_counts_by_area_with_coords.rds")
+
+```
+
+Here we got a new RDS File and we got the crime amounts in the different regions for a specific year from 2020-2024. Since not all years had data, the heatmap you see on the big picture page is of the year 2024 which had data from all regions of LA. 
+
+Here is what the data could look like after cleaning. 
+
+| **AREA NAME** | **Year** | **Crime Count** | **Avg Latitude** | **Avg Longitude** |
+|---------------|----------|-----------------|-----------------|------------------|
+| 77th Street   | 2024     | 13343           | 33.86060        | -117.8887        |
+| Central       | 2024     | 11600           | 33.84789        | -117.5570        |
+| Devonshire    | 2024     | 7982            | 34.06148        | -117.8855        |
+| Foothill      | 2024     | 7106            | 34.13832        | -117.9937        |
+| Harbor        | 2024     | 8874            | 33.67433        | -117.9386        |
+| Hollenbeck    | 2024     | 7805            | 33.88906        | -117.6273        |
+| Hollywood     | 2024     | 10171           | 33.87138        | -117.5391        |
+| Mission       | 2024     | 8480            | 34.05963        | -117.7660        |
+| N Hollywood   | 2024     | 10167           | 34.05776        | -117.9891        |
+| Newton        | 2024     | 9994            | 33.87209        | -117.7877        |
+| Northeast     | 2024     | 8452            | 34.02285        | -117.9502        |
+| Olympic       | 2024     | 9639            | 33.91484        | -117.7972        |
+| Pacific       | 2024     | 11575           | 33.79474        | -117.7623        |
+| Rampart       | 2024     | 9025            | 33.90471        | -117.7237        |
+| Southeast     | 2024     | 10847           | 33.77965        | -117.7112        |
+| Southwest     | 2024     | 11178           | 33.91014        | -117.9367        |
+| Topanga       | 2024     | 8106            | 34.13290        | -118.3959        |
+| Van Nuys      | 2024     | 8763            | 34.11259        | -118.2174        |
+| West LA       | 2024     | 9309            | 34.01168        | -118.3017        |
+| West Valley   | 2024     | 8091            | 34.13708        | -118.3457        |
+| Wilshire      | 2024     | 9291            | 33.89677        | -117.7792        |
+
+
 
 
