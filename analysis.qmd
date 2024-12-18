@@ -246,6 +246,36 @@ crime_population_summary <- crime_population_with_data %>%
 ```
 
 
+## What Motivated Our Data Analysis:
+Crime is a pervasive issue that affects communities differently based on various socioeconomic, demographic, and geographic factors. Understanding what drives crime frequency is crucial for developing effective policies and interventions to promote equity and public safety.
+
+Our data analysis was motivated by the desire to uncover relationships between crime and the following key factors:
+
+**Economic Status** (e.g., median income) \
+**Demographics** (e.g., racial composition) \
+**Location** (e.g., neighborhood characteristics) \
+\
+
+
+
+## Variables of Interest
+
+The primary variables we analyzed included:
+
+**Crime Frequency:** The total number of reported crimes in a neighborhood. \
+**Economic Data:** Median household income from the American Community Survey (ACS). \
+**Neighborhood Boundaries:** Spatial boundaries defined by the LA Times. \
+**Location Data:** Geospatial coordinates (latitude and longitude) for reported crime incidents. \
+\
+To explore these variables, we integrated datasets from LAPD crime reports, U.S. Census economic data, and geospatial shapefiles for Los Angeles neighborhoods. This allowed us to analyze both spatial and statistical relationships. \
+
+## Key Questions
+**Economic Status and Crime:** Does a neighborhood's median income influence the number of crimes reported? \
+**Geographic Crime Hotspots:** Are there specific areas with persistently high crime rates? \
+**Disparities in Crime Impact:** How do demographic or socioeconomic disparities correlate with crime?
+
+
+
 
 
 ## Relationship between crime and median income 
@@ -423,35 +453,6 @@ When connecting this to the previous graph, we see that Central's geographic loc
 
 
 
-# What Motivated Our Data Analysis:
-Crime is a pervasive issue that affects communities differently based on various socioeconomic, demographic, and geographic factors. Understanding what drives crime frequency is crucial for developing effective policies and interventions to promote equity and public safety.
-
-Our data analysis was motivated by the desire to uncover relationships between crime and the following key factors:
-
-**Economic Status** (e.g., median income) \
-**Demographics** (e.g., racial composition) \
-**Location** (e.g., neighborhood characteristics) \
-\
-
-
-
-# Variables of Interest
-
-The primary variables we analyzed included:
-
-**Crime Frequency:** The total number of reported crimes in a neighborhood. \
-**Economic Data:** Median household income from the American Community Survey (ACS). \
-**Neighborhood Boundaries:** Spatial boundaries defined by the LA Times. \
-**Location Data:** Geospatial coordinates (latitude and longitude) for reported crime incidents. \
-#Add to here as necessary \
-To explore these variables, we integrated datasets from LAPD crime reports, U.S. Census economic data, and geospatial shapefiles for Los Angeles neighborhoods. This allowed us to analyze both spatial and statistical relationships. \
-#Add links here
-
-# Key Questions
-**Economic Status and Crime:** Does a neighborhood's median income influence the number of crimes reported? \
-**Geographic Crime Hotspots:** Are there specific areas with persistently high crime rates? \
-**Disparities in Crime Impact:** How do demographic or socioeconomic disparities correlate with crime?
-#Add here as necessary \
 
 # Modeling and Inference
 ## Motivation for the Model
