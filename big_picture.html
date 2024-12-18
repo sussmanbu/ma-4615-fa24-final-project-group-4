@@ -304,7 +304,7 @@ library(shiny)
 library(dplyr)
 library(ggplot2)
 options("readr.edition" = 1)
-
+areaData=read_rds("https://sussmanbu.github.io/ma-4615-fa24-final-project-group-4/shiny_dataset/areaData.rds")
 colnames(areaData)[colnames(areaData) == "AREA NAME"] &lt;- "AREA_NAME"
 
 # Ensure year is numeric:
