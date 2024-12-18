@@ -133,6 +133,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#delving-into-violent-crime" id="toc-delving-into-violent-crime" class="nav-link" data-scroll-target="#delving-into-violent-crime">Delving Into Violent Crime</a></li>
   <li><a href="#crime-to-population-ratios" id="toc-crime-to-population-ratios" class="nav-link" data-scroll-target="#crime-to-population-ratios">Crime-to-Population Ratios</a></li>
   <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
+  <li><a href="#interactive" id="toc-interactive" class="nav-link" data-scroll-target="#interactive">Interactive</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -293,13 +294,16 @@ shinyApp(ui = ui, server = server)</code></pre>
 <section id="key-takeaways" class="level3">
 <h3 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h3>
 <p>The relationship between median income and crime in Los Angeles is far from straightforward. While there is a noticeable negative correlation—lower median income neighborhoods often experience higher crime rates—this relationship becomes less clear when accounting for factors like population density and proportional impacts. Population size, density, and local factors significantly shape crime distribution across neighborhoods. A simple link between poverty and crime oversimplifies a complex issue. Addressing crime in Los Angeles requires considering economic conditions, community dynamics, and residents’ lived experiences.</p>
+</section>
+<section id="interactive" class="level3">
+<h3 class="anchored" data-anchor-id="interactive">Interactive</h3>
 <pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
 #|   shinylive does not work in self-contained HTML documents.
 #|   Please set `embed-resources: false` in your metadata.
 #| results: "hide"
 #| echo: false
 #| standalone: true
-#| viewerHeight: 640
+#| viewerHeight: 740
 library(shiny)
 library(dplyr)
 library(ggplot2)
