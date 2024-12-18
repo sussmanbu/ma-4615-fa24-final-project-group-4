@@ -11,6 +11,8 @@ draft: false
 
 Crime patterns within urban environments are shaped by a complex interplay of socioeconomic, demographic, and spatial factors. This analysis focuses on the city of Los Angeles, examining how median household income, neighborhood boundaries, and racial demographics relate to variations in crime frequency. By integrating data from local law enforcement reports, U.S. Census surveys, and geospatial neighborhood shapefiles, we aim to uncover meaningful relationships that go beyond simplistic assumptions and stereotypes.
 
+Here is the area that is specifically under the jurisdiction of the LAPD and while the areas might not align directly, this gives a better picture when we start to look at heatmaps for crimes. 
+
 ```{r load libraries}
 #| results: "hide"
 #| echo: false
@@ -244,6 +246,8 @@ crime_population_summary <- crime_population_with_data %>%
 
 
 ```
+
+![](https://i.redd.it/gb3do15kxw0d1.jpeg)
 
 
 ## What Motivated Our Data Analysis:
