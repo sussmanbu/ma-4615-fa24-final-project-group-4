@@ -6,7 +6,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="A 538/Upshot style article about the data.">
 
 <title>Big Picture – MA [46]15 Final Project</title>
 <style>
@@ -146,11 +145,6 @@ ul.task-list li input[type="checkbox"] {
 <h1 class="title">Big Picture</h1>
 </div>
 
-<div>
-  <div class="description">
-    A 538/Upshot style article about the data.
-  </div>
-</div>
 
 
 <div class="quarto-title-meta">
@@ -299,6 +293,88 @@ shinyApp(ui = ui, server = server)</code></pre>
 <section id="key-takeaways" class="level3">
 <h3 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h3>
 <p>The relationship between median income and crime in Los Angeles is far from straightforward. While there is a noticeable negative correlation—lower median income neighborhoods often experience higher crime rates—this relationship becomes less clear when accounting for factors like population density and proportional impacts. Population size, density, and local factors significantly shape crime distribution across neighborhoods. A simple link between poverty and crime oversimplifies a complex issue. Addressing crime in Los Angeles requires considering economic conditions, community dynamics, and residents’ lived experiences.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| '!! shinylive warning !!': |
+#|   shinylive does not work in self-contained HTML documents.
+#|   Please set `embed-resources: false` in your metadata.
+#| results: "hide"
+#| echo: false
+#| standalone: true
+#| viewerHeight: 640
+library(shiny)
+library(dplyr)
+library(ggplot2)
+options("readr.edition" = 1)
+
+colnames(areaData)[colnames(areaData) == "AREA NAME"] &lt;- "AREA_NAME"
+
+# Ensure year is numeric:
+areaData$year &lt;- as.numeric(areaData$year)
+
+ui &lt;- fluidPage(
+  titlePanel("Los Angeles Area Crime Dashboard"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(
+        inputId = "selected_area",
+        label = "Select an Area:",
+        choices = unique(areaData$AREA_NAME),
+        selected = unique(areaData$AREA_NAME)[1] # default to first area
+      )
+    ),
+    mainPanel(
+      h2("Area Summary"),
+      verbatimTextOutput("summary_stats"),
+      
+      h3("Total Crime Over Time"),
+      plotOutput("crime_trend_plot")
+    )
+  )
+)
+
+server &lt;- function(input, output, session) {
+  
+  # Filter data based on selected area
+  selected_data &lt;- reactive({
+    req(input$selected_area)
+    areaData %&gt;% 
+      filter(AREA_NAME == input$selected_area)
+  })
+  
+  # Summary text
+  output$summary_stats &lt;- renderPrint({
+    d &lt;- selected_data()
+    # Calculate some basic summary information
+    yrs &lt;- range(d$year)
+    total_min &lt;- min(d$crime_count, na.rm = TRUE)
+    total_max &lt;- max(d$crime_count, na.rm = TRUE)
+    avg_lat &lt;- mean(d$avg_latitude, na.rm = TRUE)
+    avg_lon &lt;- mean(d$avg_longitude, na.rm = TRUE)
+    
+    cat("Selected Area:", input$selected_area, "\n",
+        "Year Range:", paste0(yrs[1], " - ", yrs[2]), "\n",
+        "Min Crime Count:", total_min, "\n",
+        "Max Crime Count:", total_max, "\n",
+        "Average Latitude:", round(avg_lat, 5), "\n",
+        "Average Longitude:", round(avg_lon, 5), "\n",
+        "Number of Records:", nrow(d), "\n")
+  })
+  
+  # Line plot of total crime over time
+  output$crime_trend_plot &lt;- renderPlot({
+    d &lt;- selected_data()
+    ggplot(d, aes(x = year, y = crime_count)) +
+      geom_line(color = "steelblue", size = 1) +
+      geom_point(color = "steelblue", size = 2) +
+      labs(title = paste("Crime Trends in", input$selected_area),
+           x = "Year",
+           y = "Total Crime") +
+      theme_minimal()
+  })
+}
+
+shinyApp(ui = ui, server = server)
+</code></pre>
 
 
 </section>
